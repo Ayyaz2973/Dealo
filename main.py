@@ -15,6 +15,8 @@ UPLOADS = BASE / "static" / "uploads"
 UPLOADS.mkdir(parents=True, exist_ok=True)
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:14b")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 ai_lock = threading.Lock()
 
 RULE = ("\n\nLAZMI QAWAID: Sirf Roman Urdu mein likhein (English alphabets mein Urdu). "
@@ -177,6 +179,11 @@ def init_db():
             created TEXT DEFAULT CURRENT_TIMESTAMP
         );
         CREATE INDEX IF NOT EXISTS idx_bot_tasks_bot ON bot_tasks(bot_id);
+        CREATE TABLE IF NOT EXISTS system_settings(
+            key TEXT PRIMARY KEY,
+            value TEXT DEFAULT '',
+            updated TEXT DEFAULT CURRENT_TIMESTAMP
+        );
         """)
         cols = [r[1] for r in con.execute("PRAGMA table_info(properties)")]
         if "status" not in cols:
@@ -1029,6 +1036,65 @@ EMPLOYEES = {
 }
 
 
+def get_gemini_key():
+    key = os.getenv("GEMINI_API_KEY", "").strip()
+    if key:
+        return key
+    try:
+        with db() as con:
+            row = con.execute("SELECT value FROM system_settings WHERE key='gemini_api_key'").fetchone()
+            if row and row["value"]:
+                return str(row["value"]).strip()
+    except Exception:
+        pass
+    return ""
+
+
+def call_gemini(system: str, user: str, as_json: bool = False, timeout_sec: float = 18.0) -> str:
+    key = get_gemini_key()
+    if not key:
+        raise ValueError("Google Gemini API Key is not configured.")
+
+    models = [GEMINI_MODEL, "gemini-2.0-flash", "gemini-1.5-flash"]
+    last_err = None
+
+    full_prompt = f"SYSTEM INSTRUCTION / ROLE:\n{system}\n\nUSER INPUT / TASK:\n{user}"
+    if not as_json:
+        full_prompt += RULE
+
+    for m in models:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={key}"
+            payload = {
+                "contents": [
+                    {
+                        "role": "user",
+                        "parts": [{"text": full_prompt}]
+                    }
+                ],
+                "generationConfig": {
+                    "temperature": 0.2,
+                    "maxOutputTokens": 2500,
+                }
+            }
+            if as_json:
+                payload["generationConfig"]["responseMimeType"] = "application/json"
+
+            r = requests.post(url, json=payload, timeout=timeout_sec)
+            r.raise_for_status()
+            data = r.json()
+            candidates = data.get("candidates", [])
+            if candidates:
+                parts = candidates[0].get("content", {}).get("parts", [])
+                if parts:
+                    return parts[0].get("text", "").strip()
+        except Exception as ex:
+            last_err = ex
+            continue
+
+    raise last_err or RuntimeError("Gemini API call failed.")
+
+
 def ollama(system, user, as_json=False, timeout_sec=6.0):
     payload = {
         "model": MODEL,
@@ -1045,6 +1111,27 @@ def ollama(system, user, as_json=False, timeout_sec=6.0):
     return r.json()["message"]["content"]
 
 
+def query_ai(system: str, user: str, as_json: bool = False, timeout_sec: float = 18.0) -> str:
+    """
+    Unified AI router:
+    1. If Gemini API key is configured, uses Google Gemini (Cloud & Local).
+    2. Otherwise tries Local Ollama if running.
+    3. Raises error for offline fallback.
+    """
+    if get_gemini_key():
+        try:
+            return call_gemini(system, user, as_json=as_json, timeout_sec=timeout_sec)
+        except Exception as e:
+            print(f"[Dealo AI Engine] Gemini attempt error: {e}")
+
+    try:
+        return ollama(system, user, as_json=as_json, timeout_sec=min(timeout_sec, 8.0))
+    except Exception as e:
+        print(f"[Dealo AI Engine] Ollama attempt error: {e}")
+
+    raise RuntimeError("No LLM server available")
+
+
 @app.get("/api/employees")
 def employees():
     return {k: v["name"] for k, v in EMPLOYEES.items()}
@@ -1052,11 +1139,82 @@ def employees():
 
 @app.get("/api/health")
 def health():
+    has_gemini = bool(get_gemini_key())
+    ollama_ok = False
     try:
         requests.get(f"{OLLAMA_URL}/api/tags", timeout=1.5).raise_for_status()
-        return {"ollama": True, "model": MODEL}
+        ollama_ok = True
     except Exception:
-        return {"ollama": False, "model": MODEL}
+        pass
+
+    if has_gemini:
+        engine = "Google Gemini (Cloud AI)"
+    elif ollama_ok:
+        engine = f"Ollama Local ({MODEL})"
+    else:
+        engine = "Dealo Smart Offline Engine"
+
+    return {
+        "status": "healthy",
+        "engine": engine,
+        "gemini_active": has_gemini,
+        "ollama_active": ollama_ok,
+        "ollama": ollama_ok,
+        "model": "Gemini 2.0 / 1.5 Flash" if has_gemini else MODEL
+    }
+
+
+class GeminiConfigReq(BaseModel):
+    api_key: str = ""
+
+
+@app.get("/api/ai/config")
+def get_ai_config():
+    key = get_gemini_key()
+    masked = f"{key[:4]}...{key[-4:]}" if len(key) > 8 else ("Configured" if key else "")
+    ollama_ok = False
+    try:
+        requests.get(f"{OLLAMA_URL}/api/tags", timeout=1.0).raise_for_status()
+        ollama_ok = True
+    except Exception:
+        pass
+
+    return {
+        "gemini_configured": bool(key),
+        "gemini_masked_key": masked,
+        "gemini_model": GEMINI_MODEL,
+        "ollama_active": ollama_ok,
+        "ollama_url": OLLAMA_URL,
+        "ollama_model": MODEL
+    }
+
+
+@app.post("/api/ai/config")
+def update_ai_config(req: GeminiConfigReq):
+    key = req.api_key.strip()
+    with db() as con:
+        con.execute(
+            "INSERT INTO system_settings(key, value) VALUES('gemini_api_key', ?) "
+            "ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated=CURRENT_TIMESTAMP",
+            (key,)
+        )
+    return {"ok": True, "gemini_configured": bool(key), "message": "Google Gemini API Key محفوظ کر لی گئی ہے!"}
+
+
+@app.post("/api/ai/test")
+def test_ai_connection():
+    key = get_gemini_key()
+    if not key:
+        raise HTTPException(400, "کوئی Google Gemini Key موجود نہیں ہے۔ براہ کرم پہلے Key داخل کریں۔")
+    try:
+        reply = call_gemini(
+            system="Aap Dealo PropTech Real Estate OS ke AI assistant hain. Roman Urdu mein 1 jumlay mein salam karein aur batayein ke Gemini AI live aur connect ho chuka hai.",
+            user="Dealo test message",
+            timeout_sec=12.0
+        )
+        return {"ok": True, "reply": reply}
+    except Exception as e:
+        raise HTTPException(500, f"Gemini Connection Error: {str(e)}")
 
 
 @app.post("/api/parse")
@@ -1066,7 +1224,7 @@ def parse_requirement(c: Chat):
         system = ("Message se requirement nikalein. Sirf JSON dein, in keys ke saath: "
                   "kind (sale ya rent), society, ptype (house/plot/flat/shop), size_marla (number), "
                   "budget_max (PKR number; 1 lakh=100000, 1 crore=10000000), name, phone, notes.")
-        raw = ollama(system, c.message, as_json=True, timeout_sec=4.0)
+        raw = query_ai(system, c.message, as_json=True, timeout_sec=8.0)
         data = json.loads(raw)
         if isinstance(data, dict) and (data.get("society") or data.get("budget_max") or data.get("phone")):
             return data
@@ -1380,7 +1538,7 @@ def talk(key: str, c: Chat):
     elif key == "followup" and c.ref_id:
         return {"reply": followup_text(one("requirements", c.ref_id), find_matches(c.ref_id), c.lang)}
     try:
-        return {"reply": ollama(emp["prompt"], c.message, timeout_sec=15.0)}
+        return {"reply": query_ai(emp["prompt"], c.message, timeout_sec=15.0)}
     except Exception as e:
         return {"reply": f"AI filhal offline hai. Local functions tayyar hain. ({e})"}
 
@@ -2055,8 +2213,8 @@ def generate_bot_task_report(bot_id: str, task_title: str, task_prompt: str, lan
             f"2. Sections: '📌 خلاصہ و ہدف (Executive Summary)', '📊 لائیو ڈیٹا تجزیہ (Data Findings)', '💡 تجاویز و ایکشن پلان (Recommendations)', '📲 واٹس ایپ ڈرافٹ (WhatsApp Action Draft)'.\n"
             f"3. Zaban: Roman Urdu ya Urdu (English alphabets or Urdu). Authentic figures aur accurate calculation use karein."
         )
-        ai_report = ollama(sys_prompt, f"Please complete this task: {task_prompt}", timeout_sec=12.0)
-        if ai_report and len(ai_report.strip()) > 100:
+        ai_report = query_ai(sys_prompt, f"Please complete this task: {task_prompt}", timeout_sec=18.0)
+        if ai_report and len(ai_report.strip()) > 80:
             ollama_success = True
     except Exception:
         ollama_success = False

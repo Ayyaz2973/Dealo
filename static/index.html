@@ -2089,10 +2089,13 @@ tr:hover td { background: rgba(0,0,0,0.015); }
             </p>
           </div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <span class="ai-status-pill">
-            <span class="pulse-dot dot-green"></span> <span>Hybrid Local Engine Active</span>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span class="ai-status-pill" id="aiStatusPill" onclick="openAiSettingsModal()" style="cursor:pointer" title="AI سیٹنگز اور گوگل جیمینائی کنفیگریشن">
+            <span class="pulse-dot dot-green" id="bannerAiDot"></span> <span id="bannerAiText">Hybrid AI Engine Active</span>
           </span>
+          <button type="button" class="secondary" onclick="openAiSettingsModal()" style="font-size:0.82rem;padding:6px 13px;border-radius:20px;display:inline-flex;align-items:center;gap:6px">
+            ✨ <span>Google Gemini AI</span>
+          </button>
           <button class="pri" onclick="runAllMatchesNow()" style="font-size:0.82rem;padding:6px 14px">
             ⚡ <span>Scan & Match All Demands</span>
           </button>
@@ -2986,6 +2989,59 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
         <button class="pri" onclick="testExtensionApi()">⚡ ٹیسٹ کنکشن</button>
         <button onclick="closeExtensionSetupModal()">بند کریں</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- GOOGLE GEMINI & AI ENGINE SETTINGS MODAL -->
+<div id="aiSettingsModal" class="modal" onclick="if(event.target===this) closeAiSettingsModal()">
+  <div class="modal-content" style="max-width:540px">
+    <div class="modal-header">
+      <h3 style="display:flex;align-items:center;gap:8px">
+        <span>✨</span> <span>Google Gemini AI Settings</span>
+      </h3>
+      <button type="button" class="close-btn" onclick="closeAiSettingsModal()">✕</button>
+    </div>
+    
+    <p style="margin:0;font-size:0.86rem;color:var(--text-muted);line-height:1.5">
+      Google Gemini AI کلاؤڈ پر <strong>100% مفت</strong> چلتا ہے، بغیر کسی کریڈٹ کارڈ کے۔ یہ پاکستانی پراپرٹی مارکیٹ، اردو اور رومن اردو کو بے مثال انداز میں سمجھتا ہے۔
+    </p>
+
+    <div style="background:var(--bg);padding:14px;border-radius:10px;border:1px solid var(--border)">
+      <div style="font-weight:700;font-size:0.85rem;margin-bottom:8px">موجودہ AI انجن اسٹیٹس (Active Engine):</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;font-size:0.92rem;font-weight:700">
+        <span class="pulse-dot dot-green" id="modalAiDot"></span>
+        <span id="modalAiStatus">Checking engine status...</span>
+      </div>
+    </div>
+
+    <div>
+      <label style="font-weight:700;font-size:0.85rem;display:block;margin-bottom:6px">
+        Google Gemini API Key (aistudio.google.com):
+      </label>
+      <input type="password" id="geminiApiKeyInput" 
+        style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);font-size:0.9rem;background:var(--surface)"
+        placeholder="AIzaSy... (یہاں اپنی فری Gemini API Key پیسٹ کریں)"
+      >
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;flex-wrap:wrap;gap:6px">
+        <a href="https://aistudio.google.com" target="_blank" style="font-size:0.78rem;color:var(--primary);text-decoration:none;font-weight:700">
+          🔗 مفت Gemini Key حاصل کریں (Google AI Studio)
+        </a>
+        <button type="button" class="secondary" style="font-size:0.75rem;padding:3px 8px" onclick="toggleGeminiKeyVis()">
+          👁️ دکھائیں / چھپائیں
+        </button>
+      </div>
+    </div>
+
+    <div id="aiTestResultBox" style="display:none;padding:12px;border-radius:8px;font-size:0.85rem;line-height:1.5"></div>
+
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px">
+      <button type="button" class="secondary" onclick="testGeminiConnection()" id="btnTestGemini">
+        🧪 کنکشن ٹیسٹ کریں
+      </button>
+      <button type="button" class="pri" onclick="saveGeminiKey()" id="btnSaveGemini">
+        💾 محفوظ کریں (Save Key)
+      </button>
     </div>
   </div>
 </div>
@@ -5817,6 +5873,123 @@ function toggleLang() {
   render();
 }
 
+async function refreshAiStatus() {
+  try {
+    const h = await api("/api/health");
+    const cfg = await api("/api/ai/config");
+
+    if ($("aiDot") && $("aiText")) {
+      if (h.gemini_active) {
+        $("aiDot").className = "pulse-dot dot-green";
+        $("aiText").textContent = "Gemini Flash ⚡";
+      } else if (h.ollama_active) {
+        $("aiDot").className = "pulse-dot dot-green";
+        $("aiText").textContent = (h.model || "Qwen");
+      } else {
+        $("aiDot").className = "pulse-dot dot-green";
+        $("aiText").textContent = "Smart Engine";
+      }
+    }
+
+    if ($("bannerAiText")) {
+      if (h.gemini_active) {
+        $("bannerAiText").textContent = "✨ Google Gemini 2.0 Flash Active";
+        if ($("bannerAiDot")) $("bannerAiDot").className = "pulse-dot dot-green";
+      } else if (h.ollama_active) {
+        $("bannerAiText").textContent = "🧠 Ollama Local Active (" + (h.model || "Qwen") + ")";
+        if ($("bannerAiDot")) $("bannerAiDot").className = "pulse-dot dot-green";
+      } else {
+        $("bannerAiText").textContent = "🛡️ Smart Offline Engine Active";
+        if ($("bannerAiDot")) $("bannerAiDot").className = "pulse-dot dot-green";
+      }
+    }
+
+    if ($("modalAiStatus")) {
+      $("modalAiStatus").textContent = h.engine || "Dealo Smart Engine";
+      if ($("modalAiDot")) $("modalAiDot").className = "pulse-dot dot-green";
+    }
+
+    if (cfg && cfg.gemini_configured && cfg.gemini_masked_key) {
+      if ($("geminiApiKeyInput") && !$("geminiApiKeyInput").value) {
+        $("geminiApiKeyInput").placeholder = "Key محفوظ ہے: " + cfg.gemini_masked_key;
+      }
+    }
+  } catch (err) {
+    console.warn("AI status error:", err);
+  }
+}
+
+function openAiSettingsModal() {
+  const m = $("aiSettingsModal");
+  if (m) m.classList.add("on");
+  refreshAiStatus();
+}
+
+function closeAiSettingsModal() {
+  const m = $("aiSettingsModal");
+  if (m) m.classList.remove("on");
+  if ($("aiTestResultBox")) $("aiTestResultBox").style.display = "none";
+}
+
+function toggleGeminiKeyVis() {
+  const inp = $("geminiApiKeyInput");
+  if (!inp) return;
+  inp.type = inp.type === "password" ? "text" : "password";
+}
+
+async function saveGeminiKey() {
+  const inp = $("geminiApiKeyInput");
+  const key = inp ? inp.value.trim() : "";
+  if (!key) {
+    alert("براہ کرم Google Gemini API Key داخل کریں۔");
+    return;
+  }
+  const btn = $("btnSaveGemini");
+  if (btn) btn.disabled = true;
+  try {
+    const res = await api("/api/ai/config", "POST", { api_key: key });
+    showToast("✅ " + (res.message || "Key محفوظ ہو گئی!"));
+    await refreshAiStatus();
+    testGeminiConnection();
+  } catch (err) {
+    alert("Error saving Gemini key: " + (err.message || err));
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function testGeminiConnection() {
+  const box = $("aiTestResultBox");
+  const btn = $("btnTestGemini");
+  if (box) {
+    box.style.display = "block";
+    box.style.background = "var(--bg)";
+    box.style.border = "1px solid var(--border)";
+    box.style.color = "var(--text-main)";
+    box.innerHTML = "⏳ Google Gemini AI سے رابطہ کیا جا رہا ہے...";
+  }
+  if (btn) btn.disabled = true;
+  try {
+    const res = await api("/api/ai/test", "POST");
+    if (box) {
+      box.style.background = "rgba(16, 185, 129, 0.12)";
+      box.style.border = "1px solid var(--green)";
+      box.style.color = "var(--green)";
+      box.innerHTML = `<strong>✅ Gemini AI کنکشن کامیاب رہا!</strong><br><span style="font-size:0.84rem;margin-top:4px;display:block">"${res.reply || 'Live response confirmed'}"</span>`;
+    }
+    await refreshAiStatus();
+  } catch (err) {
+    if (box) {
+      box.style.background = "rgba(239, 68, 68, 0.12)";
+      box.style.border = "1px solid var(--red)";
+      box.style.color = "var(--red)";
+      box.innerHTML = `<strong>❌ کنکشن ناکام:</strong> ${err.message || err}`;
+    }
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
 async function init() {
   try {
     const emps = await api("/api/employees");
@@ -5826,20 +5999,7 @@ async function init() {
   render();
   initBotPresets();
   loadBotTasks();
-
-  try {
-    const h = await api("/api/health");
-    if (h.ollama) {
-      $("aiDot").className = "pulse-dot dot-green";
-      $("aiText").textContent = t("ok") + " · " + (h.model || "Qwen");
-    } else {
-      $("aiDot").className = "pulse-dot dot-gray";
-      $("aiText").textContent = t("off");
-    }
-  } catch (e) {
-    $("aiDot").className = "pulse-dot dot-gray";
-    $("aiText").textContent = t("off");
-  }
+  await refreshAiStatus();
 }
 
 init();
