@@ -1,11 +1,11 @@
-import csv, io, json, os, re, sqlite3, threading, shutil
+import csv, io, json, os, re, sqlite3, threading, shutil, secrets, time
 from pathlib import Path
 from difflib import SequenceMatcher
 
 import requests
 import uvicorn
-from fastapi import FastAPI, HTTPException, UploadFile, File
-from fastapi.responses import FileResponse, Response
+from fastapi import FastAPI, HTTPException, UploadFile, File, Request, Response
+from fastapi.responses import FileResponse, Response, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, field_validator
 
@@ -18,6 +18,56 @@ MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:14b")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 ai_lock = threading.Lock()
+
+ACTIVE_ADMIN_TOKENS: dict[str, float] = {}
+
+def get_admin_password() -> str:
+    pwd = os.getenv("ADMIN_PASSWORD", "").strip()
+    if pwd:
+        return pwd
+    try:
+        with db() as con:
+            row = con.execute("SELECT value FROM system_settings WHERE key='admin_password'").fetchone()
+            if row and row["value"]:
+                return str(row["value"]).strip()
+    except Exception:
+        pass
+    return "dealo786"
+
+
+def create_admin_token() -> str:
+    token = secrets.token_hex(24)
+    ACTIVE_ADMIN_TOKENS[token] = time.time() + (7 * 86400)
+    return token
+
+
+def is_valid_admin_token(token: str | None) -> bool:
+    if not token:
+        return False
+    token = token.strip()
+    exp = ACTIVE_ADMIN_TOKENS.get(token)
+    if exp and exp > time.time():
+        return True
+    return False
+
+
+def verify_admin_request(request: Request):
+    token = request.headers.get("X-Admin-Token")
+    if not token:
+        auth_hdr = request.headers.get("Authorization", "")
+        if auth_hdr.startswith("Bearer "):
+            token = auth_hdr[7:].strip()
+    if not token:
+        token = request.cookies.get("dealo_admin_token")
+    if not token:
+        token = request.query_params.get("token")
+
+    if not is_valid_admin_token(token):
+        raise HTTPException(
+            status_code=401,
+            detail="Admin authentication required. Please login with your dealer PIN/Password."
+        )
+    return True
 
 RULE = ("\n\nLAZMI QAWAID: Sirf Roman Urdu mein likhein (English alphabets mein Urdu). "
         "Hindi ya Devanagari script bilkul istemal na karein. "
@@ -34,6 +84,176 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+PUBLIC_ROUTES = {
+    ("/", "GET"),
+    ("/api/properties", "GET"),
+    ("/api/societies", "GET"),
+    ("/api/health", "GET"),
+    ("/api/stats", "GET"),
+    ("/api/auth/login", "POST"),
+    ("/api/auth/status", "GET"),
+    ("/api/auth/logout", "POST"),
+    ("/api/inquiry", "POST"),
+    ("/api/extension/status", "GET"),
+    ("/api/extension/import", "POST"),
+    ("/openapi.json", "GET"),
+    ("/docs", "GET"),
+    ("/redoc", "GET"),
+}
+
+@app.middleware("http")
+async def admin_auth_middleware(request: Request, call_next):
+    path = request.url.path
+    method = request.method
+
+    # Allow static files and root
+    if path == "/" or path.startswith("/static/"):
+        return await call_next(request)
+
+    # Allow explicit public endpoints
+    if (path, method) in PUBLIC_ROUTES:
+        return await call_next(request)
+
+    # Allow public property detail viewing (GET /api/properties/123)
+    if method == "GET" and (path.startswith("/api/properties/") or path.startswith("/api/share/property/")):
+        return await call_next(request)
+
+    # For all other /api/* endpoints, verify admin token!
+    if path.startswith("/api/"):
+        token = request.headers.get("X-Admin-Token")
+        if not token:
+            auth_hdr = request.headers.get("Authorization", "")
+            if auth_hdr.startswith("Bearer "):
+                token = auth_hdr[7:].strip()
+        if not token:
+            token = request.cookies.get("dealo_admin_token")
+        if not token:
+            token = request.query_params.get("token")
+
+        if not is_valid_admin_token(token):
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Admin authentication required. Please login with your dealer PIN/Password."}
+            )
+
+    return await call_next(request)
+
+
+class LoginReq(BaseModel):
+    password: str
+
+@app.post("/api/auth/login")
+def auth_login(req: LoginReq, response: Response):
+    expected = get_admin_password()
+    if req.password.strip() != expected:
+        raise HTTPException(401, "Ghalat Password! Please check your Admin PIN/Password.")
+
+    token = create_admin_token()
+    response.set_cookie(
+        key="dealo_admin_token",
+        value=token,
+        max_age=7 * 86400,
+        httponly=False,
+        samesite="lax",
+        secure=False
+    )
+    return {
+        "ok": True,
+        "token": token,
+        "message": "Admin login kamyab!"
+    }
+
+
+@app.get("/api/auth/status")
+def auth_status(request: Request):
+    token = request.headers.get("X-Admin-Token")
+    if not token:
+        auth_hdr = request.headers.get("Authorization", "")
+        if auth_hdr.startswith("Bearer "):
+            token = auth_hdr[7:].strip()
+    if not token:
+        token = request.cookies.get("dealo_admin_token")
+    if not token:
+        token = request.query_params.get("token")
+
+    authenticated = is_valid_admin_token(token)
+    return {
+        "authenticated": authenticated
+    }
+
+
+@app.post("/api/auth/logout")
+def auth_logout(request: Request, response: Response):
+    token = request.headers.get("X-Admin-Token") or request.cookies.get("dealo_admin_token")
+    if token and token in ACTIVE_ADMIN_TOKENS:
+        del ACTIVE_ADMIN_TOKENS[token]
+    response.delete_cookie("dealo_admin_token")
+    return {"ok": True, "message": "Logged out successfully"}
+
+
+class ChangePasswordReq(BaseModel):
+    old_password: str
+    new_password: str
+
+@app.post("/api/auth/change-password")
+def change_admin_password(req: ChangePasswordReq, request: Request):
+    current = get_admin_password()
+    if req.old_password.strip() != current:
+        raise HTTPException(400, "Purana password durust nahi hai.")
+    new_pwd = req.new_password.strip()
+    if len(new_pwd) < 4:
+        raise HTTPException(400, "Naya password kam az kam 4 characters ka hona chahiye.")
+
+    with db() as con:
+        con.execute(
+            "INSERT INTO system_settings(key, value) VALUES('admin_password', ?) "
+            "ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated=CURRENT_TIMESTAMP",
+            (new_pwd,)
+        )
+    return {"ok": True, "message": "Admin Password kamyabi se tabdeel ho gaya!"}
+
+
+class PublicInquiryReq(BaseModel):
+    name: str
+    phone: str
+    society: str = "Islamabad"
+    kind: str = "sale"
+    ptype: str = "house"
+    size_marla: float = 5.0
+    budget_max: float = 0.0
+    notes: str = ""
+
+@app.post("/api/inquiry")
+def submit_public_inquiry(req: PublicInquiryReq):
+    name = req.name.strip()
+    phone = req.phone.strip()
+    if not name or not phone:
+        raise HTTPException(400, "Naam aur Phone number lazmi hain.")
+
+    with db() as con:
+        cur = con.execute("""
+            INSERT INTO requirements(name, phone, society, kind, ptype, size_marla, budget_max, notes)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            name, phone, req.society.strip() or "Islamabad", req.kind, req.ptype,
+            req.size_marla, req.budget_max, req.notes.strip()
+        ))
+        req_id = cur.lastrowid
+
+        try:
+            con.execute("""
+                INSERT INTO ai_queue(bot_name, task_type, recipient_name, phone, req_id, title, message_text)
+                VALUES('Ayesha', 'customer_match', ?, ?, ?, 'New Public Website Lead', ?)
+            """, (name, phone, req_id, f"Customer demand: {req.size_marla} Marla in {req.society}. Budget: PKR {req.budget_max:,.0f}"))
+        except Exception:
+            pass
+
+    return {
+        "ok": True,
+        "id": req_id,
+        "message": "Shukriya! Aapki darkhwast darj kar li gayi hai. Hamara numainda jald rabta karega."
+    }
 
 
 def db():
@@ -203,6 +423,7 @@ def init_db():
         if "is_demo" not in cols:
             con.execute("ALTER TABLE properties ADD COLUMN is_demo INTEGER DEFAULT 0")
         con.execute("UPDATE properties SET status='sold' WHERE status='closed'")
+        con.execute("INSERT INTO system_settings(key, value) VALUES('admin_password', 'dealo786') ON CONFLICT(key) DO NOTHING")
 
 
 init_db()
@@ -737,9 +958,21 @@ def followups(days: int = 3):
 
 
 @app.get("/api/stats")
-def stats():
+def stats(request: Request):
+    token = request.headers.get("X-Admin-Token") or request.cookies.get("dealo_admin_token")
+    is_admin = is_valid_admin_token(token)
     with db() as con:
         g = lambda q: con.execute(q).fetchone()[0]
+        if not is_admin:
+            return {
+                "available": g("SELECT COUNT(*) FROM properties WHERE status='available'"),
+                "closed": 0,
+                "requirements": 0,
+                "due": 0,
+                "tenants": 0,
+                "rent_pending": 0,
+                "rent_collected": 0,
+            }
         return {
             "available": g("SELECT COUNT(*) FROM properties WHERE status='available'"),
             "closed": g("SELECT COUNT(*) FROM properties WHERE status IN ('sold','closed','rented')"),

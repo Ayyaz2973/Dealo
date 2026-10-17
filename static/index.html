@@ -1485,6 +1485,151 @@ tr:hover td { background: rgba(0,0,0,0.015); }
   border-radius: 6px;
   font-size: 0.78rem;
 }
+
+/* ========================================================
+   DUAL-MODE PROPTECH: PUBLIC MARKETPLACE & ADMIN PORTAL
+   ======================================================== */
+body.is-public .admin-only {
+  display: none !important;
+}
+body.is-admin .public-only {
+  display: none !important;
+}
+
+/* Public Hero Banner */
+.public-hero-banner {
+  background: linear-gradient(135deg, #07152b 0%, #0d2847 50%, #064e3b 100%);
+  color: #fff;
+  padding: 40px 32px;
+  margin: 0 0 24px;
+  border-radius: 0 0 24px 24px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+.public-hero-banner::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #10b981, #38bdf8, #ffd700);
+}
+.public-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6ee7b7;
+  margin-bottom: 12px;
+}
+.public-hero-content h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 8px;
+  line-height: 1.3;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+.public-hero-content p {
+  font-size: 1rem;
+  opacity: 0.92;
+  max-width: 820px;
+  margin: 0 0 22px;
+  line-height: 1.6;
+}
+.public-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+  max-width: 680px;
+}
+.hero-stat-item {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 14px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+.hero-stat-val {
+  display: block;
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #ffd700;
+  line-height: 1.2;
+}
+.hero-stat-label {
+  font-size: 0.76rem;
+  opacity: 0.85;
+  font-weight: 600;
+}
+.public-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.pri-hero-btn {
+  background: #10b981;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+.pri-hero-btn:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+.sec-hero-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.sec-hero-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.wa-hero-btn {
+  background: #25d366;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: all 0.15s ease;
+}
+.wa-hero-btn:hover {
+  background: #22bf5b;
+  transform: translateY(-2px);
+}
+
+/* Public Inquiry Demand Card */
+.public-inquiry-card {
+  border: 2px solid var(--primary-border);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-hover) 100%);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
 </style>
 </head>
 <body>
@@ -1494,36 +1639,99 @@ tr:hover td { background: rgba(0,0,0,0.015); }
     <div class="brand-logo">D</div>
     <div class="brand-text">
       <h1>Dealo</h1>
-      <span>Geospatial PropTech & Real Estate OS</span>
+      <span class="public-only" data-t="brandTagPublic">Verified Geospatial Real Estate</span>
+      <span class="admin-only" style="display:none" data-t="brandTagAdmin">PropTech Command Center & OS</span>
     </div>
   </div>
   
   <div class="header-actions">
-    <div id="aiHealth" class="ai-status-pill">
+    <div id="aiHealth" class="ai-status-pill admin-only" style="display:none">
       <span class="pulse-dot dot-gray" id="aiDot"></span>
       <span id="aiText">Hero AI Active</span>
     </div>
     
-    <button class="header-btn" onclick="seedDemoData()" title="Load Sample Deals">
+    <button class="header-btn admin-only" style="display:none" onclick="seedDemoData()" title="Load Sample Deals">
       🧪 <span data-t="demoData">Load Demo Data</span>
     </button>
     
-    <a class="header-btn" href="/api/export/properties.csv" download data-t="expP">📊 Properties CSV</a>
-    <a class="header-btn" href="/api/export/requirements.csv" download data-t="expR">📋 Reqs CSV</a>
-    <a class="header-btn" href="/api/backup" download data-t="backup">💾 Backup DB</a>
+    <button class="header-btn admin-only" style="display:none" onclick="downloadCsv('properties', event)" data-t="expP">📊 Properties CSV</button>
+    <button class="header-btn admin-only" style="display:none" onclick="downloadCsv('requirements', event)" data-t="expR">📋 Reqs CSV</button>
+    <button class="header-btn admin-only" style="display:none" onclick="downloadDbBackup(event)" data-t="backup">💾 Backup DB</button>
     
-    <select id="mlang" title="WhatsApp Language" style="width:auto;padding:6px 10px;font-size:0.85rem;font-weight:700">
+    <select id="mlang" class="admin-only" style="display:none;width:auto;padding:6px 10px;font-size:0.85rem;font-weight:700" title="WhatsApp Language">
       <option value="ur">اردو (Urdu)</option>
       <option value="ro">Roman Urdu</option>
       <option value="en">English</option>
     </select>
     
+    <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20properties%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="header-btn public-only" style="background:#25d366;color:#fff;border-color:transparent;font-weight:700;text-decoration:none">
+      💬 <span data-t="contactAgency">0321-5873665</span>
+    </a>
+
     <button id="langToggle" onclick="toggleLang()" class="header-btn" style="font-weight:700">English</button>
+
+    <!-- Dealer / Admin Login Button (Visible when NOT logged in) -->
+    <button id="btnPortalLogin" onclick="openAdminLoginModal()" class="header-btn public-only" style="background:linear-gradient(135deg, #059669 0%, #0369a1 100%);color:#fff;border-color:transparent;font-weight:700;box-shadow:0 2px 8px rgba(5,150,105,0.35)">
+      🔐 <span data-t="portalLogin">Dealer Portal</span>
+    </button>
+
+    <!-- Admin Status Badge & Logout Button (Visible when logged in) -->
+    <div id="adminBadge" class="admin-only" style="display:none;align-items:center;gap:6px">
+      <span style="background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;padding:5px 10px;border-radius:20px;font-size:0.78rem;font-weight:800;display:inline-flex;align-items:center;gap:4px">
+        🛡️ Admin Mode
+      </span>
+      <button id="btnPortalLogout" onclick="adminLogout()" class="header-btn" style="color:#ef4444;border-color:#fca5a5;font-weight:700" title="Exit Admin Portal">
+        🚪 <span data-t="portalLogout">Logout</span>
+      </button>
+    </div>
   </div>
 </header>
 
-<!-- EXECUTIVE DEALER BANNER -->
-<div class="banner">
+<!-- PUBLIC VISITOR HERO BANNER (Shown when NOT logged in) -->
+<div id="publicHero" class="public-hero-banner public-only">
+  <div class="public-hero-content">
+    <div class="public-hero-badge">
+      <span class="pulse-dot dot-green"></span>
+      <span data-t="heroBadge">100% تصدیق شدہ پراپرٹیز • اسلام آباد اور راولپنڈی</span>
+    </div>
+    <h2 data-t="heroTitle">اسلام آباد اور راولپنڈی کا جدید جیو اسپیٹیل رئیل اسٹیٹ پورٹل</h2>
+    <p data-t="heroSub">خریداری، فروخت اور کرایہ — اصل نقشے پر دیکھیں، درست قیمت معلوم کریں اور براہِ راست ڈیلرز سے رابطہ کریں۔</p>
+    
+    <div class="public-hero-stats">
+      <div class="hero-stat-item">
+        <span class="hero-stat-val" id="pubStatCount">12</span>
+        <span class="hero-stat-label" data-t="pubStat1">دستیاب پراپرٹیز</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-val">100%</span>
+        <span class="hero-stat-label" data-t="pubStat2">تصدیق شدہ لسٹنگز</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-val">0%</span>
+        <span class="hero-stat-label" data-t="pubStat3">پوشیدہ چارجز</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-val">24/7</span>
+        <span class="hero-stat-label" data-t="pubStat4">واٹس ایپ رہنمائی</span>
+      </div>
+    </div>
+
+    <div class="public-hero-actions">
+      <button class="pri-hero-btn" onclick="scrollToSearch()">
+        🔍 <span data-t="heroCtaSearch">پراپرٹیز تلاش کریں</span>
+      </button>
+      <button class="sec-hero-btn" onclick="scrollToInquiry()">
+        ✨ <span data-t="heroCtaDemand">اپنی ڈیمانڈ درج کریں</span>
+      </button>
+      <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20real%20estate%20properties%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="wa-hero-btn">
+        💬 <span data-t="heroCtaWa">واٹس ایپ ہیلپ لائن</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- EXECUTIVE DEALER BANNER (Admin Only) -->
+<div class="banner admin-only" style="display:none">
   <div class="banner-profile">
     <div class="banner-avatar-wrap">
       <img class="banner-avatar" src="/static/ayyaz.jpg" alt="Ayyaz Haider Kayani">
@@ -1541,8 +1749,8 @@ tr:hover td { background: rgba(0,0,0,0.015); }
   </div>
 </div>
 
-<!-- DASHBOARD METRIC SUMMARY CARDS -->
-<div class="metrics-row">
+<!-- DASHBOARD METRIC SUMMARY CARDS (Admin Only) -->
+<div class="metrics-row admin-only" style="display:none">
   <div class="metric-card">
     <div>
       <div class="metric-label" data-t="s1">Available Properties</div>
@@ -1580,8 +1788,8 @@ tr:hover td { background: rgba(0,0,0,0.015); }
   </div>
 </div>
 
-<!-- NAVIGATION TABS -->
-<nav id="tabs"></nav>
+<!-- NAVIGATION TABS (Admin Only) -->
+<nav id="tabs" class="admin-only" style="display:none"></nav>
 
 <main>
 
@@ -1685,17 +1893,20 @@ tr:hover td { background: rgba(0,0,0,0.015); }
       </div>
       
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button class="pri" onclick="openAddPropForm()" style="font-size:0.85rem">
+        <button class="pri admin-only" style="display:none;font-size:0.85rem" onclick="openAddPropForm()">
           ➕ <span data-t="addNewProp">Add Property</span>
         </button>
-        <button onclick="goToWhatsAppBulk()" style="font-size:0.85rem;background:#dcfce7;color:#166534;border:1px solid #86efac;font-weight:700" title="Import WhatsApp real estate dealer group messages">
+        <button class="admin-only" style="display:none;font-size:0.85rem;background:#dcfce7;color:#166534;border:1px solid #86efac;font-weight:700" onclick="goToWhatsAppBulk()" title="Import WhatsApp real estate dealer group messages">
           📲 <span data-t="waBulkBtn">واٹس ایپ بلک ڈیٹا</span>
         </button>
-        <button onclick="openExtensionSetupModal()" style="font-size:0.85rem;background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;font-weight:700" title="Clip from Zameen, OLX, Graana with Chrome Extension">
+        <button class="admin-only" style="display:none;font-size:0.85rem;background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;font-weight:700" onclick="openExtensionSetupModal()" title="Clip from Zameen, OLX, Graana with Chrome Extension">
           🧩 <span data-t="chromeClipBtn">کروم ایکسٹینشن</span>
         </button>
-        <button onclick="showImport('properties')" style="font-size:0.85rem">
+        <button class="admin-only" style="display:none;font-size:0.85rem" onclick="showImport('properties')">
           📥 <span data-t="importCSV">Import CSV</span>
+        </button>
+        <button class="public-only" onclick="scrollToInquiry()" style="font-size:0.85rem;background:var(--primary-light);color:var(--primary);border:1px solid var(--primary-border);font-weight:700">
+          ✨ <span data-t="heroCtaDemand">اپنی ڈیمانڈ درج کریں</span>
         </button>
         
         <!-- 3 View Modes: Geospatial Map, Cards Gallery, Table -->
@@ -1755,8 +1966,90 @@ tr:hover td { background: rgba(0,0,0,0.015); }
     <!-- VIEW 3: PROPERTY DATA TABLE -->
     <div id="propTableContainer" class="table-wrap" style="display:none"></div>
 
-    <!-- ADD / EDIT PROPERTY FORM COLLAPSIBLE CARD -->
-    <div class="card" id="propFormCard" style="margin-top:28px">
+    <!-- PUBLIC DEMAND / INQUIRY SUBMISSION CARD (Visible to Public Visitors) -->
+    <div class="card public-inquiry-card public-only" id="publicInquiryCard" style="margin-top:28px">
+      <div class="card-header" style="border-bottom:1px solid var(--border);padding-bottom:12px">
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:var(--primary);text-transform:uppercase" data-t="inqBadge">Direct Buyer & Tenant Service</div>
+          <h3 class="card-title" style="margin-top:4px">
+            <span>✨</span> <span data-t="inqTitle">نہیں مل رہی آپ کی پسندیدہ پراپرٹی؟ اپنی ڈیمانڈ درج کریں</span>
+          </h3>
+        </div>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.92rem;margin-top:10px" data-t="inqDesc">
+        ہماری ٹیم آپ کی مطلوبہ سوسائٹی، سائز اور بجٹ کے مطابق بہترین ڈیل تلاش کر کے براہِ راست رابطہ کرے گی۔
+      </p>
+
+      <form id="publicInquiryForm" onsubmit="submitPublicInquiry(event)" style="margin-top:16px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px">
+          <label>
+            <span style="font-weight:700;font-size:0.85rem" data-t="inqName">آپ کا نام *</span>
+            <input id="inqName" required placeholder="مثال: محمد احمد">
+          </label>
+          <label>
+            <span style="font-weight:700;font-size:0.85rem" data-t="inqPhone">واٹس ایپ / فون نمبر *</span>
+            <input id="inqPhone" required placeholder="03001234567">
+          </label>
+          <label>
+            <span style="font-weight:700;font-size:0.85rem" data-t="inqSociety">پسندیدہ سوسائٹی / علاقہ</span>
+            <select id="inqSociety">
+              <option value="DHA Phase 2">DHA Phase 2</option>
+              <option value="Bahria Town Phase 8">Bahria Town Phase 8</option>
+              <option value="Soan Garden">Soan Garden</option>
+              <option value="G-13">G-13 Islamabad</option>
+              <option value="B-17 Multi Gardens">B-17 Multi Gardens</option>
+              <option value="F-11">F-11 Islamabad</option>
+              <option value="Other">دیگر (Other)</option>
+            </select>
+          </label>
+          <label>
+            <span style="font-weight:700;font-size:0.85rem" data-t="inqKind">مقصد</span>
+            <select id="inqKind">
+              <option value="sale">خریداری (Buy / Investment)</option>
+              <option value="rent">کرایہ پر لینا (Rent)</option>
+            </select>
+          </label>
+          <label>
+            <span style="font-weight:700;font-size:0.85rem" data-t="inqPtype">پراپرٹی کی نوعیت</span>
+            <select id="inqPtype">
+              <option value="house">مکان / کوٹھی (House)</option>
+              <option value="plot">پلاٹ (Plot)</option>
+              <option value="flat">فلیٹ / اپارٹمنٹ (Apartment)</option>
+              <option value="shop">کمرشل شاپ / پلازہ</option>
+            </select>
+          </label>
+          <label>
+            <span style="font-weight:700;font-size:0.85rem" data-t="inqSize">سائز (مرلہ)</span>
+            <select id="inqSize">
+              <option value="5">5 مرلہ</option>
+              <option value="7">7 مرلہ</option>
+              <option value="10" selected>10 مرلہ</option>
+              <option value="20">1 کنال (20 مرلہ)</option>
+              <option value="40">2 کنال (40 مرلہ)</option>
+            </select>
+          </label>
+          <label>
+            <span style="font-weight:700;font-size:0.85rem" data-t="inqBudget">زیادہ سے زیادہ بجٹ (روپے)</span>
+            <input id="inqBudget" type="number" step="any" placeholder="مثال: 35000000">
+          </label>
+        </div>
+
+        <label style="margin-top:14px;display:block">
+          <span style="font-weight:700;font-size:0.85rem" data-t="inqNotes">اضافی تفصیل یا خاص ڈیمانڈ (اختیاری)</span>
+          <textarea id="inqNotes" rows="2" placeholder="مثال: 5 بیڈ رومز، کارنر لوکیشن، پارک کے قریب..."></textarea>
+        </label>
+
+        <div style="margin-top:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <button type="submit" class="pri" style="padding:10px 24px;font-weight:800;font-size:0.95rem">
+            📩 <span data-t="inqSubmitBtn">ڈیمانڈ بھیجیں (Submit Requirement)</span>
+          </button>
+          <div id="inqFeedback" style="font-weight:700;font-size:0.9rem"></div>
+        </div>
+      </form>
+    </div>
+
+    <!-- ADD / EDIT PROPERTY FORM COLLAPSIBLE CARD (Admin Only) -->
+    <div class="card admin-only" id="propFormCard" style="margin-top:28px;display:none">
       <div class="card-header">
         <h3 class="card-title">
           <span>📝</span> <span id="propFormHeading" data-t="propFormTitle">Add / Edit Property</span>
@@ -2541,6 +2834,45 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
 
 </main>
 
+<!-- DEALER & ADMIN AUTHENTICATION MODAL -->
+<div id="adminLoginModal" class="modal" onclick="if(event.target===this)closeAdminLoginModal()">
+  <div class="modal-content" style="max-width:440px;border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow-lg);padding:28px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#059669,#0369a1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.2rem">🔐</div>
+        <div>
+          <h3 style="margin:0;font-size:1.15rem;font-weight:800" data-t="modalLoginTitle">Dealo Dealer Portal</h3>
+          <span style="font-size:0.75rem;color:var(--text-muted)" data-t="modalLoginSub">Command Center & Management Access</span>
+        </div>
+      </div>
+      <button onclick="closeAdminLoginModal()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted)">&times;</button>
+    </div>
+
+    <form onsubmit="submitAdminLogin(event)">
+      <label style="display:block;margin-bottom:14px">
+        <span style="font-weight:700;font-size:0.85rem;margin-bottom:6px;display:block" data-t="modalPwdLabel">Dealer PIN / Password:</span>
+        <div style="position:relative">
+          <input type="password" id="adminPwdInput" placeholder="Enter PIN/Password (default: dealo786)" required style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem" autocomplete="current-password">
+          <button type="button" onclick="togglePwdVisibility()" style="position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;font-size:1rem;color:var(--text-muted)">👁️</button>
+        </div>
+      </label>
+
+      <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:0.78rem;color:var(--text-muted);margin-bottom:16px">
+        🔑 <strong>Tip:</strong> Default password is <code>dealo786</code>. You can change this in settings after logging in.
+      </div>
+
+      <div id="loginErrorMsg" style="color:#ef4444;font-size:0.85rem;font-weight:700;margin-bottom:12px;min-height:18px"></div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" class="secondary" onclick="closeAdminLoginModal()" data-t="cancel">Cancel</button>
+        <button type="submit" class="pri" style="padding:10px 20px;font-weight:800">
+          🔓 <span data-t="loginBtn">Login to Portal</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- ADD TENANT MODAL -->
 <div id="tenantModal" class="modal">
   <div class="modal-content">
@@ -3141,7 +3473,38 @@ const T = {
     send: "ڈرافٹ بنائیں",
     avail: "دستیاب",
     sold: "بند / فروخت",
-    reopen: "دوبارہ کھولیں"
+    reopen: "دوبارہ کھولیں",
+    brandTagPublic: "اسلام آباد اور راولپنڈی کی تصدیق شدہ پراپرٹیز",
+    brandTagAdmin: "پروپ ٹیک کمانڈ سینٹر و رئیل اسٹیٹ OS",
+    contactAgency: "0321-5873665",
+    portalLogin: "ڈیلر لاگ ان",
+    portalLogout: "لاگ آؤٹ",
+    heroBadge: "100% تصدیق شدہ پراپرٹیز • اسلام آباد اور راولپنڈی",
+    heroTitle: "اسلام آباد اور راولپنڈی کا جدید جیو اسپیٹیل رئیل اسٹیٹ پورٹل",
+    heroSub: "خریداری، فروخت اور کرایہ — اصل نقشے پر دیکھیں، درست قیمت معلوم کریں اور براہِ راست ڈیلرز سے رابطہ کریں۔",
+    pubStat1: "دستیاب پراپرٹیز",
+    pubStat2: "تصدیق شدہ لسٹنگز",
+    pubStat3: "پوشیدہ چارجز",
+    pubStat4: "واٹس ایپ رہنمائی",
+    heroCtaSearch: "پراپرٹیز تلاش کریں",
+    heroCtaDemand: "اپنی ڈیمانڈ درج کریں",
+    heroCtaWa: "واٹس ایپ ہیلپ لائن",
+    inqBadge: "براہ راست خریدار و کرایہ دار سروس",
+    inqTitle: "نہیں مل رہی آپ کی پسندیدہ پراپرٹی؟ اپنی ڈیمانڈ درج کریں",
+    inqDesc: "ہماری ٹیم آپ کی مطلوبہ سوسائٹی، سائز اور بجٹ کے مطابق بہترین ڈیل تلاش کر کے براہِ راست رابطہ کرے گی۔",
+    inqName: "آپ کا نام *",
+    inqPhone: "واٹس ایپ / فون نمبر *",
+    inqSociety: "پسندیدہ سوسائٹی / علاقہ",
+    inqKind: "مقصد",
+    inqPtype: "پراپرٹی کی نوعیت",
+    inqSize: "سائز (مرلہ)",
+    inqBudget: "زیادہ سے زیادہ بجٹ (روپے)",
+    inqNotes: "اضافی تفصیل یا خاص ڈیمانڈ (اختیاری)",
+    inqSubmitBtn: "ڈیمانڈ بھیجیں",
+    modalLoginTitle: "Dealo ڈیلر و ایڈمن پورٹل",
+    modalLoginSub: "کمانڈ سینٹر اور مکمل کنٹرول تک رسائی",
+    modalPwdLabel: "ڈیلر PIN / پاس ورڈ:",
+    loginBtn: "لاگ ان کریں"
   },
   en: {
     props: "🗺️ Map & Search",
@@ -3233,7 +3596,38 @@ const T = {
     send: "Generate Draft",
     avail: "Available",
     sold: "Close / Sold",
-    reopen: "Reopen"
+    reopen: "Reopen",
+    brandTagPublic: "Verified Geospatial Real Estate",
+    brandTagAdmin: "PropTech Command Center & OS",
+    contactAgency: "0321-5873665",
+    portalLogin: "Dealer Portal",
+    portalLogout: "Logout",
+    heroBadge: "100% Verified Properties • Islamabad & Rawalpindi",
+    heroTitle: "Modern Geospatial Real Estate Portal for Twin Cities",
+    heroSub: "Buy, Sell & Rent — Verified listings, authentic map locations, and direct agent communication.",
+    pubStat1: "Available Properties",
+    pubStat2: "Verified Listings",
+    pubStat3: "Hidden Fees",
+    pubStat4: "WhatsApp Support",
+    heroCtaSearch: "Search Properties",
+    heroCtaDemand: "Submit Demand",
+    heroCtaWa: "WhatsApp Helpline",
+    inqBadge: "Direct Buyer & Tenant Service",
+    inqTitle: "Can't find your ideal property? Submit your demand",
+    inqDesc: "Our team will find the best deal matching your location, size, and budget, and contact you directly.",
+    inqName: "Your Full Name *",
+    inqPhone: "WhatsApp / Phone Number *",
+    inqSociety: "Preferred Society / Location",
+    inqKind: "Purpose",
+    inqPtype: "Property Type",
+    inqSize: "Size (Marla)",
+    inqBudget: "Max Budget (PKR)",
+    inqNotes: "Additional Details or Requirements (Optional)",
+    inqSubmitBtn: "Submit Requirement",
+    modalLoginTitle: "Dealo Dealer & Admin Portal",
+    modalLoginSub: "Command Center & Management Access",
+    modalPwdLabel: "Dealer PIN / Password:",
+    loginBtn: "Login to Portal"
   }
 };
 
@@ -3295,6 +3689,7 @@ const FL = {
   }
 };
 
+let IS_ADMIN = false;
 let lang = "ur";
 let cur = "props";
 let viewMode = "map"; // 'map', 'cards', or 'table'
@@ -3342,11 +3737,23 @@ function showToast(msg) {
 }
 
 async function api(u, m = "GET", b) {
+  const token = localStorage.getItem("dealo_admin_token");
+  const headers = { "Content-Type": "application/json" };
+  if (token) {
+    headers["X-Admin-Token"] = token;
+  }
   const r = await fetch(u, {
     method: m,
-    headers: { "Content-Type": "application/json" },
+    headers: headers,
     body: b ? JSON.stringify(b) : undefined
   });
+  if (r.status === 401 && !u.includes("/api/auth/login") && !u.includes("/api/auth/status")) {
+    if (IS_ADMIN) {
+      setAdminMode(false);
+      localStorage.removeItem("dealo_admin_token");
+      showToast(lang === "ur" ? "ایڈمن سیشن ختم ہو گیا۔ پبلک موڈ فعال ہے۔" : "Admin session expired. Switched to Public Mode.");
+    }
+  }
   const d = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(d.detail || "Error occurred");
   return d;
@@ -3830,21 +4237,29 @@ function renderPropertyCards(data) {
           </div>
 
           <div class="card-actions">
-            <button class="wa-btn" onclick="openPropWaComposer(${p.id})">
-              📲 WhatsApp Share
-            </button>
+            ${IS_ADMIN ? `
+              <button class="wa-btn" onclick="openPropWaComposer(${p.id})">
+                📲 WhatsApp Share
+              </button>
+            ` : `
+              <button class="wa-btn" onclick="inquirePropertyWa(${p.id})">
+                💬 ${lang === 'ur' ? 'رابطہ برائے پراپرٹی' : 'WhatsApp Inquiry'}
+              </button>
+            `}
             <button class="secondary" onclick="openPropDetailModal(${p.id})">
               👁️ ${t("viewDetails")}
             </button>
           </div>
 
-          <div class="card-sub-actions">
-            <button onclick="editItem(${p.id}, 'prop')">✏️ ${t("edit")}</button>
-            <button onclick="togglePropStatus(${p.id}, '${isAvail ? "sold" : "available"}')">
-              ${isAvail ? '🔒 ' + t("sold") : '🔓 ' + t("reopen")}
-            </button>
-            <button class="danger" onclick="delItem(${p.id}, 'prop')">🗑️</button>
-          </div>
+          ${IS_ADMIN ? `
+            <div class="card-sub-actions">
+              <button onclick="editItem(${p.id}, 'prop')">✏️ ${t("edit")}</button>
+              <button onclick="togglePropStatus(${p.id}, '${isAvail ? "sold" : "available"}')">
+                ${isAvail ? '🔒 ' + t("sold") : '🔓 ' + t("reopen")}
+              </button>
+              <button class="danger" onclick="delItem(${p.id}, 'prop')">🗑️</button>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -3889,10 +4304,15 @@ function renderPropertyTable(data) {
       <td>${esc(r.dealer || '-')}</td>
       <td>${esc(r.phone || '-')}</td>
       <td class="actions">
-        <button class="wa-btn" style="padding:3px 8px;font-size:0.8rem" onclick="openPropWaComposer(${r.id})">📲 Share</button>
-        <button onclick="editItem(${r.id},'prop')">✏️</button>
-        <button onclick="togglePropStatus(${r.id}, '${r.status === "available" ? "sold" : "available"}')">${r.status === "available" ? "Sold" : "Open"}</button>
-        <button class="danger" onclick="delItem(${r.id},'prop')">🗑️</button>
+        ${IS_ADMIN ? `
+          <button class="wa-btn" style="padding:3px 8px;font-size:0.8rem" onclick="openPropWaComposer(${r.id})">📲 Share</button>
+          <button onclick="editItem(${r.id},'prop')">✏️</button>
+          <button onclick="togglePropStatus(${r.id}, '${r.status === "available" ? "sold" : "available"}')">${r.status === "available" ? "Sold" : "Open"}</button>
+          <button class="danger" onclick="delItem(${r.id},'prop')">🗑️</button>
+        ` : `
+          <button class="wa-btn" style="padding:4px 10px;font-size:0.82rem;font-weight:700" onclick="inquirePropertyWa(${r.id})">💬 ${lang === 'ur' ? 'رابطہ' : 'Inquire'}</button>
+          <button class="secondary" style="padding:4px 8px;font-size:0.82rem" onclick="openPropDetailModal(${r.id})">👁️</button>
+        `}
       </td>
     </tr>`;
   }).join("")}
@@ -4103,28 +4523,43 @@ function closePropDetailModal() {
 // CORE DATA LOADING & REQUIREMENTS
 // ==========================================================
 async function load() {
-  PR = await api("/api/properties");
-  RQ = await api("/api/requirements");
+  try {
+    PR = await api("/api/properties");
+  } catch (e) {
+    PR = [];
+  }
+
+  if (IS_ADMIN) {
+    try {
+      RQ = await api("/api/requirements");
+      loadTenants();
+      loadBots();
+      loadMaintenance();
+      loadAccounting();
+      loadScreenings();
+      populateMaintSelects();
+      populateAccountingSelects();
+      populateRecordRentSelects();
+      populateScreeningSelects();
+    } catch (e) {
+      console.warn("Admin data load error:", e);
+    }
+  } else {
+    RQ = [];
+  }
   
   await loadSocietiesDropdown();
   initDealoMap();
   applyFilters();
-  filterReqs();
-  loadTenants();
-  loadBots();
-  loadMaintenance();
-  loadAccounting();
-  loadScreenings();
-  populateMaintSelects();
-  populateAccountingSelects();
-  populateRecordRentSelects();
-  populateScreeningSelects();
-  
-  $("mreq").innerHTML = RQ.length 
-    ? RQ.map(r => `<option value="${r.id}">#${r.id} ${esc(r.name || 'Client')} — ${esc(r.society)} (${r.size_marla}m ${r.ptype})</option>`).join("")
-    : `<option value="">-- ${lang === 'ur' ? 'پہلے گاہک کی ضرورت شامل کریں' : 'No requirements added yet'} --</option>`;
-    
-  showMatch();
+  if (IS_ADMIN) {
+    filterReqs();
+    if ($("mreq")) {
+      $("mreq").innerHTML = RQ.length 
+        ? RQ.map(r => `<option value="${r.id}">#${r.id} ${esc(r.name || 'Client')} — ${esc(r.society)} (${r.size_marla}m ${r.ptype})</option>`).join("")
+        : `<option value="">-- ${lang === 'ur' ? 'پہلے گاہک کی ضرورت شامل کریں' : 'No requirements added yet'} --</option>`;
+    }
+    showMatch();
+  }
   loadStats();
 }
 
@@ -4998,11 +5433,12 @@ async function dismissOutboxItem(id) {
 async function loadStats() {
   try {
     const s = await api("/api/stats");
-    $("statAvail").textContent = s.available;
-    $("statClosed").textContent = s.closed;
-    $("statDue").textContent = s.due;
-    $("statTenants").textContent = s.tenants || 0;
-    $("statRentDue").textContent = fmtMoney(s.rent_pending || 0);
+    if ($("statAvail")) $("statAvail").textContent = s.available;
+    if ($("statClosed")) $("statClosed").textContent = s.closed;
+    if ($("statDue")) $("statDue").textContent = s.due;
+    if ($("statTenants")) $("statTenants").textContent = s.tenants || 0;
+    if ($("statRentDue")) $("statRentDue").textContent = fmtMoney(s.rent_pending || 0);
+    if ($("pubStatCount")) $("pubStatCount").textContent = s.available;
   } catch (e) {}
 }
 
@@ -5814,7 +6250,14 @@ function populateScreeningSelects() {
 
 // ---------------- NAVIGATION & RENDER ----------------
 function tabs() {
-  $("tabs").innerHTML = ["props", "tenants", "maint", "accounting", "screening", "reqs", "match", "follow", "emp"].map(k => {
+  const tabsEl = $("tabs");
+  if (!tabsEl) return;
+  if (!IS_ADMIN) {
+    tabsEl.style.display = "none";
+    return;
+  }
+  tabsEl.style.display = "flex";
+  tabsEl.innerHTML = ["props", "tenants", "maint", "accounting", "screening", "reqs", "match", "follow", "emp"].map(k => {
     let badge = "";
     if (k === "emp" && BOTS_QUEUE) {
       const pCount = BOTS_QUEUE.filter(q => q.status === "pending").length;
@@ -5833,6 +6276,7 @@ function tabs() {
 }
 
 function go(k) {
+  if (!IS_ADMIN && k !== "props") return;
   cur = k;
   document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + k));
   tabs();
@@ -5862,8 +6306,10 @@ function render() {
     e.textContent = t(e.dataset.t);
   });
   
-  form("pf", F.props, "p_");
-  form("rf", F.reqs, "r_");
+  if (IS_ADMIN) {
+    form("pf", F.props, "p_");
+    form("rf", F.reqs, "r_");
+  }
   tabs();
   load();
 }
@@ -5990,16 +6436,203 @@ async function testGeminiConnection() {
   }
 }
 
-async function init() {
-  try {
-    const emps = await api("/api/employees");
-    $("ekey").innerHTML = Object.entries(emps).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
-  } catch (e) {}
+// ---------------- DUAL-MODE AUTHENTICATION & PORTAL HELPERS ----------------
+function setAdminMode(status) {
+  IS_ADMIN = !!status;
+  document.body.classList.toggle("is-admin", IS_ADMIN);
+  document.body.classList.toggle("is-public", !IS_ADMIN);
 
+  const hero = $("publicHero");
+  if (hero) hero.style.display = IS_ADMIN ? "none" : "block";
+
+  const banner = document.querySelector(".banner");
+  if (banner) banner.style.display = IS_ADMIN ? "flex" : "none";
+
+  const metrics = document.querySelector(".metrics-row");
+  if (metrics) metrics.style.display = IS_ADMIN ? "grid" : "none";
+
+  const formCard = $("propFormCard");
+  if (formCard) formCard.style.display = IS_ADMIN ? "block" : "none";
+
+  const pubInq = $("publicInquiryCard");
+  if (pubInq) pubInq.style.display = IS_ADMIN ? "none" : "block";
+
+  document.querySelectorAll(".admin-only").forEach(el => {
+    el.style.display = IS_ADMIN ? "" : "none";
+  });
+
+  document.querySelectorAll(".public-only").forEach(el => {
+    el.style.display = IS_ADMIN ? "none" : "";
+  });
+
+  const loginBtn = $("btnPortalLogin");
+  const adminBadge = $("adminBadge");
+  if (loginBtn) loginBtn.style.display = IS_ADMIN ? "none" : "inline-flex";
+  if (adminBadge) adminBadge.style.display = IS_ADMIN ? "inline-flex" : "none";
+
+  tabs();
+  if (PR && PR.length) {
+    applyFilters();
+  }
+}
+
+function openAdminLoginModal() {
+  const m = $("adminLoginModal");
+  if (m) {
+    m.classList.add("on");
+    const inp = $("adminPwdInput");
+    if (inp) {
+      inp.value = "";
+      setTimeout(() => inp.focus(), 120);
+    }
+    const err = $("loginErrorMsg");
+    if (err) err.textContent = "";
+  }
+}
+
+function closeAdminLoginModal() {
+  const m = $("adminLoginModal");
+  if (m) m.classList.remove("on");
+}
+
+function togglePwdVisibility() {
+  const inp = $("adminPwdInput");
+  if (!inp) return;
+  inp.type = inp.type === "password" ? "text" : "password";
+}
+
+async function submitAdminLogin(event) {
+  if (event) event.preventDefault();
+  const pwd = $("adminPwdInput").value.trim();
+  const errEl = $("loginErrorMsg");
+  errEl.textContent = "";
+  if (!pwd) {
+    errEl.textContent = lang === "ur" ? "براہ کرم پاس ورڈ درج کریں۔" : "Please enter your password.";
+    return;
+  }
+  try {
+    const res = await api("/api/auth/login", "POST", { password: pwd });
+    localStorage.setItem("dealo_admin_token", res.token);
+    closeAdminLoginModal();
+    setAdminMode(true);
+    showToast(lang === "ur" ? "کامیاب لاگ ان! کمانڈ سینٹر فعال ہو گیا۔" : "Login successful! Command Center activated.");
+    render();
+    try {
+      const emps = await api("/api/employees");
+      if ($("ekey")) $("ekey").innerHTML = Object.entries(emps).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+    } catch (e) {}
+    initBotPresets();
+    loadBotTasks();
+    await refreshAiStatus();
+  } catch (e) {
+    errEl.textContent = e.message || (lang === "ur" ? "غلط پاس ورڈ!" : "Invalid password!");
+  }
+}
+
+async function adminLogout() {
+  try {
+    await api("/api/auth/logout", "POST");
+  } catch (e) {}
+  localStorage.removeItem("dealo_admin_token");
+  setAdminMode(false);
+  showToast(lang === "ur" ? "آپ کا سیشن ختم ہو گیا۔ پبلک پورٹل فعال ہے۔" : "Logged out successfully. Public portal active.");
+  go("props");
   render();
-  initBotPresets();
-  loadBotTasks();
-  await refreshAiStatus();
+}
+
+function inquirePropertyWa(pid) {
+  const p = PR.find(x => x.id === pid);
+  if (!p) return;
+  const phone = "923215873665";
+  const msg = lang === "ur"
+    ? `السلام علیکم! مجھے Dealo پورٹل پر پراپرٹی #${p.id} پسند آئی ہے:\n\n*${p.title || p.society}*\nسوسائٹی: ${p.society}\nسائز: ${p.size_marla} مرلہ (${p.ptype})\nقیمت: ${fmtMoney(p.price, 'ur')}\n\nبراہ کرم مزید تفصیلات اور وزٹ کا وقت شیئر کریں۔ شکریہ!`
+    : `Assalam-o-Alaikum! I am interested in Property #${p.id} on Dealo:\n\n*${p.title || p.society}*\nLocation: ${p.society}\nSize: ${p.size_marla} Marla (${p.ptype})\nPrice: ${fmtMoney(p.price, 'en')}\n\nPlease share more details and arrange a site visit. Thank you!`;
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+async function submitPublicInquiry(event) {
+  if (event) event.preventDefault();
+  const name = $("inqName").value.trim();
+  const phone = $("inqPhone").value.trim();
+  const society = $("inqSociety").value;
+  const kind = $("inqKind").value;
+  const ptype = $("inqPtype").value;
+  const size_marla = parseFloat($("inqSize").value) || 10;
+  const budget_max = parseFloat($("inqBudget").value) || 0;
+  const notes = $("inqNotes").value.trim();
+
+  const fb = $("inqFeedback");
+  fb.textContent = lang === "ur" ? "براہ کرم انتظار فرمائیں..." : "Submitting requirement...";
+  fb.style.color = "var(--primary)";
+
+  try {
+    const res = await api("/api/inquiry", "POST", {
+      name, phone, society, kind, ptype, size_marla, budget_max, notes
+    });
+    fb.innerHTML = `✅ ${res.message || (lang === 'ur' ? 'آپ کی ڈیمانڈ موصول ہو گئی ہے۔ شکریہ!' : 'Inquiry submitted successfully!')}`;
+    fb.style.color = "var(--primary)";
+    $("publicInquiryForm").reset();
+    showToast(lang === "ur" ? "✨ ڈیمانڈ کامیابی سے درج ہو گئی!" : "✨ Inquiry received!");
+  } catch (err) {
+    fb.textContent = `❌ ${err.message || (lang === 'ur' ? 'خرابی پیش آگئی' : 'Error submitting demand')}`;
+    fb.style.color = "#ef4444";
+  }
+}
+
+function downloadDbBackup(event) {
+  if (event) event.preventDefault();
+  const token = localStorage.getItem("dealo_admin_token") || "";
+  window.location.href = "/api/backup?token=" + encodeURIComponent(token);
+}
+
+function downloadCsv(type, event) {
+  if (event) event.preventDefault();
+  const token = localStorage.getItem("dealo_admin_token") || "";
+  window.location.href = `/api/export/${type}.csv?token=` + encodeURIComponent(token);
+}
+
+function scrollToSearch() {
+  const el = $("psearch");
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.focus();
+  }
+}
+
+function scrollToInquiry() {
+  const el = $("publicInquiryCard");
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if ($("inqName")) $("inqName").focus();
+  }
+}
+
+async function init() {
+  const token = localStorage.getItem("dealo_admin_token");
+  if (token) {
+    try {
+      const res = await api("/api/auth/status");
+      IS_ADMIN = !!res.authenticated;
+    } catch (e) {
+      IS_ADMIN = false;
+      localStorage.removeItem("dealo_admin_token");
+    }
+  } else {
+    IS_ADMIN = false;
+  }
+
+  setAdminMode(IS_ADMIN);
+  render();
+
+  if (IS_ADMIN) {
+    try {
+      const emps = await api("/api/employees");
+      if ($("ekey")) $("ekey").innerHTML = Object.entries(emps).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+    } catch (e) {}
+    initBotPresets();
+    loadBotTasks();
+    await refreshAiStatus();
+  }
 }
 
 init();
