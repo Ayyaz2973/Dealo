@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Dealo Web Clipper - Real Estate Importer",
+  "version": "1.0.0",
+  "description": "1-Click import properties from Zameen.com, OLX, and Graana directly into your local Dealo CRM",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Dealo Property Clipper"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.zameen.com/*",
+    "*://*.olx.com.pk/*",
+    "*://*.graana.com/*",
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.zameen.com/*",
+        "*://*.olx.com.pk/*",
+        "*://*.graana.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

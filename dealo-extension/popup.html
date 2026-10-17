@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dealo Web Clipper</title>
+<style>
+  :root {
+    --primary: #059669;
+    --primary-hover: #047857;
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-light: #334155;
+    --border: #475569;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #f59e0b;
+    --danger: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 380px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  header {
+    background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    color: #ffffff;
+  }
+  .brand span.badge {
+    background: var(--primary);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dot-green { background: #10b981; box-shadow: 0 0 6px #10b981; }
+  .dot-red { background: #ef4444; }
+
+  .portal-banner {
+    padding: 8px 16px;
+    background: rgba(2, 132, 199, 0.15);
+    border-bottom: 1px solid rgba(2, 132, 199, 0.3);
+    color: #38bdf8;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .content {
+    padding: 14px 16px;
+    max-height: 480px;
+    overflow-y: auto;
+  }
+
+  .form-group {
+    margin-bottom: 11px;
+  }
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 7px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .kind-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    background: var(--surface);
+    padding: 3px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .kind-btn {
+    padding: 5px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+  }
+  .kind-btn.active {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .img-preview-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .thumb {
+    width: 50px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #000;
+  }
+
+  .price-preview {
+    font-size: 11px;
+    color: #34d399;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  footer {
+    padding: 12px 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity 0.15s, transform 0.1s;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+  }
+  .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+
+  .btn-dashboard {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .btn-dashboard:hover { color: var(--text); border-color: var(--text-muted); }
+
+  .toast-box {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-bottom: 10px;
+    display: none;
+  }
+  .toast-success { background: rgba(5, 150, 105, 0.2); border: 1px solid var(--primary); color: #34d399; }
+  .toast-error { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger); color: #fca5a5; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span>🏡</span>
+    <span>Dealo Clipper</span>
+    <span class="badge">V2.5</span>
+  </div>
+  <div class="status-badge" id="statusBadge">
+    <div class="dot dot-red" id="statusDot"></div>
+    <span id="statusText">Checking...</span>
+  </div>
+</header>
+
+<div class="portal-banner" id="portalBanner">
+  <span id="portalName">🌐 Scanning active page...</span>
+  <span id="portalMode">Auto-Detect</span>
+</div>
+
+<div class="content">
+  <div id="toastBox" class="toast-box"></div>
+
+  <div class="form-group">
+    <label>Purpose / Listing Kind</label>
+    <div class="kind-toggle">
+      <button type="button" class="kind-btn active" id="btnKindSale">🏷️ For Sale</button>
+      <button type="button" class="kind-btn" id="btnKindRent">🔑 For Rent</button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Property Title</label>
+    <input type="text" id="propTitle" placeholder="e.g. 10 Marla Luxury Villa in DHA Phase 2">
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <label>Society / Location</label>
+      <input type="text" id="propSociety" placeholder="DHA, Bahria, Soan Garden">
+    </div>
+    <div class="form-group">
+      <label>Property Type</label>
+      <select id="propPtype">
+        <option value="house">🏡 House / Villa</option>
+        <option value="plot">📐 Residential Plot</option>
+        <option value="flat">🏢 Flat / Apartment</option>
+        <option value="commercial">🏬 Commercial / Shop</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <label>Size (Marla)</label>
+      <input type="number" id="propSize" step="any" placeholder="5">
+    </div>
+    <div class="form-group">
+      <label>Price / Demand (PKR)</label>
+      <input type="number" id="propPrice" step="any" placeholder="38000000">
+      <div id="pricePreview" class="price-preview">PKR 0</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <label>Dealer / Agency</label>
+      <input type="text" id="propDealer" placeholder="Zameen / Portal Agent">
+    </div>
+    <div class="form-group">
+      <label>Contact Phone</label>
+      <input type="text" id="propPhone" placeholder="03xx-xxxxxxx">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Photo Image URL</label>
+    <div class="img-preview-box">
+      <img id="imgThumb" class="thumb" src="icons/icon48.png">
+      <input type="text" id="propImage" style="flex:1" placeholder="https://...">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Description / Features</label>
+    <textarea id="propDesc" rows="3" placeholder="Key specs, bedrooms, sector, amenities..."></textarea>
+  </div>
+</div>
+
+<footer>
+  <button type="button" class="btn-submit" id="btnSubmit">
+    <span>🚀</span>
+    <span>Send to Dealo CRM</span>
+  </button>
+  <a href="http://127.0.0.1:8000" target="_blank" class="btn-dashboard">
+    🖥️ Open Dealo Dashboard (127.0.0.1:8000)
+  </a>
+</footer>
+
+<script src="popup.js"></script>
+</body>
+</html>
