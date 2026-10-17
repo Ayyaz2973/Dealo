@@ -1055,12 +1055,17 @@ def call_gemini(system: str, user: str, as_json: bool = False, timeout_sec: floa
     if not key:
         raise ValueError("Google Gemini API Key is not configured.")
 
-    models = [GEMINI_MODEL, "gemini-2.0-flash", "gemini-1.5-flash"]
+    models = [GEMINI_MODEL, "gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
     last_err = None
 
     full_prompt = f"SYSTEM INSTRUCTION / ROLE:\n{system}\n\nUSER INPUT / TASK:\n{user}"
     if not as_json:
         full_prompt += RULE
+
+    headers = {
+        "x-goog-api-key": key,
+        "Content-Type": "application/json"
+    }
 
     for m in models:
         try:
@@ -1080,8 +1085,17 @@ def call_gemini(system: str, user: str, as_json: bool = False, timeout_sec: floa
             if as_json:
                 payload["generationConfig"]["responseMimeType"] = "application/json"
 
-            r = requests.post(url, json=payload, timeout=timeout_sec)
-            r.raise_for_status()
+            r = requests.post(url, headers=headers, json=payload, timeout=timeout_sec)
+            if r.status_code != 200:
+                err_text = r.text
+                try:
+                    err_data = r.json()
+                    err_text = err_data.get("error", {}).get("message", r.text)
+                except Exception:
+                    pass
+                last_err = RuntimeError(f"Google API ({r.status_code}): {err_text}")
+                continue
+
             data = r.json()
             candidates = data.get("candidates", [])
             if candidates:
