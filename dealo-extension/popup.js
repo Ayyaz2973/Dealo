@@ -67,21 +67,35 @@ function setupEventListeners() {
   if (submitBtn) submitBtn.addEventListener("click", saveToDealo);
 }
 
+let activeServerUrl = "https://dealo.yoursmarttoolkit.com";
+
 async function checkServerConnection() {
   const dot = $("statusDot");
   const txt = $("statusText");
-  try {
-    const res = await fetch("http://127.0.0.1:8000/api/extension/status", { cache: "no-store" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    if (dot) dot.className = "dot dot-green";
-    if (txt) txt.textContent = `Online (${data.properties_count} props)`;
-    return true;
-  } catch (e) {
-    if (dot) dot.className = "dot dot-red";
-    if (txt) txt.textContent = "Offline (start.bat)";
-    return false;
+  const candidates = [
+    "https://dealo.yoursmarttoolkit.com",
+    "http://127.0.0.1:8000"
+  ];
+
+  for (const s of candidates) {
+    try {
+      const res = await fetch(`${s}/api/extension/status`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        activeServerUrl = s;
+        if (dot) dot.className = "dot dot-green";
+        const label = s.includes("yoursmarttoolkit") ? "Cloud" : "Local";
+        if (txt) txt.textContent = `${label} (${data.properties_count} props)`;
+        return true;
+      }
+    } catch (e) {
+      continue;
+    }
   }
+
+  if (dot) dot.className = "dot dot-red";
+  if (txt) txt.textContent = "Offline";
+  return false;
 }
 
 async function initPopup() {
@@ -185,7 +199,7 @@ async function saveToDealo() {
   btn.innerHTML = `<span>⏳</span> <span>Saving to Dealo...</span>`;
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/api/extension/import", {
+    const res = await fetch(`${activeServerUrl}/api/extension/import`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -214,7 +228,7 @@ async function saveToDealo() {
   } catch (err) {
     if (toast) {
       toast.className = "toast-box toast-error";
-      toast.textContent = `⚠️ Cannot connect to Dealo on 127.0.0.1:8000. Please make sure start.bat is running!`;
+      toast.textContent = `⚠️ Cannot connect to Dealo (${activeServerUrl}). Please check your connection!`;
       toast.style.display = "block";
     }
 
