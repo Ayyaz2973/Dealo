@@ -48,13 +48,14 @@ Dealo is an executive real estate management and CRM platform built specifically
 - Multi-select catalog generator.
 
 ### 6. 🧠 Dealo AI Command Center & 6 AI Employees Workforce
-- **Central AI Command Center**: Accepts natural language instructions in Urdu or English (e.g. *"Jinnah Garden mein 50L-80L plots match karo"* or *"Is mahine rent collection aur outstanding rent calculate karo"*).
-- **1. 🧠 AI Manager**: Orchestrator coordinating all modules and generating executive reports.
-- **2. 🏠 Sarmad**: Property Research & Scout Agent (extracts WhatsApp group text & market analytics).
-- **3. 🎯 Ayesha**: Smart Customer Matching Agent & Ban-Safe 1-Click WhatsApp Dispatcher.
-- **4. 📞 Bilal**: Follow-up & Lead Hunter Agent (lead intent scoring and due client queues).
-- **5. 💰 Farhan**: Finance & Rental Ops Controller (rent ledger, receipts, owner monthly statements).
-- **6. 🔧 Tariq**: Maintenance & Work Order Coordinator (emergency tickets & contractor dispatch).
+- **Central AI Command Center**: Accepts natural language instructions in Urdu, Roman Urdu, or English (e.g. *"Jinnah Garden mein 50L-80L plots match karo"* or *"Is mahine rent collection aur outstanding rent calculate karo"*).
+- **Official Job Descriptions & Operating Mandates**: Detailed responsibilities, authority limits, and KPIs are documented in [AI_EMPLOYEES_JD.md](AI_EMPLOYEES_JD.md).
+- **1. 🧠 AI Manager** (*AI Operations Manager*): Central orchestrator coordinating all modules, clarifying instructions, delegating tasks, and generating unified executive summaries with zero unauthorized actions.
+- **2. 🏠 Sarmad** (*Property Research & Scout Agent*): Extracts listings from WhatsApp groups & raw text, maps fields to CRM, flags duplicates, and identifies "Verify Required" cases.
+- **3. 🎯 Ayesha** (*Customer Matching & WhatsApp Catalog Specialist*): Evaluates multi-factor match scores (0-100%), highlights exact vs alternative options, and drafts 1-click ban-safe WhatsApp catalogs.
+- **4. 📞 Bilal** (*Lead & Follow-up Coordinator*): Qualifies leads, extracts buyer intent/urgency, maintains daily due follow-up queues, and drafts context-aware reminders.
+- **5. 💰 Farhan** (*Finance & Rental Operations Controller*): Manages rental ledgers, reconciles rent dues, calculates owner monthly statements (`Rent - Maintenance - Commission = Net Payout`), and generates formula-traceable notices.
+- **6. 🔧 Tariq** (*Maintenance & Work Order Coordinator*): Triages tenant maintenance issues (Plumbing, Electrical, HVAC), detects emergency tickets, coordinates contractors, and tracks post-repair expense reports.
 
 ### 7. 🏢 AppFolio-Grade Property & Building Management
 - **Tenant Ledger & Screening**: Risk scorecards (A+, B, C) calculating rent-to-income affordability and guarantor references.

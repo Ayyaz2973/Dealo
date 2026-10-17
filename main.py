@@ -1832,56 +1832,56 @@ BOT_PROFILES = {
     "manager": {
         "id": "manager",
         "name": "AI Manager (کمانڈ سینٹر)",
-        "role": "Central Command & Orchestrator",
-        "role_ur": "مرکزی AI مینیجر و کوآرڈینیٹر",
+        "role": "AI Operations Manager",
+        "role_ur": "مرکزی AI آپریشنز مینیجر",
         "avatar": "🧠",
         "badge": "AI Manager",
-        "desc": "Aapki aam zaban ki instructions samajh kar baqi tamam AI agents aur database functions ko coordinate karta hai."
+        "desc": "Dealo ke AI employees aur CRM modules ko coordinate karke user ke instructions ko traceable workflow mein badalta hai."
     },
     "sarmad": {
         "id": "sarmad",
         "name": "Sarmad (سرمد)",
         "role": "Property Research & Scout Agent",
-        "role_ur": "پراپرٹی ریسرچ و ڈیٹا بلڈر",
+        "role_ur": "پراپرٹی ریسرچ و اسکاؤٹ ایجنٹ",
         "avatar": "🏠",
         "badge": "Active Scout",
-        "desc": "Properties, prices aur listings manage karta hai. Duplicate listings aur missing information flag karta hai."
+        "desc": "Listings aur market data organize karta hai, raw text extract karta hai, aur duplicate listings ko identify karta hai."
     },
     "ayesha": {
         "id": "ayesha",
         "name": "Ayesha (عائشہ)",
-        "role": "Customer Matching Agent",
-        "role_ur": "اسمارٹ بائیر و رینٹ میچ میکر",
+        "role": "Customer Matching & WhatsApp Catalog Specialist",
+        "role_ur": "کسٹمر میچنگ و واٹس ایپ کیٹلاگ اسپیشلسٹ",
         "avatar": "🎯",
         "badge": "Matchmaker",
-        "desc": "Buyers aur tenants ko suitable properties se match kar ke matching list aur WhatsApp draft outbox banati hai."
+        "desc": "Requirements ke mutabiq properties rank karti hai aur review ke liye ban-safe WhatsApp catalog drafts banati hai."
     },
     "bilal": {
         "id": "bilal",
         "name": "Bilal (بلال)",
-        "role": "Follow-up & Lead Hunter Agent",
-        "role_ur": "فالو اپ و لیڈ پروسپیکٹر",
+        "role": "Lead & Follow-up Coordinator",
+        "role_ur": "لیڈ و فالو اپ کوآرڈینیٹر",
         "avatar": "📞",
         "badge": "Lead Hunter",
-        "desc": "Customer follow-ups aur reminders track karta hai aur due follow-ups ki priority queue banata hai."
+        "desc": "Leads qualify karta hai, client intent/urgency prioritize karta hai aur daily due follow-up queues maintain karta hai."
     },
     "farhan": {
         "id": "farhan",
         "name": "Farhan (فرحان)",
-        "role": "Finance & Rental Ops Agent",
-        "role_ur": "فنانس و رینٹل کنٹرولر",
+        "role": "Finance & Rental Operations Controller",
+        "role_ur": "فنانس و رینٹل آپریشنز کنٹرولر",
         "avatar": "💰",
         "badge": "Finance Ops",
-        "desc": "Rent, expenses, commissions aur owner statements calculate karta hai aur discrepancies ki reports deta hai."
+        "desc": "Rental ledgers, rent dues, payment reconciliation aur owner monthly statements calculate aur audit karta hai."
     },
     "tariq": {
         "id": "tariq",
         "name": "Tariq (طارق)",
-        "role": "Maintenance & Work Order Agent",
-        "role_ur": "مینٹیننس و ورکر کوآرڈینیٹر",
+        "role": "Maintenance & Work Order Coordinator",
+        "role_ur": "مینٹیننس و ورک آرڈر کوآرڈینیٹر",
         "avatar": "🔧",
         "badge": "Work Orders",
-        "desc": "Kirayedaron ki complaints, contractors aur work orders track karta hai aur overdue tasks flag karta hai."
+        "desc": "Tenant complaints triage karta hai, emergency tickets flag karta hai, aur contractor work orders track karta hai."
     }
 }
 
@@ -2445,8 +2445,13 @@ def generate_bot_task_report(bot_id: str, task_title: str, task_prompt: str, lan
     try:
         sys_prompt = (
             f"Aap Dealo PropTech OS ke professional AI Employee '{bot['name']}' ({bot['role']}) hain. "
-            f"Aap Pakistan real estate (Islamabad, Rawalpindi, DHA, Bahria, Soan Garden, G-13, B-17, Gulberg) ke expert hain. "
-            f"User ne aapko ye specific task diya hai:\n"
+            f"Aap Pakistan real estate (Islamabad, Rawalpindi, DHA, Bahria, Soan Garden, G-13, B-17, Gulberg) ke expert hain.\n\n"
+            f"OPERATIONAL MANDATE & AUTHORITY LIMITS:\n"
+            f"- Urdu aur English instructions samajh kar zaroorat par Roman Urdu mein adab ke saath professional jawab dein.\n"
+            f"- Har suggestion ke saath source record ID, date aur confidence/verification status dikhayein.\n"
+            f"- 'Draft', 'Suggested' aur 'Completed' actions ko wazeh taur par alag rakhein.\n"
+            f"- Unclear ya missing data par guess karne ke bajaye clarification maangein.\n"
+            f"- User/Dealer ki approval ke baghair WhatsApp message direct send, record delete, financial entry post, ya status change na karein (Human-in-the-Loop safe).\n\n"
             f"TASK TITLE: {task_title or 'Custom Analysis Task'}\n"
             f"USER INSTRUCTION: {task_prompt}\n\n"
             f"HAMARA LIVE SYSTEM DATA:\n"
