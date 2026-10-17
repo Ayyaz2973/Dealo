@@ -16,7 +16,7 @@ UPLOADS.mkdir(parents=True, exist_ok=True)
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:14b")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 ai_lock = threading.Lock()
 
 RULE = ("\n\nLAZMI QAWAID: Sirf Roman Urdu mein likhein (English alphabets mein Urdu). "
@@ -1055,7 +1055,7 @@ def call_gemini(system: str, user: str, as_json: bool = False, timeout_sec: floa
     if not key:
         raise ValueError("Google Gemini API Key is not configured.")
 
-    models = [GEMINI_MODEL, "gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
+    models = [GEMINI_MODEL, "gemini-flash-latest", "gemini-flash-lite-latest", "gemini-2.5-flash", "gemini-1.5-flash"]
     last_err = None
 
     full_prompt = f"SYSTEM INSTRUCTION / ROLE:\n{system}\n\nUSER INPUT / TASK:\n{user}"
