@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dealo - Geospatial PropTech & Real Estate OS</title>
+<meta name="description" content="Dealo PropTech OS: Islamabad & Rawalpindi verified real estate marketplace & AI-powered CRM for Pakistani property dealers. Geospatial maps, smart matching, and WhatsApp catalogs.">
+<meta name="keywords" content="Dealo, PropTech, Pakistan Real Estate, Islamabad Properties, Rawalpindi, DHA Islamabad, Bahria Town, Property CRM, Real Estate OS, WhatsApp CRM">
+<meta name="author" content="Ayyaz Haider Kayani">
+<!-- Open Graph / Social Sharing -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dealo.yoursmarttoolkit.com/">
+<meta property="og:title" content="Dealo - Geospatial PropTech & Real Estate OS">
+<meta property="og:description" content="Islamabad & Rawalpindi verified properties, geospatial maps, and AI-powered CRM for property dealers.">
+<meta property="og:image" content="https://dealo.yoursmarttoolkit.com/static/ayyaz.jpg">
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dealo - Geospatial PropTech & Real Estate OS">
+<meta name="twitter:description" content="Islamabad & Rawalpindi verified properties, geospatial maps, and AI-powered CRM for property dealers.">
+<meta name="twitter:image" content="https://dealo.yoursmarttoolkit.com/static/ayyaz.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
@@ -1623,12 +1637,151 @@ body.is-admin .public-only {
   transform: translateY(-2px);
 }
 
-/* Public Inquiry Demand Card */
-.public-inquiry-card {
-  border: 2px solid var(--primary-border);
-  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-hover) 100%);
+/* Dealer Callout Strip (Public Mode) */
+.dealer-callout-strip {
+  background: linear-gradient(135deg, #061121 0%, #0d2847 60%, #083344 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 22px 28px;
+  margin: 0 0 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.dealer-callout-strip::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, #f59e0b, #10b981, #0284c7);
+}
+.dealer-callout-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.dealer-callout-text {
+  flex: 1;
+  min-width: 280px;
+}
+.dealer-badge {
+  display: inline-block;
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.dealer-callout-text h3 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.dealer-callout-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.88;
+  line-height: 1.5;
+}
+.dealer-callout-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.dealer-portal-cta {
+  background: linear-gradient(135deg, #059669 0%, #0369a1 100%);
+  color: #fff;
+  border: 1px solid #34d399;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+}
+.dealer-portal-cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+.dealer-demo-cta {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+.dealer-demo-cta:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Safe Automation Workflow Grid */
+.dealer-wf-strip {
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 24px;
+  margin-top: 28px;
+  box-shadow: var(--shadow-sm);
+}
+.dealer-wf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.dealer-wf-card {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+.dealer-wf-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+.dealer-wf-step {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+}
+.dealer-wf-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: var(--text-main);
+}
+.dealer-wf-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
 </style>
 </head>
@@ -1725,6 +1878,25 @@ body.is-admin .public-only {
       </button>
       <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20real%20estate%20properties%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="wa-hero-btn">
         💬 <span data-t="heroCtaWa">واٹس ایپ ہیلپ لائن</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- DEALER CALLOUT STRIP (Visible on Public Mode to Realtors / Agency Owners) -->
+<div class="dealer-callout-strip public-only">
+  <div class="dealer-callout-inner">
+    <div class="dealer-callout-text">
+      <span class="dealer-badge" data-t="dealerStripBadge">🏢 For Property Dealers & Real Estate Agencies</span>
+      <h3 data-t="dealerStripTitle">کیا آپ اسلام آباد / راولپنڈی میں رئیل اسٹیٹ ایجنسی چلاتے ہیں؟</h3>
+      <p data-t="dealerStripDesc">Dealo PropTech OS آپ کی ایجنسی کے لیے 6 خودکار AI ورکرز لاتا ہے — واٹس ایپ گروپس سے پراپرٹی ہارویسٹنگ، 1-کلک کیٹلاگ میچنگ، اور فل رینٹل لیجر مینجمنٹ۔</p>
+    </div>
+    <div class="dealer-callout-actions">
+      <button class="dealer-portal-cta" onclick="openAdminLoginModal()">
+        🔐 <span data-t="dealerStripPortal">Open Dealer OS Portal</span>
+      </button>
+      <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20PropTech%20OS%20agency%20software%20k%20demo%20aur%20pricing%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="dealer-demo-cta">
+        ⚡ <span data-t="dealerStripDemo">Book Live Demo</span>
       </a>
     </div>
   </div>
@@ -1965,6 +2137,41 @@ body.is-admin .public-only {
 
     <!-- VIEW 3: PROPERTY DATA TABLE -->
     <div id="propTableContainer" class="table-wrap" style="display:none"></div>
+
+    <!-- SAFE WHATSAPP AUTOMATION WORKFLOW (Public Mode Showcase) -->
+    <div class="dealer-wf-strip public-only">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:0.78rem;font-weight:800;color:var(--primary);text-transform:uppercase" data-t="wfBadge">Meta Policy Compliant • 100% Safe Architecture</div>
+          <h3 style="margin:4px 0 0;font-size:1.15rem;font-weight:800;color:var(--text-main)" data-t="wfTitle">🛡️ Dealo Safe WhatsApp Automation: Prepare + User Send ماڈل</h3>
+        </div>
+        <span style="background:rgba(16,185,129,0.1);color:#059669;border:1px solid rgba(16,185,129,0.25);padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700">No Auto-Spam • Zero Number Ban Risk</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.86rem;margin-top:8px;line-height:1.5" data-t="wfSub">Dealo میں AI تمام کام بیک اینڈ پر تیار کرتا ہے لیکن میسج بھیجنے کا حتمی بٹن ہمیشہ ڈیلر کے ہاتھ میں رہتا ہے۔ اس سے واٹس ایپ کی تمام پالیسیز کی پابندی رہتی ہے اور نمبر بند ہونے کا کوئی خطرہ نہیں رہتا۔</p>
+
+      <div class="dealer-wf-grid">
+        <div class="dealer-wf-card">
+          <div class="dealer-wf-step">1</div>
+          <div class="dealer-wf-title" data-t="wfStep1Title">📋 Paste or Clip Listing</div>
+          <div class="dealer-wf-desc" data-t="wfStep1Desc">واٹس ایپ گروپ کے میسجز پیسٹ کریں یا Dealo Chrome Extension سے Zameen/OLX سے لسٹنگ کلپ کریں۔</div>
+        </div>
+        <div class="dealer-wf-card">
+          <div class="dealer-wf-step">2</div>
+          <div class="dealer-wf-title" data-t="wfStep2Title">🤖 AI Extraction (Sarmad)</div>
+          <div class="dealer-wf-desc" data-t="wfStep2Desc">سرمد خودکار طور پر سوسائٹی، سائز، قیمت اور رابطہ نمبر نکال کر لوکل ڈیٹا بیس میں سیو کرتا ہے۔</div>
+        </div>
+        <div class="dealer-wf-card">
+          <div class="dealer-wf-step">3</div>
+          <div class="dealer-wf-title" data-t="wfStep3Title">🎯 Instant Matching (Ayesha)</div>
+          <div class="dealer-wf-desc" data-t="wfStep3Desc">عائشہ خریداروں کی ڈیمانڈز سے میچ کر کے خوبصورت واٹس ایپ کیٹلاگ کارڈ تیار کرتی ہے۔</div>
+        </div>
+        <div class="dealer-wf-card">
+          <div class="dealer-wf-step">4</div>
+          <div class="dealer-wf-title" data-t="wfStep4Title">📤 Outbox 1-Click Send</div>
+          <div class="dealer-wf-desc" data-t="wfStep4Desc">تیار میسج آؤٹ بکس میں آتا ہے — ڈیلر نظرثانی کر کے 1-کلک میں wa.me لنک کے ذریعے کلائنٹ کو بھیجتا ہے۔</div>
+        </div>
+      </div>
+    </div>
 
     <!-- PUBLIC DEMAND / INQUIRY SUBMISSION CARD (Visible to Public Visitors) -->
     <div class="card public-inquiry-card public-only" id="publicInquiryCard" style="margin-top:28px">
@@ -3504,7 +3711,23 @@ const T = {
     modalLoginTitle: "Dealo ڈیلر و ایڈمن پورٹل",
     modalLoginSub: "کمانڈ سینٹر اور مکمل کنٹرول تک رسائی",
     modalPwdLabel: "ڈیلر PIN / پاس ورڈ:",
-    loginBtn: "لاگ ان کریں"
+    loginBtn: "لاگ ان کریں",
+    dealerStripBadge: "🏢 رئیل اسٹیٹ ڈیلرز اور ایجنسیز کے لیے",
+    dealerStripTitle: "کیا آپ اسلام آباد / راولپنڈی میں رئیل اسٹیٹ ایجنسی چلاتے ہیں؟",
+    dealerStripDesc: "Dealo PropTech OS آپ کے آفس میں 6 خودکار AI ملازمین بٹھاتا ہے — واٹس ایپ گروپس سے پراپرٹی ہارویسٹنگ، 1-کلک کیٹلاگ میچنگ، اور فل رینٹل لیجر مینجمنٹ۔",
+    dealerStripPortal: "ڈیلر OS پورٹل کھولیں",
+    dealerStripDemo: "لائیو ڈیمو بک کریں",
+    wfBadge: "Meta پالیسی کے مطابق • 100% محفوظ سسٹم",
+    wfTitle: "🛡️ Dealo محفوظ واٹس ایپ آٹومیشن: Prepare + User Send ماڈل",
+    wfSub: "Dealo میں AI تمام ڈیٹا اور میسجز تیار کرتا ہے لیکن بھیجنے کا حتمی اختیار ہمیشہ ڈیلر کے پاس رہتا ہے۔ بغیر اجازت کے کوئی آٹو اسپام نہیں، واٹس ایپ نمبر بین ہونے کا زیرو رسک۔",
+    wfStep1Title: "📋 پیسٹ یا کلپ لسٹنگ",
+    wfStep1Desc: "واٹس ایپ گروپ کے میسجز پیسٹ کریں یا Dealo Chrome Extension سے Zameen/OLX سے لسٹنگ کلپ کریں۔",
+    wfStep2Title: "🤖 AI اسمارٹ تجزیہ (سرمد)",
+    wfStep2Desc: "سرمد خودکار طور پر سوسائٹی، سائز، قیمت اور رابطہ نمبر نکال کر لوکل ڈیٹا بیس میں سیو کرتا ہے۔",
+    wfStep3Title: "🎯 فوری ڈیمانڈ میچنگ (عائشہ)",
+    wfStep3Desc: "عائشہ خریداروں کی ڈیمانڈز سے میچ کر کے خوبصورت واٹس ایپ کیٹلاگ کارڈ تیار کرتی ہے۔",
+    wfStep4Title: "📤 آؤٹ بکس 1-کلک سینڈ",
+    wfStep4Desc: "تیار میسج آؤٹ بکس میں آتا ہے — ڈیلر جائزہ لے کر 1-کلک میں wa.me لنک کے ذریعے کلائنٹ کو بھیجتا ہے۔"
   },
   en: {
     props: "🗺️ Map & Search",
@@ -3627,7 +3850,23 @@ const T = {
     modalLoginTitle: "Dealo Dealer & Admin Portal",
     modalLoginSub: "Command Center & Management Access",
     modalPwdLabel: "Dealer PIN / Password:",
-    loginBtn: "Login to Portal"
+    loginBtn: "Login to Portal",
+    dealerStripBadge: "🏢 For Real Estate Dealers & Agencies",
+    dealerStripTitle: "Running a Real Estate Agency in Islamabad / Rawalpindi?",
+    dealerStripDesc: "Dealo PropTech OS equips your office with 6 AI Employees — WhatsApp group harvesting, 1-click catalog matching, and full rental ledger management.",
+    dealerStripPortal: "Open Dealer OS Portal",
+    dealerStripDemo: "Book Live Demo",
+    wfBadge: "Meta Policy Compliant • 100% Safe Architecture",
+    wfTitle: "🛡️ Dealo Safe WhatsApp Automation: Prepare + User Send Model",
+    wfSub: "Dealo's AI handles heavy data parsing and message drafting behind the scenes, but sending is always triggered by you. No unsolicited spam, zero number ban risk.",
+    wfStep1Title: "📋 Paste or Clip Listing",
+    wfStep1Desc: "Paste dealer group chats or clip listings from Zameen/OLX using Dealo Chrome Extension.",
+    wfStep2Title: "🤖 AI Extraction (Sarmad)",
+    wfStep2Desc: "Sarmad automatically extracts society, size, price, and phone into your private local database.",
+    wfStep3Title: "🎯 Demand Matching (Ayesha)",
+    wfStep3Desc: "Ayesha matches inventory against active buyer leads and generates formatted WhatsApp catalog cards.",
+    wfStep4Title: "📤 Outbox 1-Click Send",
+    wfStep4Desc: "Review staged drafts in your Outbox and dispatch instantly via wa.me links with full human control."
   }
 };
 
