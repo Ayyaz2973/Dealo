@@ -95,6 +95,7 @@ PUBLIC_ROUTES = {
     ("/api/auth/status", "GET"),
     ("/api/auth/logout", "POST"),
     ("/api/inquiry", "POST"),
+    ("/api/voice-command", "POST"),
     ("/api/extension/status", "GET"),
     ("/api/extension/import", "POST"),
     ("/openapi.json", "GET"),
@@ -404,6 +405,35 @@ def init_db():
             value TEXT DEFAULT '',
             updated TEXT DEFAULT CURRENT_TIMESTAMP
         );
+        CREATE TABLE IF NOT EXISTS team_members(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            email TEXT DEFAULT '',
+            role TEXT DEFAULT 'Real Estate Agent',
+            split_pct REAL DEFAULT 50.0,
+            status TEXT DEFAULT 'active',
+            created TEXT DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE TABLE IF NOT EXISTS commission_deals(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            property_id INTEGER DEFAULT 0,
+            team_member_id INTEGER DEFAULT 0,
+            client_name TEXT NOT NULL,
+            client_phone TEXT DEFAULT '',
+            deal_type TEXT DEFAULT 'sale',
+            deal_amount REAL NOT NULL,
+            total_commission REAL NOT NULL,
+            agent_commission REAL NOT NULL,
+            agency_commission REAL NOT NULL,
+            status TEXT DEFAULT 'pending',
+            deal_date TEXT DEFAULT CURRENT_TIMESTAMP,
+            payout_date TEXT DEFAULT '',
+            notes TEXT DEFAULT '',
+            created TEXT DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE INDEX IF NOT EXISTS idx_deal_team ON commission_deals(team_member_id);
+        CREATE INDEX IF NOT EXISTS idx_deal_status ON commission_deals(status);
         """)
         cols = [r[1] for r in con.execute("PRAGMA table_info(properties)")]
         if "status" not in cols:
@@ -424,6 +454,26 @@ def init_db():
             con.execute("ALTER TABLE properties ADD COLUMN is_demo INTEGER DEFAULT 0")
         con.execute("UPDATE properties SET status='sold' WHERE status='closed'")
         con.execute("INSERT INTO system_settings(key, value) VALUES('admin_password', 'dealo786') ON CONFLICT(key) DO NOTHING")
+
+        # Seed default team members & commission deals if empty
+        t_count = con.execute("SELECT count(*) FROM team_members").fetchone()[0]
+        if t_count == 0:
+            con.executemany("""
+                INSERT INTO team_members(name, phone, email, role, split_pct, status)
+                VALUES(?, ?, ?, ?, ?, ?)
+            """, [
+                ("Ahmed Raza Khan", "03001234567", "ahmed@dealo.pk", "Senior Property Broker", 60.0, "active"),
+                ("Hamza Tariq", "03219876543", "hamza@dealo.pk", "Listing Specialist (DHA/Bahria)", 50.0, "active"),
+                ("Usman Ali", "03335554433", "usman@dealo.pk", "Rental & Commercial Agent", 50.0, "active")
+            ])
+            con.executemany("""
+                INSERT INTO commission_deals(property_id, team_member_id, client_name, client_phone, deal_type, deal_amount, total_commission, agent_commission, agency_commission, status, payout_date, notes)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, [
+                (1, 1, "Malik Zafar Iqbal", "03005551122", "sale", 48000000, 480000, 288000, 192000, "paid", "2026-10-12", "10 Marla House in DHA Phase 2 closed. Commission cleared via Cheque."),
+                (3, 2, "Dr. Sajid Mehmood", "03339998877", "sale", 18500000, 185000, 92500, 92500, "approved", "2026-10-20", "5 Marla Brand New House in Soan Garden. Token received."),
+                (4, 3, "Kamran Abbasi", "03125556677", "rent", 660000, 55000, 27500, 27500, "pending", "", "1-Year Lease rental closed in Bahria Town Phase 8.")
+            ])
 
 
 init_db()
@@ -611,6 +661,35 @@ class ShareReq(BaseModel):
     req_id: int
     property_ids: list[int] = []
     lang: str = "ur"
+
+
+class TeamMemberReq(BaseModel):
+    name: str
+    phone: str
+    email: str = ""
+    role: str = "Real Estate Agent"
+    split_pct: float = 50.0
+    status: str = "active"
+
+
+class CommissionDealReq(BaseModel):
+    property_id: int = 0
+    team_member_id: int = 0
+    client_name: str
+    client_phone: str = ""
+    deal_type: str = "sale"
+    deal_amount: float = 0.0
+    total_commission: float = 0.0
+    split_pct: float = 0.0
+    status: str = "pending"
+    payout_date: str = ""
+    notes: str = ""
+
+
+class VoiceCommandReq(BaseModel):
+    command: str
+    lang: str = "ur"
+
 
 
 def insert(table, model):
@@ -3441,6 +3520,334 @@ def seed_appfolio_data():
         con.execute("UPDATE properties SET owner_name='Chaudhry Nadeem', owner_phone='03215559988', owner_commission_pct=6.0 WHERE id=4 AND (owner_name IS NULL OR owner_name='')")
 
     return {"ok": True, "message": "AppFolio demo data seeded successfully!"}
+
+
+# ============================================================================
+# PRIORITY 8: TEAM & COMMISSION TRACKING (PRO / ENTERPRISE)
+# ============================================================================
+@app.get("/api/team")
+def list_team_members():
+    with db() as con:
+        rows = con.execute("""
+            SELECT tm.*, 
+                COUNT(cd.id) as total_deals,
+                COALESCE(SUM(CASE WHEN cd.status='paid' THEN cd.agent_commission ELSE 0 END), 0) as paid_commission,
+                COALESCE(SUM(CASE WHEN cd.status IN ('pending', 'approved') THEN cd.agent_commission ELSE 0 END), 0) as pending_commission
+            FROM team_members tm
+            LEFT JOIN commission_deals cd ON tm.id = cd.team_member_id
+            GROUP BY tm.id
+            ORDER BY tm.id DESC
+        """).fetchall()
+        return [dict(r) for r in rows]
+
+
+@app.post("/api/team")
+def add_or_update_team_member(m: TeamMemberReq):
+    name = m.name.strip()
+    phone = m.phone.strip()
+    if not name or not phone:
+        raise HTTPException(400, "Member name and phone number are required.")
+    with db() as con:
+        cur = con.execute("""
+            INSERT INTO team_members(name, phone, email, role, split_pct, status)
+            VALUES(?, ?, ?, ?, ?, ?)
+        """, (name, phone, m.email.strip(), m.role.strip() or "Agent", m.split_pct or 50.0, m.status or "active"))
+        mid = cur.lastrowid
+    return {"ok": True, "id": mid, "message": f"Team member {name} added successfully!"}
+
+
+@app.delete("/api/team/{tid}")
+def del_team_member(tid: int):
+    with db() as con:
+        con.execute("DELETE FROM team_members WHERE id=?", (tid,))
+    return {"ok": True, "message": "Team member deleted."}
+
+
+@app.get("/api/commissions")
+def list_commissions():
+    with db() as con:
+        rows = con.execute("""
+            SELECT cd.*, 
+                   tm.name as agent_name, tm.phone as agent_phone, tm.role as agent_role,
+                   p.society as prop_society, p.title as prop_title, p.ptype as prop_ptype
+            FROM commission_deals cd
+            LEFT JOIN team_members tm ON cd.team_member_id = tm.id
+            LEFT JOIN properties p ON cd.property_id = p.id
+            ORDER BY cd.id DESC
+        """).fetchall()
+        return [dict(r) for r in rows]
+
+
+@app.post("/api/commissions")
+def add_commission_deal(d: CommissionDealReq):
+    if not d.client_name.strip() or d.deal_amount <= 0:
+        raise HTTPException(400, "Client name and valid deal amount are required.")
+    
+    with db() as con:
+        split = d.split_pct
+        if split <= 0 and d.team_member_id:
+            row = con.execute("SELECT split_pct FROM team_members WHERE id=?", (d.team_member_id,)).fetchone()
+            if row:
+                split = float(row[0] or 50.0)
+        if split <= 0:
+            split = 50.0
+
+        total_comm = d.total_commission
+        if total_comm <= 0:
+            total_comm = d.deal_amount * 0.01 if d.deal_type == "sale" else d.deal_amount * 0.08
+        
+        agent_comm = round(total_comm * (split / 100.0), 2)
+        agency_comm = round(total_comm - agent_comm, 2)
+
+        cur = con.execute("""
+            INSERT INTO commission_deals(
+                property_id, team_member_id, client_name, client_phone, deal_type,
+                deal_amount, total_commission, agent_commission, agency_commission,
+                status, payout_date, notes
+            )
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            d.property_id, d.team_member_id, d.client_name.strip(), d.client_phone.strip(),
+            d.deal_type, d.deal_amount, total_comm, agent_comm, agency_comm,
+            d.status or "pending", d.payout_date.strip(), d.notes.strip()
+        ))
+        deal_id = cur.lastrowid
+        
+        if d.property_id:
+            st = "sold" if d.deal_type == "sale" else "rented"
+            con.execute("UPDATE properties SET status=? WHERE id=?", (st, d.property_id))
+
+    return {
+        "ok": True,
+        "id": deal_id,
+        "total_commission": total_comm,
+        "agent_commission": agent_comm,
+        "agency_commission": agency_comm,
+        "message": "Commission deal recorded successfully!"
+    }
+
+
+@app.post("/api/commissions/{deal_id}/status")
+def update_deal_status(deal_id: int, status: str = "paid"):
+    import datetime
+    with db() as con:
+        payout_date = datetime.date.today().strftime("%Y-%m-%d") if status == "paid" else ""
+        con.execute("UPDATE commission_deals SET status=?, payout_date=? WHERE id=?", (status, payout_date, deal_id))
+    return {"ok": True, "status": status, "payout_date": payout_date}
+
+
+@app.delete("/api/commissions/{deal_id}")
+def del_commission_deal(deal_id: int):
+    with db() as con:
+        con.execute("DELETE FROM commission_deals WHERE id=?", (deal_id,))
+    return {"ok": True}
+
+
+# ============================================================================
+# PRIORITY 9: SIMPLE ANALYTICS DASHBOARD
+# ============================================================================
+@app.get("/api/analytics")
+def get_analytics():
+    with db() as con:
+        total_leads = con.execute("SELECT count(*) FROM requirements").fetchone()[0] or 0
+        new_leads_30d = con.execute("SELECT count(*) FROM requirements WHERE julianday('now') - julianday(created) <= 30").fetchone()[0] or 0
+
+        total_props = con.execute("SELECT count(*) FROM properties").fetchone()[0] or 0
+        avail_props = con.execute("SELECT count(*) FROM properties WHERE status='available'").fetchone()[0] or 0
+        sold_props = con.execute("SELECT count(*) FROM properties WHERE status IN ('sold', 'closed')").fetchone()[0] or 0
+        rented_props = con.execute("SELECT count(*) FROM properties WHERE status='rented'").fetchone()[0] or 0
+
+        deal_stats = con.execute("""
+            SELECT COUNT(*),
+                   COALESCE(SUM(deal_amount), 0),
+                   COALESCE(SUM(total_commission), 0),
+                   COALESCE(SUM(agency_commission), 0),
+                   COALESCE(SUM(agent_commission), 0),
+                   COALESCE(SUM(CASE WHEN status='paid' THEN agent_commission ELSE 0 END), 0),
+                   COALESCE(SUM(CASE WHEN status IN ('pending', 'approved') THEN agent_commission ELSE 0 END), 0)
+            FROM commission_deals
+        """).fetchone()
+
+        closed_deals = deal_stats[0] or 0
+        total_deal_volume = deal_stats[1] or 0.0
+        total_comm = deal_stats[2] or 0.0
+        agency_comm = deal_stats[3] or 0.0
+        agent_comm = deal_stats[4] or 0.0
+        paid_payouts = deal_stats[5] or 0.0
+        pending_payouts = deal_stats[6] or 0.0
+
+        conversion_rate = round((closed_deals / max(1, total_leads)) * 100, 1) if total_leads > 0 else 0.0
+
+        active_tenants = con.execute("SELECT count(*) FROM tenants WHERE status='active'").fetchone()[0] or 0
+        rent_roll = con.execute("SELECT COALESCE(SUM(rent_amount), 0) FROM tenants WHERE status='active'").fetchone()[0] or 0.0
+        pending_rent = con.execute("SELECT COALESCE(SUM(rent_amount), 0) FROM tenants WHERE status='active' AND payment_status='pending'").fetchone()[0] or 0.0
+        collected_rent = con.execute("SELECT COALESCE(SUM(rent_amount), 0) FROM tenants WHERE status='active' AND payment_status='paid'").fetchone()[0] or 0.0
+        collection_rate = round(((rent_roll - pending_rent) / max(1, rent_roll)) * 100, 1) if rent_roll > 0 else 100.0
+
+        top_soc_rows = con.execute("""
+            SELECT p.society,
+                   COUNT(p.id) as prop_count,
+                   (SELECT COUNT(*) FROM requirements r WHERE r.society = p.society OR LOWER(r.society) = LOWER(p.society)) as demand_count,
+                   AVG(p.price) as avg_price
+            FROM properties p
+            GROUP BY p.society
+            ORDER BY (COUNT(p.id) + (SELECT COUNT(*) FROM requirements r WHERE r.society = p.society)) DESC
+            LIMIT 6
+        """).fetchall()
+        top_societies = [
+            {
+                "society": r["society"],
+                "properties": r["prop_count"],
+                "leads": r["demand_count"],
+                "avg_price": round(r["avg_price"] or 0, 0)
+            } for r in top_soc_rows
+        ]
+
+        ptype_rows = con.execute("SELECT ptype, count(*) as cnt FROM properties GROUP BY ptype").fetchall()
+        ptypes = {r["ptype"]: r["cnt"] for r in ptype_rows}
+
+        kind_rows = con.execute("SELECT kind, count(*) as cnt FROM properties GROUP BY kind").fetchall()
+        kinds = {r["kind"]: r["cnt"] for r in kind_rows}
+
+        return {
+            "total_leads": total_leads,
+            "new_leads_30d": new_leads_30d,
+            "total_properties": total_props,
+            "available_properties": avail_props,
+            "sold_properties": sold_props,
+            "rented_properties": rented_props,
+            "closed_deals": closed_deals,
+            "conversion_rate": conversion_rate,
+            "total_deal_volume": total_deal_volume,
+            "total_commission": total_comm,
+            "agency_commission": agency_comm,
+            "agent_commission": agent_comm,
+            "paid_payouts": paid_payouts,
+            "pending_payouts": pending_payouts,
+            "active_tenants": active_tenants,
+            "monthly_rent_roll": rent_roll,
+            "pending_rent": pending_rent,
+            "collected_rent": collected_rent,
+            "rent_collection_rate": collection_rate,
+            "top_societies": top_societies,
+            "property_types": ptypes,
+            "kinds": kinds
+        }
+
+
+# ============================================================================
+# PRIORITY 7: URDU VOICE COMMANDS (NATURAL VOICE ASSISTANT)
+# ============================================================================
+@app.post("/api/voice-command")
+def parse_voice_command(v: VoiceCommandReq):
+    cmd = v.command.strip()
+    cmd_lower = cmd.lower()
+
+    # Detect bot target
+    bot = "sarmad"
+    if any(k in cmd_lower for k in ["sarmad", "سرمد", "scout"]):
+        bot = "sarmad"
+    elif any(k in cmd_lower for k in ["ayesha", "عائشہ", "match"]):
+        bot = "ayesha"
+    elif any(k in cmd_lower for k in ["bilal", "بلال", "follow"]):
+        bot = "bilal"
+    elif any(k in cmd_lower for k in ["farhan", "فرحان", "rent", "kiraya", "حساب", "کرایہ"]):
+        bot = "farhan"
+    elif any(k in cmd_lower for k in ["tariq", "طارق", "maintenance", "مرمت", "شکایت"]):
+        bot = "tariq"
+    elif any(k in cmd_lower for k in ["manager", "مینیجر"]):
+        bot = "manager"
+
+    # Detect Society
+    society = ""
+    soc_map = {
+        "soan garden": "Soan Garden",
+        "سوہان گارڈن": "Soan Garden",
+        "dha phase 2": "DHA Phase 2",
+        "ڈی ایچ اے 2": "DHA Phase 2",
+        "dha": "DHA Phase 2",
+        "ڈی ایچ اے": "DHA Phase 2",
+        "bahria town": "Bahria Town Phase 8",
+        "بحریہ ٹاؤن": "Bahria Town Phase 8",
+        "bahria": "Bahria Town Phase 8",
+        "g-13": "G-13",
+        "جی 13": "G-13",
+        "b-17": "B-17 Multi Gardens",
+        "بی 17": "B-17 Multi Gardens",
+        "pwd": "PWD",
+        "پی ڈبلیو ڈی": "PWD",
+        "gulberg": "Gulberg Greens",
+        "گلبرگ": "Gulberg Greens"
+    }
+    for k, val in soc_map.items():
+        if k in cmd_lower:
+            society = val
+            break
+
+    # Detect Purpose (rent or sale)
+    kind = ""
+    if any(k in cmd_lower for k in ["rent", "kiraya", "کرایہ", "کرائے"]):
+        kind = "rent"
+    elif any(k in cmd_lower for k in ["sale", "kharid", "buy", "bechna", "فروخت", "خرید"]):
+        kind = "sale"
+
+    # Detect Size (Marla)
+    size_marla = 0.0
+    m_match = re.search(r"(\d+(?:\.\d+)?)\s*(?:marla|مرلہ)", cmd_lower)
+    if m_match:
+        size_marla = float(m_match.group(1))
+    elif any(k in cmd_lower for k in ["5 marla", "5مرلہ", "پانچ مرلہ"]):
+        size_marla = 5.0
+    elif any(k in cmd_lower for k in ["7 marla", "7مرلہ", "سات مرلہ"]):
+        size_marla = 7.0
+    elif any(k in cmd_lower for k in ["10 marla", "10مرلہ", "دس مرلہ"]):
+        size_marla = 10.0
+    elif any(k in cmd_lower for k in ["kanal", "کنال"]):
+        size_marla = 20.0
+
+    # Detect Property Type
+    ptype = ""
+    if any(k in cmd_lower for k in ["house", "ghar", "makan", "گھر", "مکان"]):
+        ptype = "house"
+    elif any(k in cmd_lower for k in ["plot", "پلاٹ"]):
+        ptype = "plot"
+    elif any(k in cmd_lower for k in ["flat", "apartment", "فلیٹ"]):
+        ptype = "flat"
+    elif any(k in cmd_lower for k in ["shop", "dukan", "دکان"]):
+        ptype = "shop"
+
+    # Listing filter command vs AI report task
+    is_filter_cmd = any(k in cmd_lower for k in ["dikhao", "search", "dhoondo", "filter", "دکھاؤ", "تلاش", "چاہیے", "list"]) or (society or size_marla or kind)
+
+    if is_filter_cmd and (society or kind or size_marla or ptype):
+        kd_text = "کرائے" if kind == "rent" else ("فروخت" if kind == "sale" else "")
+        sz_text = f"{size_marla:g} مرلہ " if size_marla else ""
+        pt_text = "پراپرٹیز" if not ptype else UR.get(ptype, ptype)
+        reply = f"جی! سرمد آپ کے لیے {society or 'ٹوئن سٹیز'} میں {sz_text}{kd_text} {pt_text} فلٹر کر کے پیش کر رہا ہے۔"
+        return {
+            "ok": True,
+            "action": "filter_properties",
+            "bot": "sarmad",
+            "bot_name": "Sarmad (AI Property Scout)",
+            "command": cmd,
+            "filters": {
+                "society": society,
+                "kind": kind,
+                "size_marla": size_marla,
+                "ptype": ptype
+            },
+            "reply": reply
+        }
+
+    # Otherwise forward to AI Manager
+    return {
+        "ok": True,
+        "action": "ai_manager_command",
+        "bot": bot,
+        "bot_name": "AI Manager",
+        "command": cmd,
+        "reply": f"کمانڈ '{cmd}' AI مینیجر کو تفویض کر دی گئی ہے۔"
+    }
 
 
 @app.get("/")

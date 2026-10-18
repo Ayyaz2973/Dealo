@@ -88,9 +88,42 @@ Dealo offers three transparent licensing packages tailored to independent broker
 
 | Package | Target Market | One-Time Setup & Onboarding | Monthly Retainer & Support | Core Inclusions & Deliverables |
 |---|---|---|---|---|
-| **🥉 Basic Realtor OS** | Individual property dealers & single-desk offices | **PKR 35,000 – 50,000** | **PKR 5,000 / month** | • Complete Dealo Desktop OS installation<br>• Local SQLite database setup<br>• Property catalog & buyer demand directory<br>• 1-Click WhatsApp group parser (Sarmad)<br>• WhatsApp Outbox composer<br>• Twin Cities geospatial map integration |
-| **🥈 Pro Agency OS** | Established real estate agencies (3–8 agents) | **PKR 65,000 – 85,000** | **PKR 10,000 / month** | • **All Basic features plus:**<br>• Dealo Chrome Web Clipper Extension<br>• Full AppFolio Rental & Building Management OS<br>• Automated rent reminder drafts & Owner Statements<br>• Maintenance work orders & contractor tracking<br>• Tenant Credit Risk Screening engine<br>• 6 AI Employee bots with Google Gemini Flash integration |
+| **🥉 Basic Realtor OS** | Individual property dealers & single-desk offices | **PKR 35,000 – 50,000** | **PKR 5,000 / month** | • Complete Dealo Desktop OS installation<br>• Local SQLite database setup<br>• Property catalog & buyer demand directory<br>• 1-Click WhatsApp group parser (Sarmad)<br>• WhatsApp Outbox composer<br>• Twin Cities geospatial map integration<br>• **Urdu Voice Commands (Natural dealer speech search)** |
+| **🥈 Pro Agency OS** | Established real estate agencies (3–8 agents) | **PKR 65,000 – 85,000** | **PKR 10,000 / month** | • **All Basic features plus:**<br>• Dealo Chrome Web Clipper Extension<br>• Full AppFolio Rental & Building Management OS<br>• Automated rent reminder drafts & Owner Statements<br>• Maintenance work orders & contractor tracking<br>• Tenant Credit Risk Screening engine<br>• 6 AI Employee bots with Google Gemini Flash integration<br>• **Simple Analytics Dashboard (Leads, conversion, top societies)**<br>• **Team & Commission Tracking (Agent splits & payout ledger)** |
 | **🥇 Enterprise Asset OS** | Builders, large property firms & asset managers | **PKR 120,000 – 175,000** | **PKR 15,000 – 25,000 / month** | • **All Pro features plus:**<br>• Custom multi-branch deployment (Cloud or Local LAN)<br>• Custom society GIS polygon mapping (New societies/extensions)<br>• Dedicated backup automation & disaster recovery<br>• Staff training workshops for agents & accountants<br>• Priority WhatsApp Business API integration roadmap |
+
+---
+
+## 🌟 Modern Feature Suite: Voice AI, Team Commissions & Analytics
+
+### 🎙️ Priority 7: Urdu Voice Commands (Natural Dealer Workflow)
+- **Why It Matters:** Pakistani property dealers often find typing on keyboards cumbersome while talking to clients or driving. Natural Urdu voice commands make software interaction completely effortless.
+- **How It Works:** Powered by Web Speech API (`ur-PK`), dealers click the microphone and speak naturally:
+  > *"سرمد، سوہان گارڈن 5 مرلہ رینٹ دکھاؤ"*  
+  > *"Sarmad, Soan Garden 5 marla rent dikhao"*  
+  > *"عائشہ، ڈی ایچ اے فیز 2 میں پلاٹ میچ کرو"*  
+  > *"فرحان، اوور ڈیو رینٹ کا حساب کرو"*
+- **Result:** Dealo parses the target AI bot, society, size, property type, and purpose in under 1 second, instantly applying filters to the Leaflet map and catalog while providing spoken Urdu audio confirmation.
+
+---
+
+### 👥 Priority 8: Team & Commission Tracking (Pro / Enterprise)
+- **Why It Matters:** Growing agencies with 3–15 agents lose track of which agent closed which deal, what percentage commission split was agreed, and which payouts are still pending.
+- **How It Works:**
+  - **Agent Directory:** Track agent roles (Senior Broker, Listing Specialist, Rental Agent), phone numbers, and default commission split % (e.g. 50/50, 60/40).
+  - **Closed Deals Ledger:** Automatically calculate Agent Payout vs Agency Net Revenue on every closed sale or rental lease.
+  - **1-Click Status Progression:** Track deals from `Pending Token` ➔ `Approved / Clearing` ➔ `Paid to Agent`.
+
+---
+
+### 📊 Priority 9: Simple Analytics Dashboard (Data-Driven Agency Intelligence)
+- **Why It Matters:** Agency owners need immediate, at-a-glance visibility into business health without digging through spreadsheets.
+- **Key Metrics & Visuals:**
+  1. **Lead Pipeline & Inquiries:** Total active buyer demands with 30-day intake trend.
+  2. **Deal Conversion Rate:** Real-time conversion percentage calculated from closed deals vs total buyer leads.
+  3. **Top Societies Demand vs Inventory:** Visual progress bars revealing the hottest societies (e.g. Soan Garden, DHA 2, Bahria 8) by comparing active listings against registered buyer inquiries.
+  4. **Property Type Distribution:** Ratio of Houses vs Plots vs Commercial vs Apartments.
+  5. **Rental Portfolio Health:** Monthly expected rent roll, total collections, and overdue tenant receivables.
 
 ---
 
