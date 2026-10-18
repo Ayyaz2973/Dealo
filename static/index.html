@@ -2129,6 +2129,56 @@ body.is-admin .public-only {
   color: var(--text);
   flex-grow: 1;
 }
+
+/* 2-Minute Flow Simulator Styles */
+.flow-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.flow-step-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.flow-step-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.active-flow-step {
+  border-color: #0284c7 !important;
+  background: rgba(2, 132, 199, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
+}
+.flow-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #059669, #0284c7);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.flow-step-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+}
+.flow-step-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
 </style>
 </head>
 <body>
@@ -4312,6 +4362,53 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
           <p style="font-size:0.8rem;color:var(--text-muted);margin:0">
             آپ کے کسٹمرز اور پرائیویٹ لسٹنگز کا ڈیٹا کسی پبلک سائٹ پر لیک نہیں ہوتا۔ سارا کنٹرول آپ کے پاس محفوظ رہتا ہے۔
           </p>
+        </div>
+      </div>
+
+      <!-- 2-MINUTE INTERACTIVE LIVE DEMO FLOW (LIVE SIMULATOR) -->
+      <div class="demo-simulator-box" style="margin-top:16px;background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+          <div>
+            <span class="badge" style="background:#e0f2fe;color:#0369a1;font-weight:800">⚡ Core Live Demo Flow (2–3 Minutes)</span>
+            <h4 style="margin:4px 0 0 0;font-size:1.05rem;font-weight:900">لائیو فیلڈ ڈیمو سمیلیٹر — 5 مراحل خود چلا کر دیکھیں:</h4>
+          </div>
+          <button type="button" class="pri" style="padding:6px 14px;font-size:0.8rem;font-weight:800;border-radius:20px" onclick="runLiveFlowDemo()">
+            ▶️ آٹو فلو چلائیں (Auto Demo)
+          </button>
+        </div>
+
+        <!-- 5 Steps Horizontal Stepper -->
+        <div class="flow-steps-grid">
+          <div id="flowStep1" class="flow-step-card active-flow-step" onclick="selectFlowStep(1)">
+            <div class="flow-step-num">1</div>
+            <div class="flow-step-title">واٹس ایپ میسج پیسٹ</div>
+            <div class="flow-step-sub">Sarmad AI Scout</div>
+          </div>
+          <div id="flowStep2" class="flow-step-card" onclick="selectFlowStep(2)">
+            <div class="flow-step-num">2</div>
+            <div class="flow-step-title">ڈیٹا بیس و نقشہ پن</div>
+            <div class="flow-step-sub">Geospatial Pin Drop</div>
+          </div>
+          <div id="flowStep3" class="flow-step-card" onclick="selectFlowStep(3)">
+            <div class="flow-step-num">3</div>
+            <div class="flow-step-title">خریدار ڈیمانڈ میچنگ</div>
+            <div class="flow-step-sub">Ayesha Matchmaker</div>
+          </div>
+          <div id="flowStep4" class="flow-step-card" onclick="selectFlowStep(4)">
+            <div class="flow-step-num">4</div>
+            <div class="flow-step-title">آؤٹ بکس (محفوظ سینڈ)</div>
+            <div class="flow-step-sub">100% Meta Safe</div>
+          </div>
+          <div id="flowStep5" class="flow-step-card" onclick="selectFlowStep(5)">
+            <div class="flow-step-num">5</div>
+            <div class="flow-step-title">سوسائٹیز جیو میپ</div>
+            <div class="flow-step-sub">Twin Cities Intelligence</div>
+          </div>
+        </div>
+
+        <!-- Stage Dynamic Content -->
+        <div id="flowStageContent" style="margin-top:12px;background:var(--surface-hover);border:1px solid var(--border);border-radius:10px;padding:14px">
+          <!-- Dynamically populated by selectFlowStep(1) -->
         </div>
       </div>
     </div>
@@ -8230,16 +8327,169 @@ function closeAdminLoginModal() {
 // DEALO LIVE DEMO & PRODUCT TOUR JS
 // ==========================================================
 let isDemoVoicePlaying = false;
+let currentFlowStep = 1;
+let flowAutoTimer = null;
+
+const FLOW_STEPS_DATA = {
+  1: {
+    title: "مرحلہ 1: واٹس ایپ گروپ کا اصلی میسج پیسٹ کریں",
+    sub: "سرمد (AI Property Scout) غیر منظم میسج سے تمام اہم تفصیلات خودکار نکالتا ہے:",
+    html: `
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">📋 ڈیلر واٹس ایپ گروپ سے کاپی شدہ میسج:</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:0.82rem;line-height:1.5;color:var(--text)">
+        "Aoa friends, Soan Garden Block C 7 Marla brand new double story house for urgent sale. 5 bed attach bath, drawing dining, 2 kitchen, car porch. Demand 2.85 crore final. Direct owner contact: 0321-5873665"
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px">
+        <span style="font-size:0.78rem;font-weight:700;color:#059669">⚡ سرمد نے 0.4 سیکنڈ میں تجزیہ مکمل کر لیا!</span>
+        <button type="button" class="pri" style="padding:5px 12px;font-size:0.78rem" onclick="selectFlowStep(2)">اگلا مرحلہ: نقشہ اور ڈیٹا بیس دیکھیں ➔</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px">
+        <div style="background:var(--surface);padding:8px;border-radius:6px;border:1px solid var(--border);font-size:0.78rem">📍 سوسائٹی: <strong>Soan Garden (Block C)</strong></div>
+        <div style="background:var(--surface);padding:8px;border-radius:6px;border:1px solid var(--border);font-size:0.78rem">📐 سائز: <strong>7 مرلہ (House)</strong></div>
+        <div style="background:var(--surface);padding:8px;border-radius:6px;border:1px solid var(--border);font-size:0.78rem">💰 ڈیمانڈ: <strong>PKR 2.85 کروڑ</strong></div>
+        <div style="background:var(--surface);padding:8px;border-radius:6px;border:1px solid var(--border);font-size:0.78rem">📞 فون: <strong>0321-5873665</strong></div>
+      </div>
+    `
+  },
+  2: {
+    title: "مرحلہ 2: پراپرٹی ڈیٹا بیس اور میپ پن",
+    sub: "نکالی گئی پراپرٹی خودکار طریقے سے آپ کی پرائیویٹ انوینٹری میں سیو اور نقشے پر پن ہو گئی:",
+    html: `
+      <div style="background:var(--surface);border:1px solid #10b981;border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:2rem">🏡</div>
+        <div style="flex-grow:1">
+          <div style="font-weight:800;font-size:0.9rem">7 مرلہ برانڈ نیو ڈبل اسٹوری مکان • Soan Garden Block C</div>
+          <div style="font-size:0.78rem;color:var(--text-muted)">Record ID #108 • ڈیمانڈ ریٹ: PKR 28,500,000 • اسٹیٹس: 🟢 Available</div>
+          <div style="font-size:0.75rem;color:#0284c7;margin-top:2px">📍 جیو کوآرڈینیٹس: 33.565°N, 73.125°E (سوہان گارڈن زون پر تصدیق شدہ پن)</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span style="font-size:0.78rem;color:var(--text-muted)">🔒 سارا ڈیٹا آپ کے اپنے کمپیوٹر کی SQLite فائل میں محفوظ ہے۔</span>
+        <button type="button" class="pri" style="padding:5px 12px;font-size:0.78rem" onclick="selectFlowStep(3)">اگلا مرحلہ: خریدار سے میچ کریں ➔</button>
+      </div>
+    `
+  },
+  3: {
+    title: "مرحلہ 3: عائشہ AI — خریدار ڈیمانڈ میچنگ",
+    sub: "عائشہ نے رجسٹرڈ گاہکوں میں سے خریدار تلاش کر کے واٹس ایپ کارڈ تیار کر دیا:",
+    html: `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:800;font-size:0.9rem">👤 خریدار: حاجی کامران صاحب</div>
+            <div style="font-size:0.78rem;color:var(--text-muted)">مطلوبہ: 7 مرلہ مکان در Soan Garden • کلائنٹ بجٹ: PKR 3.00 کروڑ (30,000,000)</div>
+          </div>
+          <span style="background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;padding:4px 10px;border-radius:14px;font-weight:900;font-size:0.85rem">
+            🔥 98% MATCH
+          </span>
+        </div>
+        <div style="margin-top:10px;background:var(--surface-hover);padding:10px;border-radius:6px;font-size:0.8rem;border-left:3px solid #ec4899">
+          <strong>عائشہ نے تجویز تیار کی:</strong> کلائنٹ کے بجٹ (3 کروڑ) کے اندر 2.85 کروڑ کی نئی آپشن میچ ہو گئی ہے۔ فوری واٹس ایپ پروپوزل ڈرافٹ آؤٹ بکس میں منتقل کر دیا گیا ہے۔
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <button type="button" class="pri" style="padding:5px 12px;font-size:0.78rem" onclick="selectFlowStep(4)">اگلا مرحلہ: آؤٹ بکس سے محفوظ سینڈ دیکھیں ➔</button>
+      </div>
+    `
+  },
+  4: {
+    title: "مرحلہ 4: آؤٹ بکس (Safe Send — 100% Meta Compliant)",
+    sub: "میسج تیار ہے — آپ جائزہ لیں، ترمیم کریں، اور 1-کلک میں wa.me لنک سے کلائنٹ کو بھیجیں:",
+    html: `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:0.78rem;font-weight:700">موصول کنندہ: حاجی کامران (0300-5551234)</span>
+          <span class="badge" style="background:#ecfdf5;color:#047857">Staged in Outbox</span>
+        </div>
+        <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:0.8rem;line-height:1.5">
+          السلام علیکم محترم حاجی کامران صاحب! آپ کی مطلوبہ ڈیمانڈ کے مطابق سوہان گارڈن بلاک سی میں 7 مرلہ برانڈ نیو ڈبل اسٹوری مکان دستیاب ہے۔ 5 بیڈ، اٹیچ باتھ، کار پورچ۔ ڈیمانڈ: 2.85 کروڑ۔ کیا آپ آج وزٹ کرنا چاہیں گے؟ — Dealo Real Estate
+        </div>
+        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <div style="font-size:0.75rem;color:#059669;font-weight:700">
+            🛡️ AI خود میسج نہیں بھیجتا، کنٹرول آپ کے پاس رہتا ہے۔ زیرو بین رسک!
+          </div>
+          <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum%20Haji%20Kamran%20sb,%20Soan%20Garden%207%20Marla%20deal%20ready" target="_blank" class="pri" style="padding:6px 14px;font-size:0.8rem;text-decoration:none;border-radius:6px;display:inline-flex;align-items:center;gap:4px">
+            💬 Send via WhatsApp (wa.me)
+          </a>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <button type="button" class="pri" style="padding:5px 12px;font-size:0.78rem" onclick="selectFlowStep(5)">اگلا مرحلہ: ٹوئن سٹیز میپ انٹیلیجنس ➔</button>
+      </div>
+    `
+  },
+  5: {
+    title: "مرحلہ 5: اسلام آباد اور راولپنڈی جیو اسپیٹیل میپ",
+    sub: "تمام اہم سوسائٹیز کے نقشے، ریٹس اور حدود آپ کے کنٹرول میں ہیں:",
+    html: `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-bottom:10px">
+          <div style="background:var(--surface-hover);padding:6px 8px;border-radius:6px;font-size:0.75rem;font-weight:700">📍 DHA Phase 2</div>
+          <div style="background:var(--surface-hover);padding:6px 8px;border-radius:6px;font-size:0.75rem;font-weight:700">📍 Bahria Town Phase 8</div>
+          <div style="background:var(--surface-hover);padding:6px 8px;border-radius:6px;font-size:0.75rem;font-weight:700">📍 Soan Garden</div>
+          <div style="background:var(--surface-hover);padding:6px 8px;border-radius:6px;font-size:0.75rem;font-weight:700">📍 Jinnah Garden</div>
+          <div style="background:var(--surface-hover);padding:6px 8px;border-radius:6px;font-size:0.75rem;font-weight:700">📍 PWD</div>
+          <div style="background:var(--surface-hover);padding:6px 8px;border-radius:6px;font-size:0.75rem;font-weight:700">📍 G-13 & B-17</div>
+        </div>
+        <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5">
+          🎯 یہ Dealo کا 2 منٹ کا بنیادی فلو ہے جو ڈیلرز کے روزمرہ وقت کی 80 فیصد بچت کرتا ہے اور ایک بھی کسٹمر ڈیمانڈ ضائع نہیں ہونے دیتا۔
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <button type="button" class="secondary" style="padding:5px 12px;font-size:0.78rem" onclick="selectFlowStep(1)">↺ دوبارہ شروع کریں</button>
+        <button type="button" class="pri" style="padding:6px 14px;font-size:0.8rem;font-weight:800" onclick="launchInteractiveDemoMode()">
+          🔓 لائیو کمانڈ سینٹر آزمائیں (Full Access)
+        </button>
+      </div>
+    `
+  }
+};
+
+function selectFlowStep(step) {
+  currentFlowStep = step;
+  for (let i = 1; i <= 5; i++) {
+    const card = $("flowStep" + i);
+    if (card) {
+      if (i === step) card.classList.add("active-flow-step");
+      else card.classList.remove("active-flow-step");
+    }
+  }
+  const cont = $("flowStageContent");
+  const data = FLOW_STEPS_DATA[step];
+  if (cont && data) {
+    cont.innerHTML = `
+      <div style="font-weight:800;font-size:0.92rem;color:var(--text);margin-bottom:2px">${data.title}</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px">${data.sub}</div>
+      ${data.html}
+    `;
+  }
+}
+
+function runLiveFlowDemo() {
+  if (flowAutoTimer) clearInterval(flowAutoTimer);
+  let step = 1;
+  selectFlowStep(step);
+  flowAutoTimer = setInterval(() => {
+    step++;
+    if (step > 5) {
+      clearInterval(flowAutoTimer);
+      return;
+    }
+    selectFlowStep(step);
+  }, 3500);
+}
 
 function openLiveDemoModal(initialTab = 'overview') {
   const m = $("liveDemoModal");
   if (m) {
     m.classList.add("on");
     switchDemoTab(initialTab);
+    selectFlowStep(1);
   }
 }
 
 function closeLiveDemoModal() {
+  if (flowAutoTimer) clearInterval(flowAutoTimer);
   stopDemoVoice();
   const m = $("liveDemoModal");
   if (m) m.classList.remove("on");
@@ -8276,8 +8526,8 @@ function playDemoVoice() {
   }
   window.speechSynthesis.cancel();
   
-  const voiceTextUr = "السلام علیکم! Dealo PropTech OS میں خوش آمدید۔ یہ اسلام آباد اور راولپنڈی کی رئیل اسٹیٹ ایجنسیز اور پراپرٹی ڈیلرز کے لیے پاکستان کا پہلا جیو اسپیٹیل آپریٹنگ سسٹم ہے۔ Dealo آپ کے دفتر کے لیے چھ خودکار AI ملازمین لاتا ہے: AI مینیجر، سرمد، عائشہ، بلال، فرحان، اور طارق۔ ہمارا واٹس ایپ آٹومیشن سو فیصد میٹا پالیسی کے مطابق محفوظ ہے اور نمبر بین ہونے کا کوئی خطرہ نہیں۔ پیکجز پینتیس ہزار روپے سے شروع ہوتے ہیں۔ آپ ابھی کمانڈ سینٹر ٹیسٹ کر سکتے ہیں یا واٹس ایپ پر لائیو ڈیمو بک کر سکتے ہیں۔ شکریہ!";
-  const voiceTextEn = "Assalam-o-Alaikum and welcome to Dealo PropTech OS, Pakistan's first geospatial real estate operating system for Islamabad and Rawalpindi agencies. Dealo brings six specialized AI workers: AI Manager, Sarmad, Ayesha, Bilal, Farhan, and Tariq. Our WhatsApp automation is one hundred percent Meta safe with zero ban risk. Packages start from thirty-five thousand rupees. Test the command center now or book a live on-site demo. Thank you!";
+  const voiceTextUr = "السلام علیکم! Dealo آپ کا پرائیویٹ رئیل اسٹیٹ آپریٹنگ سسٹم ہے — جو واٹس ایپ کے شوروغل، ضائع ہونے والی ڈیمانڈز، اور کاغذی رجسٹروں کے مینول حساب کو منظم کرتا ہے۔ آپ کا سارا ڈیٹا آپ کے اپنے کمپیوٹر پر پرائیویٹ رہتا ہے، کلاؤڈ پر لیک نہیں ہوتا۔ AI میسج تیار کرتا ہے مگر بھیجنے کا فیصلہ آپ کے ہاتھ میں رہتا ہے۔ واٹس ایپ گروپ سے میسج کاپی کریں، سرمد فوراً لسٹنگ نکال لیتا ہے، عائشہ خریدار سے میچ کر کے پروپوزل بناتی ہے، اور آؤٹ بکس سے آپ ایک کلک میں کلائنٹ کو بھیج دیتے ہیں۔ یہ ہے Dealo کا آسان اور پاور فل فلو!";
+  const voiceTextEn = "Assalam-o-Alaikum! Dealo is your private real estate OS — organizing WhatsApp chaos, lost client demands, and manual register calculations. Your entire data stays private on your own computer, never leaked on public clouds. AI prepares messages, but you decide when to send. Paste a WhatsApp group message, Sarmad extracts the listing, Ayesha matches buyer demands, and you dispatch via the Outbox in one click. That is the power and speed of Dealo!";
   
   const textToSpeak = lang === "ur" ? voiceTextUr : voiceTextEn;
   const utter = new SpeechSynthesisUtterance(textToSpeak);
