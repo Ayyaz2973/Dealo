@@ -1,4 +1,4 @@
-import csv, io, json, os, re, sqlite3, threading, shutil, secrets, time
+import csv, io, json, os, re, sqlite3, threading, shutil, secrets, time, zipfile
 from pathlib import Path
 from difflib import SequenceMatcher
 
@@ -99,6 +99,7 @@ PUBLIC_ROUTES = {
     ("/api/demo-info", "GET"),
     ("/api/extension/status", "GET"),
     ("/api/extension/import", "POST"),
+    ("/api/download/extension", "GET"),
     ("/openapi.json", "GET"),
     ("/docs", "GET"),
     ("/redoc", "GET"),
@@ -474,6 +475,32 @@ def init_db():
                 (1, 1, "Malik Zafar Iqbal", "03005551122", "sale", 48000000, 480000, 288000, 192000, "paid", "2026-10-12", "10 Marla House in DHA Phase 2 closed. Commission cleared via Cheque."),
                 (3, 2, "Dr. Sajid Mehmood", "03339998877", "sale", 18500000, 185000, 92500, 92500, "approved", "2026-10-20", "5 Marla Brand New House in Soan Garden. Token received."),
                 (4, 3, "Kamran Abbasi", "03125556677", "rent", 660000, 55000, 27500, 27500, "pending", "", "1-Year Lease rental closed in Bahria Town Phase 8.")
+            ])
+
+        # Seed default properties if empty (ensures fresh Render/cloud deployments always have live inventory)
+        p_count = con.execute("SELECT count(*) FROM properties").fetchone()[0]
+        if p_count == 0:
+            con.executemany("""
+                INSERT INTO properties(kind, society, ptype, size_marla, price, title, description, dealer, phone, status, image, lat, lng, is_demo)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+            """, [
+                ("sale", "DHA Phase 2", "house", 10.0, 38000000.0, "Brand New Luxury 10 Marla Designer House", "5 master bedrooms, imported fittings, servant quarter, solar installed.", "Al-Haram Estate", "03215873665", "available", "house_dha.jpg", 33.5229, 73.1710),
+                ("sale", "Bahria Town Phase 8", "plot", 10.0, 14500000.0, "Prime Location 10 Marla Residential Plot", "Sector L, boulevard facing, near park & commercial.", "Malik Properties", "03001234567", "available", "plot_bahria.jpg", 33.4931, 73.0838),
+                ("rent", "Soan Garden", "house", 5.0, 65000.0, "5 Marla Double Story House on Rent", "3 beds with bath, 2 kitchens, garage, near main market.", "Kayani Real Estate", "03335559876", "available", "house_dha.jpg", 33.5728, 73.1428),
+                ("sale", "G-13/2", "flat", 5.0, 16000000.0, "Spacious 3-Bed Apartment with Parking", "Corner apartment, lift, 24/7 water and security.", "Capital Associates", "03125432109", "available", "apartment_g13.jpg", 33.6542, 72.9752),
+                ("sale", "B-17 Multi Gardens", "plot", 7.0, 7500000.0, "7 Marla Plot in Block C", "Ready for construction, possession paid, utility available.", "Ideal Deals", "03456789012", "available", "plot_bahria.jpg", 33.6990, 72.8248),
+                ("sale", "Jinnah Garden", "house", 5.0, 14000000.0, "5 Marla Brand New Modern House", "Solid construction, 4 beds, car porch, peaceful street.", "Twin Cities Realtors", "03215873665", "available", "house_dha.jpg", 33.5821, 73.1550)
+            ])
+
+        # Seed default tenants if empty
+        tn_count = con.execute("SELECT count(*) FROM tenants").fetchone()[0]
+        if tn_count == 0:
+            con.executemany("""
+                INSERT INTO tenants(property_id, tenant_name, phone, rent_amount, due_day, deposit, status, payment_status, notes)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, [
+                (3, "Usman Sheikh", "03341238901", 65000.0, 5, 130000.0, "active", "pending", "5 Marla House in Soan Garden, family of 4"),
+                (4, "Hamza Farooq", "03215556677", 55000.0, 10, 110000.0, "active", "paid", "Apartment in G-13, paid via Bank Alfalah")
             ])
 
 
@@ -3037,6 +3064,27 @@ def extension_status():
         "properties_count": p_cnt,
         "requirements_count": r_cnt
     }
+
+
+@app.get("/api/download/extension")
+def download_extension():
+    """Package and serve dealo-extension as a downloadable ZIP package"""
+    ext_dir = BASE / "dealo-extension"
+    if not ext_dir.exists():
+        raise HTTPException(404, "Extension directory not found")
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for root, dirs, files in os.walk(ext_dir):
+            for file in files:
+                p = Path(root) / file
+                arcname = p.relative_to(ext_dir)
+                zf.write(p, arcname)
+    buf.seek(0)
+    return Response(
+        content=buf.getvalue(),
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment; filename=dealo-extension.zip"}
+    )
 
 
 @app.post("/api/extension/import")

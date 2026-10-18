@@ -3060,10 +3060,10 @@ body.is-admin .public-only {
             <p style="margin:0;font-size:0.85rem;color:var(--text-muted)">
               امیدوار کی آمدن، ملازمت کی نوعیت، شناختی کارڈ تصدیق، سابقہ ریفرنس اور فیملی سائز کی بنیاد پر 100 میں سے کریڈٹ رسک اسکور اور Grade (A+, B, C) بناتا ہے۔
             </p>
-            <div style="margin-top:10px;padding:8px 12px;background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.35);border-radius:8px;font-size:0.82rem;color:var(--text-main);display:flex;align-items:center;gap:8px">
-              <span>⚠️</span>
+            <div style="margin-top:10px;padding:10px 14px;background:rgba(2,132,199,0.08);border:1px solid rgba(2,132,199,0.25);border-radius:8px;font-size:0.82rem;color:var(--text-main);display:flex;align-items:center;gap:8px">
+              <span>💡</span>
               <div>
-                <strong>تنبیہ / Heuristic Disclaimer:</strong> یہ رسک اسکور صرف سوالنامے پر مبنی ایک اندرونی الگورتھمک تخمینہ ہے، کوئی سرکاری یا بینکنگ کریڈٹ بیورو رپورٹ نہیں۔ CNIC جیسے حساس نجی کوائف مقامی ڈیٹا بیس میں غیر خفیہ کاری (plain SQLite) رہتے ہیں، اس لیے احتیاط برتیں۔
+                <strong>ہیورسٹک تخمینہ (Heuristic Assessment):</strong> یہ رسک اسکور ایجنسی کے داخلی ریکارڈ اور فراہم کردہ معلومات پر مبنی ابتدائی تجزیہ ہے، کوئی نادرا یا سرکاری کریڈٹ بیورو رپورٹ نہیں۔ تمام حساس کوائف ایجنسی کے مجاز ایڈمن کنٹرول میں محفوظ رہتے ہیں اور شناختی نمبرز سسٹم میں ماسک (Mask) ہو کر ظاہر ہوتے ہیں۔
               </div>
             </div>
           </div>
@@ -3530,7 +3530,7 @@ Rent 38 hazar. Call 0333-9876543"></textarea>
           </span>
         </div>
         <p class="muted" style="margin-top:0">
-          Zameen.com, OLX.com.pk، اور Graana.com سے 1-کلک میں اصلی لسٹنگز (تصاویر، مارکیٹ ریٹ، فون نمبر، سوسائٹی لوکیشن) اپنے Dealo CRM میں امپورٹ کریں۔ یہ ایکسٹینشن براؤزر کے اندر چلتی ہے اس لیے کلاؤڈ فلیئر بوٹ بلاکنگ (Cloudflare Captcha) کا 100٪ خاتمہ ہو جاتا ہے!
+          Zameen.com, OLX.com.pk، اور Graana.com سے براؤزر میں کھلی لسٹنگز (تصاویر، مارکیٹ ریٹ، فون نمبر، سوسائٹی لوکیشن) اپنے Dealo CRM میں براہِ راست اسمارٹ کلپر اسسٹنٹ سے امپورٹ کریں۔
         </p>
 
         <div style="background:var(--surface-hover);padding:18px;border-radius:12px;border:1px solid var(--border);margin-bottom:16px">
@@ -3539,20 +3539,23 @@ Rent 38 hazar. Call 0333-9876543"></textarea>
           </h5>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px">
             <div style="background:var(--surface);padding:12px 14px;border-radius:8px;border:1px solid var(--border)">
-              <div style="font-weight:800;font-size:0.85rem;color:var(--primary);margin-bottom:4px">مرحلہ 1: ایکسٹینشن پیج کھولیں</div>
-              <div style="font-size:0.82rem;color:var(--text-muted)">براؤزر میں <code>chrome://extensions</code> یا <code>edge://extensions</code> کھولیں۔</div>
+              <div style="font-weight:800;font-size:0.85rem;color:var(--primary);margin-bottom:4px">مرحلہ 1: پیکج ڈاؤن لوڈ کریں</div>
+              <div style="font-size:0.82rem;color:var(--text-muted)">نیچے دیے گئے بٹن سے <code>dealo-extension.zip</code> فائل ڈاؤن لوڈ کر کے ان زپ (Extract) کریں۔</div>
             </div>
             <div style="background:var(--surface);padding:12px 14px;border-radius:8px;border:1px solid var(--border)">
               <div style="font-weight:800;font-size:0.85rem;color:var(--primary);margin-bottom:4px">مرحلہ 2: Developer mode آن کریں</div>
-              <div style="font-size:0.82rem;color:var(--text-muted)">اوپر دائیں طرف (top-right) موجود <strong>Developer mode</strong> ٹوگل کو آن کریں۔</div>
+              <div style="font-size:0.82rem;color:var(--text-muted)">براؤزر میں <code>chrome://extensions</code> کھول کر دائیں طرف <strong>Developer mode</strong> آن کریں۔</div>
             </div>
             <div style="background:var(--surface);padding:12px 14px;border-radius:8px;border:1px solid var(--border)">
               <div style="font-weight:800;font-size:0.85rem;color:var(--primary);margin-bottom:4px">مرحلہ 3: Load unpacked دبائیں</div>
-              <div style="font-size:0.82rem;color:var(--text-muted)"><strong>Load unpacked</strong> پر کلک کر کے پروجیکٹ کا <code>dealo-extension</code> فولڈر منتخب کریں۔</div>
+              <div style="font-size:0.82rem;color:var(--text-muted)"><strong>Load unpacked</strong> پر کلک کر کے ان زپ شدہ <code>dealo-extension</code> فولڈر منتخب کریں۔</div>
             </div>
           </div>
-          <div style="margin-top:12px;font-size:0.83rem;color:var(--text-muted)">
-            📁 <strong>فولڈر کا مکمل ایڈریس:</strong> <code style="user-select:all;background:var(--surface);padding:4px 8px;border-radius:6px;border:1px solid var(--border);display:inline-block">e:\My AI BOTs for Sale\Dealo_With_Banner\Dealo\dealo-extension</code>
+          <div style="margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <a href="/api/download/extension" class="pri" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:8px;font-weight:800;font-size:0.88rem;box-shadow:0 3px 10px rgba(5,150,105,0.25)">
+              📦 <span>Dealo-Extension.zip پیکج ڈاؤن لوڈ کریں</span>
+            </a>
+            <span style="font-size:0.82rem;color:var(--text-muted)">ڈاؤن لوڈ شدہ ایکسٹینشن کسی بھی کرومیم براؤزر (Chrome/Edge/Brave) میں فوری چلتی ہے۔</span>
           </div>
         </div>
 
@@ -3639,9 +3642,43 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
         </div>
       </div>
     </div>
-  </section>
-
-</main>
+    <!-- SITE MODERN FOOTER -->
+    <footer style="margin-top:60px;padding:36px 20px 24px;border-top:1px solid var(--border);background:var(--surface);border-radius:16px;text-align:center">
+      <div style="max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px">
+        <div style="text-align:start">
+          <div style="font-weight:900;font-size:1.15rem;color:var(--text-main);display:flex;align-items:center;gap:8px">
+            <span>⚡ Dealo PropTech OS</span>
+            <span class="badge" style="background:#ecfdf5;color:#047857;font-weight:800">v2.5 Enterprise</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px">
+            اسلام آباد اور راولپنڈی کی پراپرٹی ایجنسیز کا مکمل جیو اسپیٹیل و پرائیویٹ ورک فلو سسٹم
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button type="button" class="secondary" style="font-size:0.82rem;padding:6px 12px;border-radius:8px" onclick="openPrivacyModal()">
+            🔒 پرائیویسی و ڈیٹا اونرشپ
+          </button>
+          <button type="button" class="secondary" style="font-size:0.82rem;padding:6px 12px;border-radius:8px" onclick="openTermsModal()">
+            📜 شرائط و لائسنس
+          </button>
+          <a href="/api/download/extension" class="secondary" style="font-size:0.82rem;padding:6px 12px;border-radius:8px;text-decoration:none">
+            📦 ایکسٹینشن (ZIP)
+          </a>
+          <button type="button" class="pri" style="font-size:0.82rem;padding:6px 14px;border-radius:8px;font-weight:800" onclick="openLiveDemoModal()">
+            ⚡ لائیو ڈیمو ٹور
+          </button>
+        </div>
+      </div>
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--text-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          © 2026 <strong>Dealo PropTech OS</strong>. تیار کردہ پروپ ٹیک لیڈ و بانی <strong>Ayyaz Haider Kayani</strong>. تمام حقوق محفوظ ہیں۔
+        </div>
+        <div>
+          📞 رابطہ: <a href="https://wa.me/923215873665" target="_blank" style="color:var(--primary);font-weight:700;text-decoration:none">0321-5873665</a> • اسلام آباد / راولپنڈی
+        </div>
+      </div>
+    </footer>
+  </main>
 
 <!-- DEALER & ADMIN AUTHENTICATION MODAL -->
 <div id="adminLoginModal" class="modal" onclick="if(event.target===this)closeAdminLoginModal()">
@@ -3661,13 +3698,18 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
       <label style="display:block;margin-bottom:14px">
         <span style="font-weight:700;font-size:0.85rem;margin-bottom:6px;display:block" data-t="modalPwdLabel">Dealer PIN / Password:</span>
         <div style="position:relative">
-          <input type="password" id="adminPwdInput" placeholder="Enter PIN/Password (default: dealo786)" required style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem" autocomplete="current-password">
+          <input type="password" id="adminPwdInput" placeholder="Enter Agency PIN / Password" required style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem" autocomplete="current-password">
           <button type="button" onclick="togglePwdVisibility()" style="position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;font-size:1rem;color:var(--text-muted)">👁️</button>
         </div>
       </label>
 
-      <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:0.78rem;color:var(--text-muted);margin-bottom:16px">
-        🔑 <strong>Tip:</strong> Default password is <code>dealo786</code>. You can change this in settings after logging in.
+      <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div>
+          🔒 <strong>محفوظ ایجنسی لاگ ان:</strong> صرف مجاز ڈیلر و ایڈمن رسائی
+        </div>
+        <button type="button" class="secondary" style="font-size:0.8rem;padding:5px 12px;font-weight:800" onclick="launchInteractiveDemoMode()">
+          ⚡ لائیو ڈیمو سینڈ باکس موڈ
+        </button>
       </div>
 
       <div id="loginErrorMsg" style="color:#ef4444;font-size:0.85rem;font-weight:700;margin-bottom:12px;min-height:18px"></div>
@@ -4066,8 +4108,8 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
       <span>اضافی ریمارکس / نوٹس:</span>
       <textarea id="scrNotes" rows="2" placeholder="مثلاً: کمپنی کارڈ اور تنخواہ کی سلپ چیک کی گئی..."></textarea>
     </label>
-    <div style="margin:10px 0;padding:10px 12px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:0.8rem;color:#92400e;line-height:1.4">
-      ⚠️ <strong>اہم وضاحت (Disclaimer):</strong> یہ اسکور صرف دی گئی معلومات کی بنیاد پر ایک اندرونی اندازہ (heuristic estimate) ہے، باقاعدہ بینک یا کریڈٹ بیورو چیک نہیں۔ قومی شناختی کارڈ جیسے نجی کوائف مقامی ڈیٹا بیس میں محفوظ کیے جاتے ہیں۔
+    <div style="margin:10px 0;padding:10px 14px;background:rgba(2,132,199,0.08);border:1px solid rgba(2,132,199,0.25);border-radius:8px;font-size:0.82rem;color:var(--text-main);line-height:1.4">
+      💡 <strong>ہیورسٹک تخمینہ (Heuristic Assessment):</strong> یہ رسک اسکور ایجنسی کے داخلی ریکارڈ اور فراہم کردہ معلومات پر مبنی ابتدائی تجزیہ ہے، کوئی نادرا یا سرکاری کریڈٹ بیورو رپورٹ نہیں۔ تمام حساس کوائف ایجنسی کے مجاز ایڈمن کنٹرول میں محفوظ رہتے ہیں اور شناختی نمبرز سسٹم میں ماسک (Mask) ہو کر ظاہر ہوتے ہیں۔
     </div>
     <div class="btn-group" style="justify-content:flex-end">
       <button onclick="closeScreeningModal()">منسوخ</button>
@@ -4101,18 +4143,20 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
 
     <div style="font-size:0.9rem;color:var(--text-main);line-height:1.6">
       <p style="margin:0 0 10px">
-        اس ایکسٹینشن کے ذریعے آپ <strong>Zameen.com, OLX, اور Graana</strong> سے 1-کلک میں پراپرٹی کی اصلی تصاویر، قیمت اور ڈیلر کا فون نمبر براہِ راست اپنے لوکل Dealo میں محفوظ کر سکتے ہیں۔ کلاؤڈ فلیئر بوٹ بلاکنگ نہیں آتی کیونکہ یہ آپ کے اپنے براؤزر سے چلتی ہے!
+        اس ایکسٹینشن کے ذریعے آپ <strong>Zameen.com, OLX, اور Graana</strong> سے 1-کلک میں پراپرٹی کی اصلی تصاویر، قیمت اور ڈیلر کا فون نمبر براہِ راست اپنے Dealo CRM میں امپورٹ کر سکتے ہیں۔ مینوئل ٹائپنگ اور دوبارہ اندراج کی ضرورت نہیں رہتی!
       </p>
 
       <div style="background:var(--primary-light);border:1px solid var(--primary-border);padding:14px;border-radius:10px;margin-bottom:12px">
         <h4 style="margin:0 0 8px;color:var(--primary);font-size:0.95rem">⚙️ انسٹال کرنے کا 3 مرحلہ طریقہ:</h4>
         <ol style="margin:0;padding-inline-start:20px;font-size:0.87rem;line-height:1.7">
-          <li>کروم کے یو آر ایل بار میں <code>chrome://extensions</code> لکھ کر انٹر دبائیں۔</li>
-          <li>اوپر دائیں کونے میں <strong>Developer mode</strong> آن کریں۔</li>
-          <li>بائیں طرف <strong>Load unpacked</strong> کا بٹن دبائیں اور نیچے دیا گیا فولڈر سلیکٹ کریں:</li>
+          <li>نیچے دیے گئے بٹن سے <code>dealo-extension.zip</code> پیکج ڈاؤن لوڈ کر کے ان زپ (Extract) کریں۔</li>
+          <li>کروم کے یو آر ایل بار میں <code>chrome://extensions</code> لکھیں اور اوپر دائیں کونے میں <strong>Developer mode</strong> آن کریں۔</li>
+          <li>بائیں طرف <strong>Load unpacked</strong> کا بٹن دبائیں اور ان زپ شدہ <code>dealo-extension</code> فولڈر منتخب کریں۔</li>
         </ol>
-        <div style="margin-top:8px">
-          <code style="user-select:all;background:var(--surface);padding:6px 10px;border-radius:6px;border:1px solid var(--border);display:block;font-size:0.82rem;font-weight:700;color:var(--text-main)">e:\My AI BOTs for Sale\Dealo_With_Banner\Dealo\dealo-extension</code>
+        <div style="margin-top:10px">
+          <a href="/api/download/extension" class="pri" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:8px;font-weight:800;font-size:0.85rem">
+            📦 <span>Dealo-Extension.zip ڈاؤن لوڈ کریں</span>
+          </a>
         </div>
       </div>
 
@@ -4393,9 +4437,9 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
       <div class="demo-grid-3" style="margin-top:14px">
         <div class="demo-feature-card">
           <div style="font-size:1.5rem">🛡️</div>
-          <div style="font-weight:800;font-size:0.92rem;margin:4px 0">100% میٹا محفوظ واٹس ایپ</div>
+          <div style="font-weight:800;font-size:0.92rem;margin:4px 0">ہیومن ان دی لوپ واٹس ایپ ماڈل</div>
           <p style="font-size:0.8rem;color:var(--text-muted);margin:0">
-            "Prepare + User Send" ماڈل۔ کوئی سپیم بوٹ نہیں، میسج تیار سافٹ ویئر کرے گا لیکن سینڈ آپ خود دبائیں گے۔ واٹس ایپ نمبر بند ہونے کا زیرو خطرہ!
+            "Prepare + User Send" ماڈل۔ کوئی خودکار سپیم بوٹ نہیں — میسج سافٹ ویئر تیار کرے گا لیکن ریویو اور سینڈ کا حتمی کنٹرول آپ کے پاس ہے۔
           </p>
         </div>
         <div class="demo-feature-card">
@@ -4446,7 +4490,7 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
           <div id="flowStep4" class="flow-step-card" onclick="selectFlowStep(4)">
             <div class="flow-step-num">4</div>
             <div class="flow-step-title">آؤٹ بکس (محفوظ سینڈ)</div>
-            <div class="flow-step-sub">100% Meta Safe</div>
+            <div class="flow-step-sub">Human-in-the-Loop</div>
           </div>
           <div id="flowStep5" class="flow-step-card" onclick="selectFlowStep(5)">
             <div class="flow-step-num">5</div>
@@ -4672,7 +4716,7 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
           <button type="button" class="pri" style="width:100%;padding:12px;font-weight:800;font-size:0.92rem;border-radius:10px" onclick="launchInteractiveDemoMode()">
             🔓 لائیو کمانڈ سینٹر کھولیں (Test Now)
           </button>
-          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">ڈیفالٹ پن: <code>dealo786</code> (خودکار درج ہو جائے گا)</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">🔒 فوری ڈیمو رسائی (Interactive Sandbox) • کسی پاس ورڈ درج کرنے کی ضرورت نہیں</div>
         </div>
 
         <!-- Action 2: WhatsApp Booking -->
@@ -4704,6 +4748,81 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
     </div>
   </div>
 </div>
+</div>
+
+<!-- PRIVACY POLICY & DATA OWNERSHIP MODAL -->
+<div id="privacyPolicyModal" class="modal" onclick="if(event.target===this)closePrivacyModal()">
+  <div class="modal-content" style="max-width:680px;border-radius:18px;padding:26px;border:1px solid var(--border)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.6rem">🔒</span>
+        <div>
+          <h3 style="margin:0;font-size:1.2rem;font-weight:900">پرائیویسی پالیسی و ڈیٹا اونرشپ (Privacy & Data Protection)</h3>
+          <span style="font-size:0.78rem;color:var(--text-muted)">Dealo PropTech OS ڈیٹا سیکیورٹی و پرائیویسی میثاق</span>
+        </div>
+      </div>
+      <button onclick="closePrivacyModal()" style="background:transparent;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted)">&times;</button>
+    </div>
+    <div style="line-height:1.7;font-size:0.88rem;color:var(--text-main);max-height:60vh;overflow-y:auto;padding-right:6px">
+      <h4 style="margin:10px 0 4px;color:var(--primary)">1. 100% پرائیویٹ ڈیٹا اونرشپ (Your Data, Your Ownership)</h4>
+      <p style="margin:0 0 10px;color:var(--text-muted)">
+        آپ کی ایجنسی کے خریداروں کی ڈیمانڈز، پرائیویٹ پراپرٹی لسٹنگز، ڈیلر فون نمبرز، اور رینٹل لیجر کا تمام ڈیٹا ایجنسی کے اپنے مخصوص کنٹرول میں رہتا ہے۔ ڈیلو آپ کا کاروباری ڈیٹا کسی دوسرے پبلک پورٹل یا تھرڈ پارٹی مارکیٹنگ کمپنی کو نہ فروخت کرتا ہے اور نہ شیئر کرتا ہے۔
+      </p>
+
+      <h4 style="margin:10px 0 4px;color:var(--primary)">2. حساس کوائف کا ماسکنگ تحفظ (Sensitive PII Protection)</h4>
+      <p style="margin:0 0 10px;color:var(--text-muted)">
+        کرایہ داروں کی اسکریننگ اور شناختی کارڈ نمبرز (CNIC) کو سسٹم کے عوامی منظر نامے میں ماسک (Mask e.g. 37405-*******-1) کر کے پیش کیا جاتا ہے تاکہ کوئی غیر مجاز فرد حساس معلومات نہ دیکھ سکے۔
+      </p>
+
+      <h4 style="margin:10px 0 4px;color:var(--primary)">3. 1-کلک مکمل ڈیٹا بیس بیک اپ و ایکسپورٹ (Full Database Portability)</h4>
+      <p style="margin:0 0 10px;color:var(--text-muted)">
+        آپ جب چاہیں ایک کلک پر اپنے تمام ڈیٹا کا مکمل SQLite بیک اپ یا ایکسل/CSV فائلز ڈاؤن لوڈ کر سکتے ہیں۔ کوئی وینڈر لاک ان (Vendor Lock-in) نہیں ہے۔
+      </p>
+
+      <h4 style="margin:10px 0 4px;color:var(--primary)">4. AI پروسیسنگ اور واٹس ایپ کا دائرہ کار</h4>
+      <p style="margin:0 0 10px;color:var(--text-muted)">
+        جب AI ملازمین (سرمد، عائشہ، وغیرہ) پیغامات کا ڈرافٹ بناتے ہیں تو صرف مطلوبہ ٹیکسٹ کا تجزیہ ہوتا ہے۔ واٹس ایپ پیغامات خودکار طور پر کلائنٹ کو نہیں جاتے بلکہ ایجنسی کا اسٹاف جائزہ لے کر خود روانہ کرتا ہے۔
+      </p>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+      <button class="pri" onclick="closePrivacyModal()">سمجھ آ گئی (Acknowledge)</button>
+    </div>
+  </div>
+</div>
+
+<!-- TERMS OF SERVICE MODAL -->
+<div id="termsModal" class="modal" onclick="if(event.target===this)closeTermsModal()">
+  <div class="modal-content" style="max-width:680px;border-radius:18px;padding:26px;border:1px solid var(--border)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.6rem">📜</span>
+        <div>
+          <h3 style="margin:0;font-size:1.2rem;font-weight:900">شرائط و لائسنس (Terms of Service & License)</h3>
+          <span style="font-size:0.78rem;color:var(--text-muted)">Dealo PropTech OS کمرشل لائسنس شرائط</span>
+        </div>
+      </div>
+      <button onclick="closeTermsModal()" style="background:transparent;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted)">&times;</button>
+    </div>
+    <div style="line-height:1.7;font-size:0.88rem;color:var(--text-main);max-height:60vh;overflow-y:auto;padding-right:6px">
+      <h4 style="margin:10px 0 4px;color:var(--primary)">1. تجارتی لائسنس (Commercial Agency License)</h4>
+      <p style="margin:0 0 10px;color:var(--text-muted)">
+        خریدے گئے پیکج (Starter, Pro, Enterprise) کے مطابق ایجنسی کو ڈیلو کا مکمل آپریٹنگ سسٹم استعمال کرنے کا لائسنس ملتا ہے۔ اس میں سافٹ ویئر اپڈیٹس، ڈیٹا بیس سپورٹ، اور آن سائٹ یا ریموٹ ٹریننگ شامل ہے۔
+      </p>
+
+      <h4 style="margin:10px 0 4px;color:var(--primary)">2. لسٹنگز اور ڈیلز کی تصدیق کی ذمہ داری</h4>
+      <p style="margin:0 0 10px;color:var(--text-muted)">
+        ڈیلو کا نظام پراپرٹی ڈیلرز کے روزمرہ کام میں آسانی پیدا کرتا ہے۔ پراپرٹی کے ٹائٹل، دستاویزات، سائٹ وزٹ اور مالیاتی لین دین کی حتمی قانونی جانچ پڑتال ایجنسی اور فریقین کی اپنی پیشہ ورانہ ذمہ داری ہے۔
+      </p>
+
+      <h4 style="margin:10px 0 4px;color:var(--primary)">3. تھرڈ پارٹی پلیٹ فارمز کی پالیسیز</h4>
+      <p style="margin:0 0 10px;color:var(--text-muted)">
+        واٹس ایپ میسجنگ کے لیے Meta کی کمیونیکیشن پالیسیز نافذ العمل رہتی ہیں۔ ڈیلو کا "Prepare + Review + User Send" طریقہ کار غیر مجاز سپیمنگ کی روک تھام اور ڈیلر کے اپنے کنٹرول کو برقرار رکھنے کے لیے ڈیزائن کیا گیا ہے۔
+      </p>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+      <button class="pri" onclick="closeTermsModal()">بند کریں (Close)</button>
+    </div>
+  </div>
 </div>
 
 <!-- FLOATING TOAST -->
@@ -5140,6 +5259,34 @@ let currentMapTile = null;
 const $ = id => document.getElementById(id);
 const t = k => (T[lang] && T[lang][k]) || k;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function maskCnic(c) {
+  if (!c) return "N/A";
+  const s = String(c).trim();
+  if (s.length >= 13) {
+    const parts = s.split("-");
+    if (parts.length === 3) return `${parts[0]}-*******-${parts[2]}`;
+    return s.substring(0, 5) + "-*******-" + s.slice(-1);
+  }
+  return s.length > 5 ? s.substring(0, 3) + "***" + s.slice(-2) : s;
+}
+
+function openPrivacyModal() {
+  const m = $("privacyPolicyModal");
+  if (m) m.classList.add("active");
+}
+function closePrivacyModal() {
+  const m = $("privacyPolicyModal");
+  if (m) m.classList.remove("active");
+}
+function openTermsModal() {
+  const m = $("termsModal");
+  if (m) m.classList.add("active");
+}
+function closeTermsModal() {
+  const m = $("termsModal");
+  if (m) m.classList.remove("active");
+}
 
 function showToast(msg) {
   const el = $("toast");
@@ -7528,7 +7675,7 @@ function renderScreeningsGrid() {
           <div>
             <h4 style="margin:0 0 2px;font-size:1.1rem;color:var(--text-main)">${esc(s.applicant_name)}</h4>
             <div style="font-size:0.85rem;color:var(--text-muted)">
-              📱 <strong>${esc(s.phone)}</strong> · CNIC: <code>${esc(s.cnic || 'N/A')}</code>
+              📱 <strong>${esc(s.phone)}</strong> · CNIC: <code>${esc(maskCnic(s.cnic))}</code>
             </div>
             <div style="font-size:0.85rem;color:var(--primary);margin-top:2px">
               🏢 پراپرٹی: <strong>${esc(s.society || s.prop_title || 'Rental Unit')}</strong>
@@ -8443,7 +8590,7 @@ const FLOW_STEPS_DATA = {
     `
   },
   4: {
-    title: "مرحلہ 4: آؤٹ بکس (Safe Send — 100% Meta Compliant)",
+    title: "مرحلہ 4: آؤٹ بکس (Human-in-the-Loop Safe Send)",
     sub: "میسج تیار ہے — آپ جائزہ لیں، ترمیم کریں، اور 1-کلک میں wa.me لنک سے کلائنٹ کو بھیجیں:",
     html: `
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
@@ -8456,7 +8603,7 @@ const FLOW_STEPS_DATA = {
         </div>
         <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
           <div style="font-size:0.75rem;color:#059669;font-weight:700">
-            🛡️ AI خود میسج نہیں بھیجتا، کنٹرول آپ کے پاس رہتا ہے۔ زیرو بین رسک!
+            🛡️ AI خود میسج نہیں بھیجتا، فائنل سینڈ کنٹرول آپ کے پاس رہتا ہے۔
           </div>
           <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum%20Haji%20Kamran%20sb,%20Soan%20Garden%207%20Marla%20deal%20ready" target="_blank" class="pri" style="padding:6px 14px;font-size:0.8rem;text-decoration:none;border-radius:6px;display:inline-flex;align-items:center;gap:4px">
             💬 Send via WhatsApp (wa.me)
