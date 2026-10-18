@@ -1932,23 +1932,35 @@ body.is-admin .public-only {
 
 /* Live Demo & Product Tour Modal Styles */
 .demo-modal-content {
-  max-width: 920px;
+  max-width: 960px;
   width: 95%;
-  max-height: 92vh;
-  overflow-y: auto;
+  max-height: 90vh;
   border-radius: 20px;
-  padding: 24px;
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+}
+.demo-modal-fixed-top {
+  padding: 20px 24px 0 24px;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+  z-index: 20;
 }
 .demo-modal-icon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 12px;
   background: linear-gradient(135deg, #10b981 0%, #0284c7 100%);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
 }
 .demo-voice-bar {
   display: flex;
@@ -1957,8 +1969,8 @@ body.is-admin .public-only {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%);
   border: 1px solid rgba(2, 132, 199, 0.25);
   border-radius: 12px;
-  padding: 12px 16px;
-  margin: 10px 0 14px 0;
+  padding: 10px 16px;
+  margin: 10px 0 12px 0;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -1995,33 +2007,65 @@ body.is-admin .public-only {
 }
 .demo-tab-nav {
   display: flex;
-  gap: 8px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 10px;
-  margin-bottom: 14px;
+  gap: 10px;
+  padding: 6px 0 14px 0;
+  margin: 0;
   overflow-x: auto;
-  flex-wrap: wrap;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.demo-tab-nav::-webkit-scrollbar {
+  display: none;
 }
 .demo-tab-btn {
-  background: var(--surface-hover);
-  border: 1px solid var(--border);
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--text);
-  transition: all 0.2s ease;
+  background: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+  padding: 10px 20px !important;
+  border-radius: 30px !important;
+  font-family: "Plus Jakarta Sans", "Noto Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  line-height: 1.4 !important;
+  cursor: pointer !important;
+  color: #0f172a !important; /* Crystal clear dark slate */
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 .demo-tab-btn:hover {
-  background: var(--surface);
-  border-color: var(--primary);
+  background: #e2e8f0 !important;
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
+  transform: translateY(-1px);
 }
 .active-demo-tab {
-  background: linear-gradient(135deg, #059669, #0284c7) !important;
-  color: #fff !important;
+  background: linear-gradient(135deg, #059669 0%, #0284c7 100%) !important;
+  color: #ffffff !important;
   border-color: transparent !important;
-  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
+}
+.demo-modal-scroll-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 20px 24px;
+  scroll-behavior: smooth;
+}
+.demo-modal-footer {
+  padding: 14px 24px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .demo-hero-box {
   background: var(--surface-hover);
@@ -4284,54 +4328,59 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
 <!-- DEALO LIVE DEMO & PRODUCT TOUR MODAL -->
 <div id="liveDemoModal" class="modal" onclick="if(event.target===this)closeLiveDemoModal()">
   <div class="modal-content demo-modal-content">
-    <!-- Modal Header -->
-    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:14px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="demo-modal-icon">⚡</div>
-        <div>
-          <h3 style="margin:0;font-size:1.25rem;font-weight:900" data-t="demoModalTitle">Dealo PropTech OS — لائیو ڈیمو و پرائسنگ ٹور</h3>
-          <span style="font-size:0.8rem;color:var(--text-muted)">اسلام آباد اور راولپنڈی کی پراپرٹی ایجنسیز کا مکمل جیو اسپیٹیل آپریٹنگ سسٹم</span>
-        </div>
-      </div>
-      <button onclick="closeLiveDemoModal()" style="background:transparent;border:none;font-size:1.6rem;cursor:pointer;color:var(--text-muted);line-height:1">&times;</button>
-    </div>
-
-    <!-- AI Voice Presenter Bar -->
-    <div class="demo-voice-bar">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="demo-voice-avatar">🤖</div>
-        <div>
-          <div style="font-weight:800;font-size:0.88rem;display:flex;align-items:center;gap:6px">
-            <span>Dealo AI Voice Presenter</span>
-            <span class="pulse-dot dot-green"></span>
-            <span id="demoVoiceWave" class="voice-wave" style="display:none">
-              <span></span><span></span><span></span><span></span>
-            </span>
+    <!-- FIXED TOP SECTION (Stays permanently in view, never scrolls away!) -->
+    <div class="demo-modal-fixed-top">
+      <!-- Modal Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="demo-modal-icon">⚡</div>
+          <div>
+            <h3 style="margin:0;font-size:1.25rem;font-weight:900" data-t="demoModalTitle">Dealo PropTech OS — لائیو ڈیمو و پرائسنگ ٹور</h3>
+            <span style="font-size:0.8rem;color:var(--text-muted)">اسلام آباد اور راولپنڈی کی پراپرٹی ایجنسیز کا مکمل جیو اسپیٹیل آپریٹنگ سسٹم</span>
           </div>
-          <div style="font-size:0.75rem;color:var(--text-muted)">مکمل سافٹ ویئر خصوصیات اور پرائسنگ کی لائیو آڈیو بریفنگ سنیں</div>
+        </div>
+        <button onclick="closeLiveDemoModal()" style="background:transparent;border:none;font-size:1.6rem;cursor:pointer;color:var(--text-muted);line-height:1">&times;</button>
+      </div>
+
+      <!-- AI Voice Presenter Bar -->
+      <div class="demo-voice-bar">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="demo-voice-avatar">🤖</div>
+          <div>
+            <div style="font-weight:800;font-size:0.88rem;display:flex;align-items:center;gap:6px">
+              <span>Dealo AI Voice Presenter</span>
+              <span class="pulse-dot dot-green"></span>
+              <span id="demoVoiceWave" class="voice-wave" style="display:none">
+                <span></span><span></span><span></span><span></span>
+              </span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">مکمل سافٹ ویئر خصوصیات اور پرائسنگ کی لائیو آڈیو بریفنگ سنیں</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="btnPlayDemoVoice" type="button" class="pri" style="padding:7px 14px;font-size:0.82rem;font-weight:800;border-radius:20px" onclick="toggleDemoVoice()">
+            🔊 <span>AI آواز میں سنیں (Play AI Voice)</span>
+          </button>
+          <button type="button" class="secondary" style="padding:7px 12px;font-size:0.82rem;border-radius:20px" onclick="stopDemoVoice()">
+            ⏹️ آواز بند کریں
+          </button>
         </div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button id="btnPlayDemoVoice" type="button" class="pri" style="padding:7px 14px;font-size:0.82rem;font-weight:800;border-radius:20px" onclick="toggleDemoVoice()">
-          🔊 <span>AI آواز میں سنیں (Play AI Voice)</span>
-        </button>
-        <button type="button" class="secondary" style="padding:7px 12px;font-size:0.82rem;border-radius:20px" onclick="stopDemoVoice()">
-          ⏹️ آواز بند کریں
-        </button>
+
+      <!-- Crystal-Clear Navigation Tabs (Always Pinned at Top) -->
+      <div class="demo-tab-nav">
+        <button id="demoTabBtn_overview" class="demo-tab-btn active-demo-tab" onclick="switchDemoTab('overview')">🌟 1. تعارف و لائیو فلو</button>
+        <button id="demoTabBtn_workforce" class="demo-tab-btn" onclick="switchDemoTab('workforce')">🤖 2. چھ (6) AI ملازمین</button>
+        <button id="demoTabBtn_modules" class="demo-tab-btn" onclick="switchDemoTab('modules')">🗺️ 3. جدید ماڈیولز</button>
+        <button id="demoTabBtn_pricing" class="demo-tab-btn" onclick="switchDemoTab('pricing')">💎 4. پرائسنگ پیکجز</button>
+        <button id="demoTabBtn_try" class="demo-tab-btn" onclick="switchDemoTab('try')">🚀 5. ابھی آزمائیں / رابطہ</button>
       </div>
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="demo-tab-nav">
-      <button id="demoTabBtn_overview" class="demo-tab-btn active-demo-tab" onclick="switchDemoTab('overview')">🌟 1. تعارف و ویژن</button>
-      <button id="demoTabBtn_workforce" class="demo-tab-btn" onclick="switchDemoTab('workforce')">🤖 2. چھ (6) AI ملازمین</button>
-      <button id="demoTabBtn_modules" class="demo-tab-btn" onclick="switchDemoTab('modules')">🗺️ 3. جدید ماڈیولز</button>
-      <button id="demoTabBtn_pricing" class="demo-tab-btn" onclick="switchDemoTab('pricing')">💎 4. پرائسنگ پیکجز</button>
-      <button id="demoTabBtn_try" class="demo-tab-btn" onclick="switchDemoTab('try')" style="background:rgba(16,185,129,0.15);color:#047857;border-color:rgba(16,185,129,0.3)">🚀 5. ابھی آزمائیں / رابطہ</button>
-    </div>
-
-    <!-- PANE 1: OVERVIEW & CORE VALUE -->
-    <div id="demoPane_overview" class="demo-pane">
+    <!-- SCROLLABLE CONTENT BODY (Panes scroll smoothly inside here) -->
+    <div class="demo-modal-scroll-body">
+      <!-- PANE 1: OVERVIEW & CORE VALUE -->
+      <div id="demoPane_overview" class="demo-pane">
       <div class="demo-hero-box">
         <span class="badge" style="background:#ecfdf5;color:#047857;font-weight:800">🇵🇰 ٹوئن سٹیز رئیل اسٹیٹ انوویشن</span>
         <h4 style="font-size:1.15rem;margin:8px 0;font-weight:800">ایجنسی کا روزمرہ کام خودکار بنائیں — واٹس ایپ کا شوروغل ختم، کسٹمر لیڈز محفوظ!</h4>
@@ -4640,20 +4689,21 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal Footer Actions -->
-    <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:14px;margin-top:10px">
-      <div style="font-size:0.8rem;color:var(--text-muted)">
-        💡 <strong>Dealo PropTech OS</strong> • اسلام آباد اور راولپنڈی ایجنسیز کے لیے
-      </div>
-      <div style="display:flex;gap:10px">
-        <button type="button" class="secondary" onclick="closeLiveDemoModal()">بند کریں (Close)</button>
-        <button type="button" class="pri" onclick="switchDemoTab('try')" style="font-weight:800">
-          🚀 اگلا مرحلہ: لائیو ٹیسٹ کریں
-        </button>
-      </div>
+  <!-- FIXED FOOTER ACTIONS (Permanently anchored at bottom) -->
+  <div class="demo-modal-footer">
+    <div style="font-size:0.82rem;color:var(--text-muted);font-weight:700">
+      💡 <strong>Dealo PropTech OS</strong> • اسلام آباد اور راولپنڈی ایجنسیز کے لیے
+    </div>
+    <div style="display:flex;gap:10px">
+      <button type="button" class="secondary" onclick="closeLiveDemoModal()">بند کریں (Close)</button>
+      <button type="button" class="pri" onclick="switchDemoTab('try')" style="font-weight:800">
+        🚀 اگلا مرحلہ: لائیو ٹیسٹ کریں
+      </button>
     </div>
   </div>
+</div>
 </div>
 
 <!-- FLOATING TOAST -->
@@ -8509,6 +8559,8 @@ function switchDemoTab(tabId) {
       }
     }
   });
+  const scrollBody = document.querySelector(".demo-modal-scroll-body");
+  if (scrollBody) scrollBody.scrollTop = 0;
 }
 
 function toggleDemoVoice() {
