@@ -96,6 +96,7 @@ PUBLIC_ROUTES = {
     ("/api/auth/logout", "POST"),
     ("/api/inquiry", "POST"),
     ("/api/voice-command", "POST"),
+    ("/api/demo-info", "GET"),
     ("/api/extension/status", "GET"),
     ("/api/extension/import", "POST"),
     ("/openapi.json", "GET"),
@@ -2740,8 +2741,43 @@ def execute_ai_manager_command(req: ManagerCommandReq):
     title = "AI Command Execution"
     report_content = ""
 
+    # 0. DEMO & PRICING INTENT: "Dealo demo aur pricing k baray mein maloomat chahiye"
+    if any(k in cmd for k in ["demo", "pricing", "price", "package", "maloomat", "taaruf", "kya hai", "functionality", "features", "khusoosiyat", "cost"]):
+        title = "Dealo PropTech OS — جامع ڈیمو، خصوصیات اور پرائسنگ ماڈل"
+        report_content = (
+            "### 🏢 Dealo PropTech OS — جامع ڈیمو اور پرائسنگ گائیڈ\n\n"
+            "**السلام علیکم!** Dealo پاکستان کا پہلا **Geospatial Real Estate Operating System** ہے، جو خاص طور پر **اسلام آباد اور راولپنڈی** کے رئیل اسٹیٹ ایجنٹس، بلڈرز اور پراپرٹی ڈیلرز کے روزمرہ کام کو خودکار اور منظم کرنے کے لیے تیار کیا گیا ہے۔\n\n"
+            "---\n\n"
+            "#### 🤖 1. آپ کی ایجنسی کے 6 خودکار AI ملازمین (The 6 AI Employees):\n\n"
+            "1. 🧠 **AI Manager (کمانڈ سینٹر):** پورے دفتر کا ماسٹر کوآرڈینیٹر۔ عام اردو وائس اور ٹیکسٹ کمانڈز سمجھتا ہے، تمام ایجنٹس کے کام کو مانیٹر کرتا ہے اور ایگزیکٹو فنانشل رپورٹس تیار کرتا ہے۔\n"
+            "2. 📥 **Sarmad — سرمد (واٹس ایپ پراپرٹی ہارویسٹر):** ڈیلرز کے شوروغل والے واٹس ایپ گروپس کے غیر منظم میسجز پڑھتا ہے اور سوسائٹی، سائز، قیمت اور فون نمبر نکال کر صاف ستھری لسٹنگ بنا دیتا ہے۔\n"
+            "3. 🎯 **Ayesha — عائشہ (اسمارٹ میچ میکر و ڈیل کلوزر):** خریدار کے بجٹ اور مطلوبہ علاقے کو دستیاب پراپرٹیز سے فوری میچ کرتی ہے اور 1-کلک میں واٹس ایپ کیٹلاگ پروپوزل تیار کرتی ہے۔\n"
+            "4. 🛡️ **Bilal — بلال (کرایہ دار اسکریننگ و ڈیو ڈیلیجنس):** کرایہ دار کے شناختی کارڈ، پولیس تصدیق، اور سابقہ ریکارڈ کی جانچ کر کے رسک ریٹنگ دیتا ہے تاکہ نادہندہ افراد سے بچا جا سکے۔\n"
+            "5. 💰 **Farhan — فرحان (خودکار رینٹ کلیکشن و فنانشل لیجر):** ہر ماہ کی مقررہ تاریخ پر رینٹ رول بناتا ہے، رسیدیں جنریٹ کرتا ہے اور مؤدبانہ اردو واٹس ایپ ریمائنڈرز ڈرافٹ کرتا ہے۔\n"
+            "6. 🛠️ **Tariq — طارق (بلڈنگ مینٹیننس و ورک آرڈرز):** پلمبر، الیکٹریشن اور مرمت کے کاموں کے ٹکٹ بناتا ہے، کاریگروں کو اسائن کرتا ہے اور اخراجات کا حساب رکھتا ہے۔\n\n"
+            "---\n\n"
+            "#### 🌟 2. جدید خصوصیات اور محفوظ ٹیکنالوجی:\n\n"
+            "- 🛡️ **100% میٹا پالیسی محفوظ WhatsApp ماڈل (Prepare + User Send):** سافٹ ویئر ڈیٹا پراسیس اور ڈرافٹ تیار کرتا ہے، مگر بھیجنے کا اختیار آپ کے پاس رہتا ہے۔ **زیرو بین رسک!**\n"
+            "- 🗺️ **ٹوئن سٹیز جیو اسپیٹیل میپ:** DHA، بحریہ ٹاؤن، سوہان گارڈن، جناح گارڈن، PWD، G-13 اور B-17 کے تصدیق شدہ نقشے۔\n"
+            "- 🎙️ **اردو آواز سے کمانڈز:** 'سرمد، سوہان گارڈن 5 مرلہ رینٹ دکھاؤ' جیسے الفاظ پر خودکار فلٹرنگ۔\n"
+            "- 👥 **ٹیم مینجمنٹ اور کمیشن لیجر:** ایجنٹس کی ڈائریکٹری، کمیشن اسپلٹ اور پے آؤٹ اسٹیٹس ٹریکنگ۔\n"
+            "- 📊 **اینالیٹکس ڈیش بورڈ:** لیڈ کنورژن شرح، تجارتی حجم، اور سب سے زیادہ مانگی جانے والی سوسائٹیز۔\n\n"
+            "---\n\n"
+            "#### 💎 3. کمرشل پرائسنگ پیکجز (Pricing Tiers):\n\n"
+            "| پیکج (Tier) | ون ٹائم سیٹ اپ | ماہانہ لائسنس | کس کے لیے بہترین ہے؟ | اہم خصوصیات |\n"
+            "|---|---|---|---|---|\n"
+            "| 🥉 **Starter Realtor** | PKR 35,000 | PKR 5,000 | سنگل ایجنٹ / سولو ڈیلر | 50 لسٹنگز، واٹس ایپ آؤٹ بکس، بنیادی میچنگ، لوکل ڈیٹا بیک اپ |\n"
+            "| 🥈 **Pro Agency OS** *(Most Popular)* | PKR 65,000 | PKR 10,000 | فعال ایجنسیز اور دفاتر | تمام 6 AI ورکرز، جیو میپ، ٹیم کمیشن لیجر (5 ایجنٹس)، رینٹل او ایس، وائس کمانڈز |\n"
+            "| 🥇 **Enterprise Network** | PKR 125,000 | PKR 20,000 | بڑے گروپس / ملٹی برانچ | لامحدود ایجنٹس، کسٹم واٹس ایپ برانڈنگ، پرائیویٹ کلاؤڈ یا سرور، ڈیڈیکیٹڈ سپورٹ |\n\n"
+            "---\n\n"
+            "#### 🚀 4. ابھی لائیو ڈیمو ٹیسٹ کریں یا ذاتی سیشن بُک کریں:\n\n"
+            "- 🌐 **آن لائن لائیو پورٹل:** [https://dealo.yoursmarttoolkit.com/](https://dealo.yoursmarttoolkit.com/)\n"
+            "- 🔑 **ڈیلر ایڈمن پن (PIN):** `dealo786` درج کر کے فوری کمانڈ سینٹر دیکھیں۔\n"
+            "- 📞 **آن سائٹ یا زوم ڈیمو بُک کریں:** بانی **Ayyaz Haider Kayani** سے واٹس ایپ پر رابطہ کریں: [0321-5873665](https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20PropTech%20OS%20agency%20software%20k%20demo%20aur%20pricing%20k%20baray%20mein%20maloomat%20chahiye.)\n"
+        )
+
     # 1. LEADS INTENT: "Aaj ke tamam naye property leads dikhao"
-    if any(k in cmd for k in ["lead", "inquir", "demand", "naye", "naya", "aaj"]):
+    elif any(k in cmd for k in ["lead", "inquir", "demand", "naye", "naya", "aaj"]):
         title = "نئے پراپرٹی لیڈز اور ڈیمانڈز رپورٹ"
         report_content = (
             f"### 🧠 Dealo AI Manager — تازہ ترین کسٹمر لیڈز رپورٹ\n\n"
@@ -3816,6 +3852,17 @@ def parse_voice_command(v: VoiceCommandReq):
     elif any(k in cmd_lower for k in ["shop", "dukan", "دکان"]):
         ptype = "shop"
 
+    # Detect Demo or Pricing intent in Voice
+    if any(k in cmd_lower for k in ["demo", "pricing", "ڈیمو", "پرائسنگ", "پیکج", "قیمت", "معلومات", "taaruf", "تعارف"]):
+        return {
+            "ok": True,
+            "action": "open_demo",
+            "bot": "manager",
+            "bot_name": "AI Manager (کمانڈ سینٹر)",
+            "command": cmd,
+            "reply": "جی! Dealo PropTech OS کا مکمل لائیو ڈیمو اور پرائسنگ ماڈل پیش کیا جا رہا ہے۔"
+        }
+
     # Listing filter command vs AI report task
     is_filter_cmd = any(k in cmd_lower for k in ["dikhao", "search", "dhoondo", "filter", "دکھاؤ", "تلاش", "چاہیے", "list"]) or (society or size_marla or kind)
 
@@ -3847,6 +3894,34 @@ def parse_voice_command(v: VoiceCommandReq):
         "bot_name": "AI Manager",
         "command": cmd,
         "reply": f"کمانڈ '{cmd}' AI مینیجر کو تفویض کر دی گئی ہے۔"
+    }
+
+
+@app.get("/api/demo-info")
+def get_demo_info():
+    """Returns comprehensive Dealo PropTech OS demo overview, features, 6 AI workers, and pricing structure."""
+    return {
+        "ok": True,
+        "name": "Dealo PropTech OS",
+        "tagline_ur": "اسلام آباد اور راولپنڈی کے پراپرٹی ڈیلرز اور رئیل اسٹیٹ ایجنسیز کا مکمل جیو اسپیٹیل آپریٹنگ سسٹم",
+        "tagline_en": "Geospatial Real Estate Operating System & Smart CRM for Pakistani Agencies",
+        "founder": "Ayyaz Haider Kayani",
+        "phone": "0321-5873665",
+        "whatsapp_url": "https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20PropTech%20OS%20agency%20software%20k%20demo%20aur%20pricing%20k%20baray%20mein%20maloomat%20chahiye.",
+        "admin_pin": "dealo786",
+        "coverage": ["DHA Islamabad", "Bahria Town Rawalpindi", "Jinnah Garden", "Soan Garden", "PWD", "G-13", "B-17", "Gulberg Greens"],
+        "speech_narration_ur": (
+            "السلام علیکم! Dealo PropTech OS میں خوش آمدید۔ "
+            "یہ اسلام آباد اور راولپنڈی کی رئیل اسٹیٹ ایجنسیز اور پراپرٹی ڈیلرز کے لیے پاکستان کا پہلا جیو اسپیٹیل آپریٹنگ سسٹم ہے۔ "
+            "Dealo آپ کے دفتر کے لیے 6 خودکار AI ملازمین لاتا ہے: "
+            "AI مینیجر جو پورے دفتر کو کنٹرول کرتا ہے، سرمد جو واٹس ایپ گروپس سے پراپرٹیز نکالتا ہے، "
+            "عائشہ جو خریداروں کو پراپرٹیز میچ کر کے واٹس ایپ پروپوزل بناتی ہے، "
+            "بلال جو کرایہ داروں کی اسکریننگ کرتا ہے، فرحان جو ماہانہ رینٹ اور بقایا جات وصول کرتا ہے، "
+            "اور طارق جو بلڈنگ مینٹیننس سنبھالتا ہے۔ "
+            "ہماری واٹس ایپ آٹومیشن سو فیصد میٹا پالیسی کے مطابق محفوظ ہے اور نمبر بین ہونے کا کوئی خطرہ نہیں ہے۔ "
+            "اسٹارٹر پیکج پینتیس ہزار روپے، پرو ایجنسی او ایس پینسٹھ ہزار روپے، اور انٹرپرائز نیٹ ورک ایک لاکھ پچیس ہزار روپے سے شروع ہوتے ہیں۔ "
+            "آپ ابھی کمانڈ سینٹر ٹیسٹ کر سکتے ہیں یا واٹس ایپ پر لائیو ڈیمو بُک کر سکتے ہیں۔ شکریہ!"
+        )
     }
 
 

@@ -1929,6 +1929,206 @@ body.is-admin .public-only {
 .deal-pill-pending { background: rgba(234, 179, 8, 0.15); color: #b45309; border: 1px solid rgba(234, 179, 8, 0.3); }
 .deal-pill-approved { background: rgba(2, 132, 199, 0.15); color: #0369a1; border: 1px solid rgba(2, 132, 199, 0.3); }
 .deal-pill-paid { background: rgba(16, 185, 129, 0.15); color: #047857; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+/* Live Demo & Product Tour Modal Styles */
+.demo-modal-content {
+  max-width: 920px;
+  width: 95%;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  padding: 24px;
+}
+.demo-modal-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981 0%, #0284c7 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+.demo-voice-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 10px 0 14px 0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.demo-voice-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #059669, #0284c7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.voice-wave {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.voice-wave span {
+  width: 3px;
+  height: 100%;
+  background: #10b981;
+  border-radius: 2px;
+  animation: wavePulse 0.8s ease-in-out infinite alternate;
+}
+.voice-wave span:nth-child(2) { animation-delay: 0.2s; height: 70%; }
+.voice-wave span:nth-child(3) { animation-delay: 0.4s; height: 100%; }
+.voice-wave span:nth-child(4) { animation-delay: 0.1s; height: 50%; }
+@keyframes wavePulse {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
+}
+.demo-tab-nav {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+.demo-tab-btn {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+.demo-tab-btn:hover {
+  background: var(--surface);
+  border-color: var(--primary);
+}
+.active-demo-tab {
+  background: linear-gradient(135deg, #059669, #0284c7) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+}
+.demo-hero-box {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.demo-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+.demo-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+.demo-feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  transition: transform 0.15s ease;
+}
+.demo-feature-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+.demo-worker-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.demo-worker-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.demo-worker-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.demo-worker-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.demo-pricing-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.demo-pricing-pop {
+  border: 2px solid #0284c7;
+  background: rgba(2, 132, 199, 0.03);
+  box-shadow: 0 4px 15px rgba(2, 132, 199, 0.15);
+}
+.demo-pop-badge {
+  position: absolute;
+  top: -10px;
+  inset-inline-end: 14px;
+  background: #0284c7;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+.demo-pricing-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+.demo-pricing-target {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  min-height: 24px;
+}
+.demo-pricing-price {
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin-bottom: 2px;
+}
+.demo-pricing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--text);
+  flex-grow: 1;
+}
 </style>
 </head>
 <body>
@@ -1966,6 +2166,11 @@ body.is-admin .public-only {
     <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20properties%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="header-btn public-only" style="background:#25d366;color:#fff;border-color:transparent;font-weight:700;text-decoration:none">
       💬 <span data-t="contactAgency">0321-5873665</span>
     </a>
+
+    <!-- Live Demo & Pricing Tour Button -->
+    <button id="btnHeaderLiveDemo" onclick="openLiveDemoModal()" class="header-btn" style="background:linear-gradient(135deg, #10b981 0%, #0284c7 100%);color:#fff;border-color:transparent;font-weight:800;box-shadow:0 2px 8px rgba(16,185,129,0.35);cursor:pointer" title="Explore Complete Dealo OS Functionality & Pricing">
+      ⚡ <span data-t="liveDemoBtn">Live Demo & Pricing</span>
+    </button>
 
     <!-- Urdu Voice Assistant Button -->
     <button id="btnVoiceCommand" onclick="startVoiceRecognition()" class="header-btn" style="background:rgba(239,68,68,0.1);color:#dc2626;border-color:rgba(239,68,68,0.3);font-weight:700" title="Urdu Voice Assistant (مثال: 'سرمد، سوہان گارڈن 5 مرلہ رینٹ دکھاؤ')">
@@ -2024,6 +2229,9 @@ body.is-admin .public-only {
       <button class="pri-hero-btn" onclick="scrollToSearch()">
         🔍 <span data-t="heroCtaSearch">پراپرٹیز تلاش کریں</span>
       </button>
+      <button class="sec-hero-btn" onclick="openLiveDemoModal()" style="background:rgba(2,132,199,0.15);color:#0284c7;border-color:#38bdf8;font-weight:800">
+        ⚡ <span data-t="heroCtaDemo">Live Demo & تعارف</span>
+      </button>
       <button class="sec-hero-btn" onclick="scrollToInquiry()">
         ✨ <span data-t="heroCtaDemand">اپنی ڈیمانڈ درج کریں</span>
       </button>
@@ -2046,9 +2254,9 @@ body.is-admin .public-only {
       <button class="dealer-portal-cta" onclick="openAdminLoginModal()">
         🔐 <span data-t="dealerStripPortal">Open Dealer OS Portal</span>
       </button>
-      <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20PropTech%20OS%20agency%20software%20k%20demo%20aur%20pricing%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="dealer-demo-cta">
-        ⚡ <span data-t="dealerStripDemo">Book Live Demo</span>
-      </a>
+      <button class="dealer-demo-cta" onclick="openLiveDemoModal()" style="border:none;cursor:pointer">
+        ⚡ <span data-t="dealerStripDemo">Book Live Demo & Tour</span>
+      </button>
     </div>
   </div>
 </div>
@@ -2924,6 +3132,7 @@ body.is-admin .public-only {
           <button type="button" class="secondary" style="font-size:0.77rem;padding:5px 11px;border-radius:16px" onclick="setAndRunManagerCmd('Pending maintenance complaints ki report banao.')">⚡ 4. پینڈنگ مینٹیننس شکایات رپورٹ</button>
           <button type="button" class="secondary" style="font-size:0.77rem;padding:5px 11px;border-radius:16px" onclick="setAndRunManagerCmd('Is mahine rent collection aur outstanding rent calculate karo.')">⚡ 5. اس ماہ کی رینٹ وصولی اور واجبات</button>
           <button type="button" class="secondary" style="font-size:0.77rem;padding:5px 11px;border-radius:16px" onclick="setAndRunManagerCmd('Owner ke liye monthly statement tayyar karo.')">⚡ 6. اونر کا ماہانہ اکاؤنٹ اسٹیٹمنٹ</button>
+          <button type="button" class="secondary" style="font-size:0.77rem;padding:5px 11px;border-radius:16px;background:rgba(16,185,129,0.15);color:#047857;border-color:rgba(16,185,129,0.3);font-weight:700" onclick="setAndRunManagerCmd('Dealo PropTech OS demo aur pricing k baray mein maloomat chahiye.')">⚡ 7. سافٹ ویئر ڈیمو اور پرائسنگ پیکجز</button>
         </div>
       </div>
 
@@ -4022,6 +4231,334 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
   </div>
 </div>
 
+<!-- DEALO LIVE DEMO & PRODUCT TOUR MODAL -->
+<div id="liveDemoModal" class="modal" onclick="if(event.target===this)closeLiveDemoModal()">
+  <div class="modal-content demo-modal-content">
+    <!-- Modal Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:14px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="demo-modal-icon">⚡</div>
+        <div>
+          <h3 style="margin:0;font-size:1.25rem;font-weight:900" data-t="demoModalTitle">Dealo PropTech OS — لائیو ڈیمو و پرائسنگ ٹور</h3>
+          <span style="font-size:0.8rem;color:var(--text-muted)">اسلام آباد اور راولپنڈی کی پراپرٹی ایجنسیز کا مکمل جیو اسپیٹیل آپریٹنگ سسٹم</span>
+        </div>
+      </div>
+      <button onclick="closeLiveDemoModal()" style="background:transparent;border:none;font-size:1.6rem;cursor:pointer;color:var(--text-muted);line-height:1">&times;</button>
+    </div>
+
+    <!-- AI Voice Presenter Bar -->
+    <div class="demo-voice-bar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="demo-voice-avatar">🤖</div>
+        <div>
+          <div style="font-weight:800;font-size:0.88rem;display:flex;align-items:center;gap:6px">
+            <span>Dealo AI Voice Presenter</span>
+            <span class="pulse-dot dot-green"></span>
+            <span id="demoVoiceWave" class="voice-wave" style="display:none">
+              <span></span><span></span><span></span><span></span>
+            </span>
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">مکمل سافٹ ویئر خصوصیات اور پرائسنگ کی لائیو آڈیو بریفنگ سنیں</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="btnPlayDemoVoice" type="button" class="pri" style="padding:7px 14px;font-size:0.82rem;font-weight:800;border-radius:20px" onclick="toggleDemoVoice()">
+          🔊 <span>AI آواز میں سنیں (Play AI Voice)</span>
+        </button>
+        <button type="button" class="secondary" style="padding:7px 12px;font-size:0.82rem;border-radius:20px" onclick="stopDemoVoice()">
+          ⏹️ آواز بند کریں
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="demo-tab-nav">
+      <button id="demoTabBtn_overview" class="demo-tab-btn active-demo-tab" onclick="switchDemoTab('overview')">🌟 1. تعارف و ویژن</button>
+      <button id="demoTabBtn_workforce" class="demo-tab-btn" onclick="switchDemoTab('workforce')">🤖 2. چھ (6) AI ملازمین</button>
+      <button id="demoTabBtn_modules" class="demo-tab-btn" onclick="switchDemoTab('modules')">🗺️ 3. جدید ماڈیولز</button>
+      <button id="demoTabBtn_pricing" class="demo-tab-btn" onclick="switchDemoTab('pricing')">💎 4. پرائسنگ پیکجز</button>
+      <button id="demoTabBtn_try" class="demo-tab-btn" onclick="switchDemoTab('try')" style="background:rgba(16,185,129,0.15);color:#047857;border-color:rgba(16,185,129,0.3)">🚀 5. ابھی آزمائیں / رابطہ</button>
+    </div>
+
+    <!-- PANE 1: OVERVIEW & CORE VALUE -->
+    <div id="demoPane_overview" class="demo-pane">
+      <div class="demo-hero-box">
+        <span class="badge" style="background:#ecfdf5;color:#047857;font-weight:800">🇵🇰 ٹوئن سٹیز رئیل اسٹیٹ انوویشن</span>
+        <h4 style="font-size:1.15rem;margin:8px 0;font-weight:800">ایجنسی کا روزمرہ کام خودکار بنائیں — واٹس ایپ کا شوروغل ختم، کسٹمر لیڈز محفوظ!</h4>
+        <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;margin:0">
+          اسلام آباد اور راولپنڈی کے پراپرٹی ڈیلرز کا سب سے بڑا مسئلہ یہ ہے کہ واٹس ایپ گروپس میں روزانہ سینکڑوں میسجز گم ہو جاتے ہیں، پرانے خریداروں کو فالو اپ نہیں مل پاتا، اور کرائے کا حساب کاغذی رجسٹروں پر بکھر جاتا ہے۔ 
+          <strong>Dealo PropTech OS</strong> آپ کی ایجنسی کے کمپیوٹر میں 6 مخصوص AI ملازمین انسٹال کرتا ہے جو آپ کے لیے ڈیٹا اکٹھا کرتے ہیں، خریدار ڈھونڈتے ہیں اور رینٹل لیجر سنبھالتے ہیں۔
+        </p>
+      </div>
+
+      <div class="demo-grid-3" style="margin-top:14px">
+        <div class="demo-feature-card">
+          <div style="font-size:1.5rem">🛡️</div>
+          <div style="font-weight:800;font-size:0.92rem;margin:4px 0">100% میٹا محفوظ واٹس ایپ</div>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0">
+            "Prepare + User Send" ماڈل۔ کوئی سپیم بوٹ نہیں، میسج تیار سافٹ ویئر کرے گا لیکن سینڈ آپ خود دبائیں گے۔ واٹس ایپ نمبر بند ہونے کا زیرو خطرہ!
+          </p>
+        </div>
+        <div class="demo-feature-card">
+          <div style="font-size:1.5rem">📍</div>
+          <div style="font-weight:800;font-size:0.92rem;margin:4px 0">جیو اسپیٹیل سوسائٹی میپ</div>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0">
+            DHA، بحریہ ٹاؤن، سوہان گارڈن، جناح گارڈن، PWD، G-13 اور B-17 کی درست حدود اور ریٹ ہسٹری کے ساتھ انٹرایکٹو نقشہ۔
+          </p>
+        </div>
+        <div class="demo-feature-card">
+          <div style="font-size:1.5rem">🔒</div>
+          <div style="font-weight:800;font-size:0.92rem;margin:4px 0">پرائیویٹ و لوکل ڈیٹا بیس</div>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0">
+            آپ کے کسٹمرز اور پرائیویٹ لسٹنگز کا ڈیٹا کسی پبلک سائٹ پر لیک نہیں ہوتا۔ سارا کنٹرول آپ کے پاس محفوظ رہتا ہے۔
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 2: THE 6 AI WORKERS -->
+    <div id="demoPane_workforce" class="demo-pane" style="display:none">
+      <div style="margin-bottom:12px;font-size:0.88rem;color:var(--text-muted)">
+        Dealo کے 6 ورچوئل AI ملازمین آپ کے دفتر کے مختلف ڈیپارٹمنٹس کو 24/7 خودکار انداز میں چلاتے ہیں:
+      </div>
+      <div class="demo-grid-2">
+        <!-- Worker 1 -->
+        <div class="demo-worker-card">
+          <div class="demo-worker-head">
+            <div class="demo-worker-avatar" style="background:#0284c7">🧠</div>
+            <div>
+              <div style="font-weight:800;font-size:0.95rem">AI Manager (کمانڈ سینٹر)</div>
+              <span class="demo-worker-badge">Central Brain & Audit</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:8px 0 0 0;line-height:1.5">
+            <strong>کردار:</strong> پورے دفتر کا ماسٹر مینیجر۔ ڈیلر کی عام بول چال اور وائس کمانڈز کا تجزیہ کرتا ہے، تمام بوٹس کو ٹاسک اسائن کرتا ہے اور ایگزیکٹو فنانشل آڈٹ رپورٹس بناتا ہے۔
+          </p>
+        </div>
+
+        <!-- Worker 2 -->
+        <div class="demo-worker-card">
+          <div class="demo-worker-head">
+            <div class="demo-worker-avatar" style="background:#10b981">📥</div>
+            <div>
+              <div style="font-weight:800;font-size:0.95rem">Sarmad — سرمد (پراپرٹی ہارویسٹر)</div>
+              <span class="demo-worker-badge">WhatsApp Group Parser</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:8px 0 0 0;line-height:1.5">
+            <strong>کردار:</strong> واٹس ایپ گروپس کے بے ہنگم میسجز کو پڑھ کر سوسائٹی، سائز، قیمت، اور فون نمبر نکال کر خودکار تصدیق شدہ لسٹنگ میں تبدیل کرتا ہے۔ دستی ٹائپنگ کی ضرورت نہیں!
+          </p>
+        </div>
+
+        <!-- Worker 3 -->
+        <div class="demo-worker-card">
+          <div class="demo-worker-head">
+            <div class="demo-worker-avatar" style="background:#ec4899">🎯</div>
+            <div>
+              <div style="font-weight:800;font-size:0.95rem">Ayesha — عائشہ (اسمارٹ میچ میکر)</div>
+              <span class="demo-worker-badge">Deal Closer & Matchmaker</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:8px 0 0 0;line-height:1.5">
+            <strong>کردار:</strong> خریدار کے بجٹ اور لوکیشن کو موجودہ پراپرٹیز سے لمحوں میں میچ کرتی ہے اور 1-کلک میں واٹس ایپ پر خوبصورت کیٹلاگ کارڈ پروپوزل بنا کر بھیجتی ہے۔
+          </p>
+        </div>
+
+        <!-- Worker 4 -->
+        <div class="demo-worker-card">
+          <div class="demo-worker-head">
+            <div class="demo-worker-avatar" style="background:#8b5cf6">🛡️</div>
+            <div>
+              <div style="font-weight:800;font-size:0.95rem">Bilal — بلال (کرایہ دار اسکریننگ)</div>
+              <span class="demo-worker-badge">Due Diligence & Risk Rating</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:8px 0 0 0;line-height:1.5">
+            <strong>کردار:</strong> کرایہ داروں کے شناختی کارڈ، پولیس ویریفکیشن، سابقہ ریکارڈ اور کرایہ دینے کی مالی استعداد کا آڈٹ کر کے رسک اسکور تیار کرتا ہے تاکہ نادہندہ افراد سے بچا جا سکے۔
+          </p>
+        </div>
+
+        <!-- Worker 5 -->
+        <div class="demo-worker-card">
+          <div class="demo-worker-head">
+            <div class="demo-worker-avatar" style="background:#f59e0b">💰</div>
+            <div>
+              <div style="font-weight:800;font-size:0.95rem">Farhan — فرحان (رینٹ کلیکشن و لیجر)</div>
+              <span class="demo-worker-badge">Rent Roll & Automated Ledger</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:8px 0 0 0;line-height:1.5">
+            <strong>کردار:</strong> ہر ماہ کی 1 سے 5 تاریخ کو رینٹ رول بناتا ہے، بقایا جات کا حساب رکھتا ہے، رسیدیں تیار کرتا ہے اور مؤدبانہ اردو واٹس ایپ ریمائنڈرز جنریٹ کرتا ہے۔
+          </p>
+        </div>
+
+        <!-- Worker 6 -->
+        <div class="demo-worker-card">
+          <div class="demo-worker-head">
+            <div class="demo-worker-avatar" style="background:#ef4444">🛠️</div>
+            <div>
+              <div style="font-weight:800;font-size:0.95rem">Tariq — طارق (مینٹیننس کوآرڈینیٹر)</div>
+              <span class="demo-worker-badge">Work Orders & Technician Tracker</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:8px 0 0 0;line-height:1.5">
+            <strong>کردار:</strong> پانی کی موٹر، بجلی، یا سینیٹری کی شکایات کے ورک آرڈرز بناتا ہے، مقامی پلمبر/الیکٹریشن کو اسائن کرتا ہے اور خرچہ اونر کے ماہانہ حساب میں درج کرتا ہے۔
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 3: ADVANCED MODULES -->
+    <div id="demoPane_modules" class="demo-pane" style="display:none">
+      <div class="demo-grid-2">
+        <div class="demo-feature-card">
+          <div style="font-size:1.5rem">🎙️</div>
+          <div style="font-weight:800;font-size:0.95rem;margin:4px 0">اردو وائس اسسٹنٹ (Urdu Voice Commands)</div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:0;line-height:1.5">
+            ڈیلرز کے لیے ٹائپنگ کی زحمت ختم! مائیکروفون پر کلک کریں اور عام الفاظ میں بولیں: 
+            <em>"سرمد، سوہان گارڈن 5 مرلہ رینٹ دکھاؤ"</em> یا <em>"آج کے نائے لیڈز دکھاؤ"</em> — سسٹم فوراً حکم پر عمل کرتا ہے۔
+          </p>
+        </div>
+        <div class="demo-feature-card">
+          <div style="font-size:1.5rem">👥</div>
+          <div style="font-weight:800;font-size:0.95rem;margin:4px 0">ٹیم مینجمنٹ و کمیشن لیجر (Commission Tracking)</div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:0;line-height:1.5">
+            ایجنسی کے ایجنٹس اور فیلڈ بوائز کا کمیشن اسپلٹ (50/50 یا 60/40)، کلوزڈ ڈیلز، اور پے آؤٹ اسٹیٹس (Pending, Approved, Paid) ایک شفاف لیجر میں محفوظ رکھیں۔
+          </p>
+        </div>
+        <div class="demo-feature-card">
+          <div style="font-size:1.5rem">📊</div>
+          <div style="font-weight:800;font-size:0.95rem;margin:4px 0">ایگزیکٹو اینالیٹکس ڈیش بورڈ (Real-Time Analytics)</div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:0;line-height:1.5">
+            ایجنسی کا لیڈ کنورژن ریٹ %، گزشتہ 30 دنوں کی نئی ڈیمانڈز، ٹوٹل ڈیل والیوم، اور ٹاپ سوسائٹیز کی طلب بمقابلہ لسٹنگز کا گرافیکل جائزہ لیں۔
+          </p>
+        </div>
+        <div class="demo-feature-card">
+          <div style="font-size:1.5rem">⚡</div>
+          <div style="font-weight:800;font-size:0.95rem;margin:4px 0">1-کلک کروم ایکسٹینشن اور آؤٹ بکس</div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:0;line-height:1.5">
+            زمین ڈاٹ کام یا OLX پر پراپرٹی دیکھتے ہوئے 1-کلک میں کلپ کر کے اپنی ایجنسی کے پرائیویٹ Dealo پورٹل میں امپورٹ کریں اور فوری کیٹلاگ بنائیں۔
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 4: PRICING PACKAGES -->
+    <div id="demoPane_pricing" class="demo-pane" style="display:none">
+      <div style="text-align:center;margin-bottom:14px">
+        <span class="badge" style="background:#e0f2fe;color:#0369a1;font-weight:800">شفاف کمرشل پرائسنگ ماڈل</span>
+        <h4 style="font-size:1.15rem;margin:6px 0;font-weight:800">ایجنسی کے سائز کے مطابق 3 لچکدار پیکجز</h4>
+        <span style="font-size:0.8rem;color:var(--text-muted)">صرف ایک سودا کلوز ہونے پر سافٹ ویئر کا پورے سال کا خرچہ نکل آتا ہے!</span>
+      </div>
+
+      <div class="demo-grid-3">
+        <!-- Tier 1 -->
+        <div class="demo-pricing-card">
+          <div class="demo-pricing-title">🥉 Starter Realtor</div>
+          <div class="demo-pricing-target">سولو ایجنٹ اور چھوٹے ڈیلرز کے لیے</div>
+          <div class="demo-pricing-price">
+            PKR 35,000 <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">ون ٹائم سیٹ اپ</span>
+          </div>
+          <div style="font-size:0.82rem;font-weight:700;color:#059669;margin-bottom:12px">+ PKR 5,000 / ماہانہ لائسنس</div>
+          <ul class="demo-pricing-list">
+            <li>✓ سنگل ڈیلر لاگ ان</li>
+            <li>✓ 50 ایکٹو پراپرٹی لسٹنگز</li>
+            <li>✓ واٹس ایپ آؤٹ بکس (Prepare + Send)</li>
+            <li>✓ بنیادی کسٹمر ڈیمانڈ میچنگ</li>
+            <li>✓ محفوظ لوکل SQLite بیک اپ</li>
+          </ul>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="demo-pricing-card demo-pricing-pop">
+          <div class="demo-pop-badge">سب سے مقبول • BEST VALUE</div>
+          <div class="demo-pricing-title">🥈 Pro Agency OS</div>
+          <div class="demo-pricing-target">باقاعدہ رئیل اسٹیٹ دفاتر اور ایجنسیز</div>
+          <div class="demo-pricing-price" style="color:#0284c7">
+            PKR 65,000 <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">ون ٹائم سیٹ اپ</span>
+          </div>
+          <div style="font-size:0.82rem;font-weight:700;color:#0284c7;margin-bottom:12px">+ PKR 10,000 / ماہانہ لائسنس</div>
+          <ul class="demo-pricing-list">
+            <li>✓ <strong>تمام 6 خودکار AI ملازمین</strong></li>
+            <li>✓ ٹوئن سٹیز جیو اسپیٹیل میپنگ</li>
+            <li>✓ <strong>ٹیم کمیشن ٹریکنگ لیجر (5 ایجنٹس)</strong></li>
+            <li>✓ رینٹل بلڈنگ او ایس و کرایہ دار اسکریننگ</li>
+            <li>✓ <strong>اردو آواز سے کمانڈز (Voice AI)</strong></li>
+            <li>✓ اینالیٹکس و کنورژن ڈیش بورڈ</li>
+            <li>✓ آن سائٹ ٹریننگ و واٹس ایپ ترجیحی سپورٹ</li>
+          </ul>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="demo-pricing-card">
+          <div class="demo-pricing-title">🥇 Enterprise Network</div>
+          <div class="demo-pricing-target">بڑے رئیل اسٹیٹ گروپس و ملٹی برانچ</div>
+          <div class="demo-pricing-price">
+            PKR 125,000 <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">ون ٹائم سیٹ اپ</span>
+          </div>
+          <div style="font-size:0.82rem;font-weight:700;color:#7c3aed;margin-bottom:12px">+ PKR 20,000 / ماہانہ لائسنس</div>
+          <ul class="demo-pricing-list">
+            <li>✓ لامحدود ایجنٹس اور ملٹی برانچز</li>
+            <li>✓ کسٹم واٹس ایپ برانڈنگ و ٹیمپلیٹس</li>
+            <li>✓ پرائیویٹ کلاؤڈ یا لوکل سرور ڈپلائمنٹ</li>
+            <li>✓ کسٹم ایجنسی رپورٹس اور اونر اسٹیٹمنٹس</li>
+            <li>✓ مکمل ڈیٹا مائیگریشن اور VIP سپورٹ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 5: TRY IT NOW & BOOKING -->
+    <div id="demoPane_try" class="demo-pane" style="display:none">
+      <div style="text-align:center;margin-bottom:16px">
+        <h4 style="font-size:1.15rem;margin:4px 0;font-weight:800">ڈیمو کو ابھی خود چلا کر دیکھیں یا ذاتی سیشن بُک کریں!</h4>
+        <span style="font-size:0.85rem;color:var(--text-muted)">آپ بغیر کسی انتظار کے لائیو سافٹ ویئر کی تمام صلاحیتیں ٹیسٹ کر سکتے ہیں۔</span>
+      </div>
+
+      <div class="demo-grid-2">
+        <!-- Action 1: 1-Click Interactive Login -->
+        <div style="background:var(--surface-hover);border:2px dashed #059669;border-radius:14px;padding:20px;text-align:center">
+          <div style="font-size:2.2rem">🧪</div>
+          <h5 style="margin:8px 0;font-size:1.05rem;font-weight:800">1-کلک لائیو کمانڈ سینٹر ٹیسٹ کریں</h5>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px 0">
+            ایک کلک پر ایڈمن پورٹل میں داخل ہوں، تمام 11 ٹیبز، AI بوٹس، اینالیٹکس اور کمیشن لیجر کو لائیو استعمال کر کے دیکھیں۔
+          </p>
+          <button type="button" class="pri" style="width:100%;padding:12px;font-weight:800;font-size:0.92rem;border-radius:10px" onclick="launchInteractiveDemoMode()">
+            🔓 لائیو کمانڈ سینٹر کھولیں (Test Now)
+          </button>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">ڈیفالٹ پن: <code>dealo786</code> (خودکار درج ہو جائے گا)</div>
+        </div>
+
+        <!-- Action 2: WhatsApp Booking -->
+        <div style="background:rgba(37,211,102,0.06);border:2px solid rgba(37,211,102,0.4);border-radius:14px;padding:20px;text-align:center">
+          <div style="font-size:2.2rem">💬</div>
+          <h5 style="margin:8px 0;font-size:1.05rem;font-weight:800">واٹس ایپ پر ڈیمو اور ٹریننگ سیشن بُک کریں</h5>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px 0">
+            بانی اور پروپ ٹیک لیڈ Ayyaz Haider Kayani سے براہِ راست رابطہ کریں اور اپنے دفتر کے لیے کسٹم ڈیمو شیڈول کریں۔
+          </p>
+          <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20PropTech%20OS%20agency%20software%20k%20demo%20aur%20pricing%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" style="display:block;background:#25d366;color:#fff;text-decoration:none;padding:12px;border-radius:10px;font-weight:800;font-size:0.92rem;box-shadow:0 3px 10px rgba(37,211,102,0.3)">
+            📲 واٹس ایپ پر رابطہ کریں (0321-5873665)
+          </a>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">دفتر / آن سائٹ کوریج: اسلام آباد اور راولپنڈی</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:14px;margin-top:10px">
+      <div style="font-size:0.8rem;color:var(--text-muted)">
+        💡 <strong>Dealo PropTech OS</strong> • اسلام آباد اور راولپنڈی ایجنسیز کے لیے
+      </div>
+      <div style="display:flex;gap:10px">
+        <button type="button" class="secondary" onclick="closeLiveDemoModal()">بند کریں (Close)</button>
+        <button type="button" class="pri" onclick="switchDemoTab('try')" style="font-weight:800">
+          🚀 اگلا مرحلہ: لائیو ٹیسٹ کریں
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- FLOATING TOAST -->
 <div id="toast"></div>
 
@@ -4186,7 +4723,11 @@ const T = {
     tmKpiPaid: "ایجنٹس کو ادا شدہ کمیشن",
     tmKpiPending: "زیرِ التواء ادائیگیاں (Pending Payouts)",
     teamDirectoryTitle: "ایجنٹس اور بروکرز ڈائریکٹری (Team Directory)",
-    commissionLedgerTitle: "کلوزڈ ڈیلز و کمیشن پے آؤٹ لیجر (Commission Deals Ledger)"
+    commissionLedgerTitle: "کلوزڈ ڈیلز و کمیشن پے آؤٹ لیجر (Commission Deals Ledger)",
+    liveDemoBtn: "⚡ لائیو ڈیمو و پرائسنگ",
+    heroCtaDemo: "⚡ لائیو ڈیمو و تعارف",
+    dealerStripDemo: "⚡ مکمل ڈیمو و پرائسنگ ٹور",
+    demoModalTitle: "Dealo PropTech OS — لائیو ڈیمو و پرائسنگ ٹور"
   },
   en: {
     props: "🗺️ Map & Search",
@@ -4347,7 +4888,11 @@ const T = {
     tmKpiPaid: "Agent Commissions Paid",
     tmKpiPending: "Pending Payouts",
     teamDirectoryTitle: "Team Agents Directory",
-    commissionLedgerTitle: "Closed Deals & Commission Ledger"
+    commissionLedgerTitle: "Closed Deals & Commission Ledger",
+    liveDemoBtn: "⚡ Live Demo & Pricing",
+    heroCtaDemo: "⚡ Live Demo & Tour",
+    dealerStripDemo: "⚡ Live Demo & Pricing Tour",
+    demoModalTitle: "Dealo PropTech OS — Live Demo & Pricing Tour"
   }
 };
 
@@ -7073,7 +7618,9 @@ async function handleVoiceCommandSubmission(speechText) {
     setTimeout(() => {
       stopVoiceRecognition();
 
-      if (res.action === "filter_properties") {
+      if (res.action === "open_demo") {
+        openLiveDemoModal();
+      } else if (res.action === "filter_properties") {
         go("props");
         const f = res.filters || {};
         if (f.society && $("socFilter")) $("socFilter").value = f.society;
@@ -7677,6 +8224,132 @@ function openAdminLoginModal() {
 function closeAdminLoginModal() {
   const m = $("adminLoginModal");
   if (m) m.classList.remove("on");
+}
+
+// ==========================================================
+// DEALO LIVE DEMO & PRODUCT TOUR JS
+// ==========================================================
+let isDemoVoicePlaying = false;
+
+function openLiveDemoModal(initialTab = 'overview') {
+  const m = $("liveDemoModal");
+  if (m) {
+    m.classList.add("on");
+    switchDemoTab(initialTab);
+  }
+}
+
+function closeLiveDemoModal() {
+  stopDemoVoice();
+  const m = $("liveDemoModal");
+  if (m) m.classList.remove("on");
+}
+
+function switchDemoTab(tabId) {
+  const tabs = ['overview', 'workforce', 'modules', 'pricing', 'try'];
+  tabs.forEach(t => {
+    const pane = $("demoPane_" + t);
+    const btn = $("demoTabBtn_" + t);
+    if (pane) pane.style.display = (t === tabId) ? "block" : "none";
+    if (btn) {
+      if (t === tabId) {
+        btn.classList.add("active-demo-tab");
+      } else {
+        btn.classList.remove("active-demo-tab");
+      }
+    }
+  });
+}
+
+function toggleDemoVoice() {
+  if (isDemoVoicePlaying) {
+    stopDemoVoice();
+    return;
+  }
+  playDemoVoice();
+}
+
+function playDemoVoice() {
+  if (!('speechSynthesis' in window)) {
+    alert(lang === "ur" ? "آپ کے براؤزر میں اسپیچ سپورٹ موجود نہیں ہے۔" : "Speech synthesis not supported in this browser.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  
+  const voiceTextUr = "السلام علیکم! Dealo PropTech OS میں خوش آمدید۔ یہ اسلام آباد اور راولپنڈی کی رئیل اسٹیٹ ایجنسیز اور پراپرٹی ڈیلرز کے لیے پاکستان کا پہلا جیو اسپیٹیل آپریٹنگ سسٹم ہے۔ Dealo آپ کے دفتر کے لیے چھ خودکار AI ملازمین لاتا ہے: AI مینیجر، سرمد، عائشہ، بلال، فرحان، اور طارق۔ ہمارا واٹس ایپ آٹومیشن سو فیصد میٹا پالیسی کے مطابق محفوظ ہے اور نمبر بین ہونے کا کوئی خطرہ نہیں۔ پیکجز پینتیس ہزار روپے سے شروع ہوتے ہیں۔ آپ ابھی کمانڈ سینٹر ٹیسٹ کر سکتے ہیں یا واٹس ایپ پر لائیو ڈیمو بک کر سکتے ہیں۔ شکریہ!";
+  const voiceTextEn = "Assalam-o-Alaikum and welcome to Dealo PropTech OS, Pakistan's first geospatial real estate operating system for Islamabad and Rawalpindi agencies. Dealo brings six specialized AI workers: AI Manager, Sarmad, Ayesha, Bilal, Farhan, and Tariq. Our WhatsApp automation is one hundred percent Meta safe with zero ban risk. Packages start from thirty-five thousand rupees. Test the command center now or book a live on-site demo. Thank you!";
+  
+  const textToSpeak = lang === "ur" ? voiceTextUr : voiceTextEn;
+  const utter = new SpeechSynthesisUtterance(textToSpeak);
+  utter.rate = 0.95;
+  utter.pitch = 1.0;
+  
+  const voices = window.speechSynthesis.getVoices();
+  if (lang === "ur") {
+    const urVoice = voices.find(v => v.lang.startsWith("ur") || v.lang.startsWith("hi"));
+    if (urVoice) utter.voice = urVoice;
+  } else {
+    const enVoice = voices.find(v => v.lang.startsWith("en"));
+    if (enVoice) utter.voice = enVoice;
+  }
+
+  const btn = $("btnPlayDemoVoice");
+  const wave = $("demoVoiceWave");
+
+  utter.onstart = () => {
+    isDemoVoicePlaying = true;
+    if (btn) btn.innerHTML = "⏸️ <span>پاز / آواز روکیں (Pause)</span>";
+    if (wave) wave.style.display = "inline-flex";
+  };
+
+  utter.onend = () => {
+    isDemoVoicePlaying = false;
+    if (btn) btn.innerHTML = "🔊 <span>AI آواز میں سنیں (Play AI Voice)</span>";
+    if (wave) wave.style.display = "none";
+  };
+
+  utter.onerror = () => {
+    isDemoVoicePlaying = false;
+    if (btn) btn.innerHTML = "🔊 <span>AI آواز میں سنیں (Play AI Voice)</span>";
+    if (wave) wave.style.display = "none";
+  };
+
+  window.speechSynthesis.speak(utter);
+}
+
+function stopDemoVoice() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+  isDemoVoicePlaying = false;
+  const btn = $("btnPlayDemoVoice");
+  const wave = $("demoVoiceWave");
+  if (btn) btn.innerHTML = "🔊 <span>AI آواز میں سنیں (Play AI Voice)</span>";
+  if (wave) wave.style.display = "none";
+}
+
+async function launchInteractiveDemoMode() {
+  try {
+    showToast(lang === "ur" ? "ڈیمو موڈ فعال کیا جا رہا ہے..." : "Activating interactive demo mode...");
+    const res = await api("/api/auth/login", "POST", { password: "dealo786" });
+    localStorage.setItem("dealo_admin_token", res.token);
+    closeLiveDemoModal();
+    setAdminMode(true);
+    showToast(lang === "ur" ? "✨ لائیو کمانڈ سینٹر ڈیمو موڈ فعال ہو گیا!" : "✨ Live Command Center demo mode activated!");
+    render();
+    try {
+      const emps = await api("/api/employees");
+      if ($("ekey")) $("ekey").innerHTML = Object.entries(emps).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+    } catch (e) {}
+    initBotPresets();
+    loadBotTasks();
+    await refreshAiStatus();
+    loadAnalytics();
+    loadTeamData();
+    go("emp");
+  } catch (err) {
+    alert("Demo login error: " + (err.message || err));
+  }
 }
 
 function togglePwdVisibility() {
