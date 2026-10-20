@@ -5,7 +5,7 @@ from difflib import SequenceMatcher
 import requests
 import uvicorn
 from fastapi import FastAPI, HTTPException, UploadFile, File, Request, Response
-from fastapi.responses import FileResponse, Response, JSONResponse
+from fastapi.responses import FileResponse, Response, JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, field_validator
 
@@ -112,8 +112,8 @@ async def admin_auth_middleware(request: Request, call_next):
     path = request.url.path
     method = request.method
 
-    # Allow static files, root, sitemap, and robots
-    if path in ("/", "/sitemap.xml", "/robots.txt") or path.startswith("/static/"):
+    # Allow static files, root, sitemap, robots, and society SEO landing pages
+    if path in ("/", "/sitemap.xml", "/robots.txt") or path.startswith("/static/") or path.startswith("/society/"):
         return await call_next(request)
 
     # Allow explicit public endpoints
@@ -3975,21 +3975,130 @@ def get_demo_info():
     }
 
 
+SOCIETIES_SEO = {
+    "dha-islamabad": {
+        "name": "DHA Islamabad (Phases 1-8)",
+        "name_ur": "ڈی ایچ اے اسلام آباد (فیز 1 تا 8)",
+        "desc": "Verified DHA Islamabad houses, plots, and commercial properties. Dealo AI PropTech CRM with 1-click WhatsApp catalog sharing and geospatial maps for DHA dealers.",
+        "keywords": "DHA Islamabad, DHA Phase 2, DHA Phase 5, DHA Phase 1, Property CRM, Real Estate Islamabad",
+    },
+    "bahria-town-rawalpindi": {
+        "name": "Bahria Town Rawalpindi & Islamabad",
+        "name_ur": "بحریہ ٹاؤن راولپنڈی و اسلام آباد",
+        "desc": "Browse verified houses and plots in Bahria Town Phase 1 to 8. Real estate operating system and CRM for Bahria Town realtors with instant WhatsApp proposals.",
+        "keywords": "Bahria Town Rawalpindi, Bahria Phase 7, Bahria Phase 8, Safari Villas, Bahria Town CRM",
+    },
+    "gulberg-greens": {
+        "name": "Gulberg Greens Islamabad",
+        "name_ur": "گلبرگ گرینز اسلام آباد",
+        "desc": "Executive farm houses, luxury plots, and commercial spaces in Gulberg Greens Islamabad. AI matching and geospatial CRM for Gulberg property consultants.",
+        "keywords": "Gulberg Greens Islamabad, Gulberg Residencia, Farm Houses Islamabad, PropTech CRM",
+    },
+    "b-17-multi-gardens": {
+        "name": "B-17 Multi Gardens Islamabad",
+        "name_ur": "بی 17 ملٹی گارڈنز اسلام آباد",
+        "desc": "Properties for sale and rent in B-17 Multi Gardens Islamabad (Blocks A to G). AI WhatsApp outbox proposals and rental management for B-17 dealers.",
+        "keywords": "B-17 Islamabad, Multi Gardens MPCHS, Block B, Block C, Block G, Real Estate CRM",
+    },
+    "g-13-islamabad": {
+        "name": "G-13 Islamabad",
+        "name_ur": "جی 13 اسلام آباد",
+        "desc": "Verified residential houses, CDA plots, and apartments in G-13 Islamabad. AI lead scoring, rental ledgers, and WhatsApp catalogs for G-13 brokers.",
+        "keywords": "G-13 Islamabad, G-13/1, G-13/2, G-13/3, G-13/4, CDA sectors, Real Estate CRM",
+    },
+    "f-sectors-islamabad": {
+        "name": "F Sectors Islamabad (F-6, F-7, F-8, F-10, F-11)",
+        "name_ur": "ایف سیکٹرز اسلام آباد (F-6, F-7, F-8, F-10, F-11)",
+        "desc": "Prime luxury homes and commercial listings in Islamabad CDA F-sectors. Executive property CRM with AppFolio-grade rental ledgers and client follow-ups.",
+        "keywords": "F-6 Islamabad, F-7 Islamabad, F-10 Markaz, F-11 luxury houses, Islamabad Real Estate CRM",
+    },
+    "soan-gardens": {
+        "name": "Soan Gardens Islamabad",
+        "name_ur": "سوآن گارڈنز اسلام آباد",
+        "desc": "Residential and commercial property listings in Soan Gardens Islamabad. AI inventory clipper and WhatsApp catalog generator for Soan Gardens realtors.",
+        "keywords": "Soan Gardens Islamabad, Block C, Block H, Islamabad Highway properties, PropTech CRM",
+    },
+    "pwd-housing-scheme": {
+        "name": "PWD Housing Scheme Rawalpindi",
+        "name_ur": "پی ڈبلیو ڈی ہاؤسنگ اسکیم راولپنڈی",
+        "desc": "Houses, portions, and shops in PWD Housing Scheme. AI lead matching and WhatsApp client proposals for PWD and Pakistan Town property dealers.",
+        "keywords": "PWD Housing Scheme, PWD Road, Pakistan Town, Police Foundation, Real Estate CRM",
+    },
+}
+
+
 @app.get("/")
 def index():
     return FileResponse(BASE / "static" / "index.html")
 
 
+@app.get("/society/{slug}", response_class=HTMLResponse)
+def society_landing(slug: str):
+    info = SOCIETIES_SEO.get(slug.lower().strip())
+    if not info:
+        raise HTTPException(status_code=404, detail="Society landing page not found")
+
+    index_path = BASE / "static" / "index.html"
+    if not index_path.exists():
+        raise HTTPException(status_code=500, detail="index.html not found")
+
+    html = index_path.read_text(encoding="utf-8")
+
+    seo_title = f"Dealo PropTech OS — {info['name']} AI Real Estate CRM & Properties"
+    seo_desc = info["desc"]
+    seo_keywords = info["keywords"]
+
+    html = re.sub(r"<title>.*?</title>", f"<title>{seo_title}</title>", html, count=1)
+    html = re.sub(r'<meta name="description" content=".*?">', f'<meta name="description" content="{seo_desc}">', html, count=1)
+    html = re.sub(r'<meta name="keywords" content=".*?">', f'<meta name="keywords" content="{seo_keywords}">', html, count=1)
+    html = re.sub(r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{seo_title}">', html, count=1)
+    html = re.sub(r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{seo_desc}">', html, count=1)
+    html = re.sub(r'<meta property="og:url" content=".*?">', f'<meta property="og:url" content="https://dealo.yoursmarttoolkit.com/society/{slug}">', html, count=1)
+
+    hero_replace = f'<h2 data-t="heroTitle">{info["name"]} — {info["name_ur"]}</h2>'
+    html = re.sub(r'<h2 data-t="heroTitle">.*?</h2>', hero_replace, html, count=1)
+
+    prefix = slug.split("-")[0]
+    inject_script = f"""
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {{
+        const socSelect = document.getElementById('fltSociety');
+        if (socSelect) {{
+          for (let opt of socSelect.options) {{
+            if (opt.value && opt.value.toLowerCase().includes('{prefix}')) {{
+              socSelect.value = opt.value;
+              if (typeof applyFilters === 'function') applyFilters();
+              break;
+            }}
+          }}
+        }}
+      }});
+    </script>
+    """
+    html = html.replace("</body>", f"{inject_script}\n</body>")
+    return HTMLResponse(content=html)
+
+
 @app.get("/sitemap.xml", include_in_schema=False)
 def sitemap():
-    sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
+    urls = [
+        """  <url>
     <loc>https://dealo.yoursmarttoolkit.com/</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
+  </url>"""
+    ]
+    for slug in SOCIETIES_SEO.keys():
+        urls.append(f"""  <url>
+    <loc>https://dealo.yoursmarttoolkit.com/society/{slug}</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>""")
+    sitemap_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(urls)}
 </urlset>"""
     return Response(content=sitemap_xml.strip(), media_type="application/xml")
 

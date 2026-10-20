@@ -2336,6 +2336,92 @@ body.is-admin .public-only {
   </div>
 </div>
 
+<!-- Dealo 60-Second Interactive WhatsApp Clipper Sandbox -->
+<section class="public-only" dir="ltr" style="max-width: 960px; margin: 1.5rem auto 2.5rem; padding: 1.75rem; background: #0f172a; border: 1px solid #334155; border-radius: 16px; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
+    <div>
+      <span style="background: rgba(16,185,129,0.2); color: #34d399; padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(52,211,153,0.3);">⚡ LIVE AI DEMO — NO LOGIN REQUIRED</span>
+      <h3 style="margin: 8px 0 4px; font-size: 1.35rem; color:#fff;">Test Sarmad AI: Raw WhatsApp Message → Structured Deal Card</h3>
+      <p style="margin: 0; color: #94a3b8; font-size: 0.88rem;">Paste any messy dealer group message below or test with a Twin Cities sample:</p>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button onclick="loadSampleListing('dha')" style="background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; padding: 7px 12px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600;">
+        📋 Load DHA-2 Sample
+      </button>
+      <button onclick="loadSampleListing('bahria')" style="background: #1e293b; color: #f59e0b; border: 1px solid #f59e0b; padding: 7px 12px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600;">
+        📋 Load Bahria-7 Sample
+      </button>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-top: 1rem;">
+    <!-- Left: Raw WhatsApp Input -->
+    <div>
+      <label style="font-size: 0.85rem; color: #cbd5e1; display: block; margin-bottom: 6px; font-weight: 600;">1. Raw WhatsApp Group Forward:</label>
+      <textarea id="rawWhatsappInput" oninput="parseWhatsappListing()" rows="6" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #475569; background: #1e293b; color: #fff; font-size: 0.95rem; box-sizing: border-box; resize: vertical; line-height: 1.4;" placeholder="e.g. Urgent sale DHA phase 2 sector E 1 kanal solid house demand 7.50 crore direct owner key in hand 03001234567"></textarea>
+      <button onclick="parseWhatsappListing()" style="width: 100%; margin-top: 10px; background: #10b981; color: #052e16; border: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: background 0.2s;">
+        ✨ Extract Inventory & Client Proposal (3 Sec)
+      </button>
+    </div>
+
+    <!-- Right: Structured Output Card -->
+    <div id="parsedDealOutput" style="background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 10px;">
+          <strong id="outSociety" style="color: #38bdf8; font-size: 1.05rem;">DHA Phase 2, Islamabad</strong>
+          <span id="outBadge" style="background: #059669; color: #fff; font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; font-weight: 700;">🔑 Direct Inventory</span>
+        </div>
+        <div style="font-size: 0.9rem; line-height: 1.6; color: #e2e8f0;">
+          <div>📐 <strong>Size & Type:</strong> <span id="outSize">1 Kanal Solid House (Sector E)</span></div>
+          <div>💰 <strong>Demand:</strong> <span id="outPrice" style="color: #4ade80; font-weight: 700;">PKR 7.50 Crore</span></div>
+          <div>🛡️ <strong>Client Safe Mode:</strong> <span style="color: #fbbf24;">House/Plot # Hidden from Buyer</span></div>
+        </div>
+      </div>
+      <a id="waSafeSendBtn" href="https://wa.me/?text=%F0%9F%8F%A1%20*Executive%20Property%20Offer*%0A%F0%9F%93%8D%20Location%3A%20DHA%20Phase%202%20(Sector%20E)%0A%F0%9F%93%90%20Size%3A%201%20Kanal%20Solid%20House%0A%F0%9F%92%B0%20Demand%3A%207.50%20Crore%0A%F0%9F%93%9E%20Reply%20for%20site%20visit%20(Plot%20%23%20protected)" target="_blank" style="margin-top: 12px; display: block; text-align: center; background: #25D366; color: #052e16; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; transition: background 0.2s;">
+        📲 Test 1-Click Zero-Ban WhatsApp Send
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+function loadSampleListing(type) {
+  if (type === 'bahria') {
+    document.getElementById('rawWhatsappInput').value = "Asalam o alaikum brothers!! Urgent sale Bahria Town Phase 7 Rawalpindi 10 Marla brand new designer house near commercial demand 425 lac direct owner key with me contact 0321-5559988";
+  } else {
+    document.getElementById('rawWhatsappInput').value = "DHA phase 2 sector E 1 kanal solid house demand 7.50 crore direct owner key in hand 03001234567";
+  }
+  parseWhatsappListing();
+}
+
+function parseWhatsappListing() {
+  const raw = document.getElementById('rawWhatsappInput').value || "";
+  if (!raw.trim()) return;
+  const societyMatch = raw.match(/(DHA\s*Phase\s*\d|Bahria\s*Town\s*Phase\s*\d|Gulberg\s*Greens|B-17|G-13|F-\d+|Soan\s*Garden|PWD)/i);
+  const sizeMatch = raw.match(/(\d+(\.\d+)?\s*(Marla|Kanal))/i);
+  const priceMatch = raw.match(/(\d+(\.\d+)?\s*(Crore|Cr|Lac|Lakh))/i);
+  const isDirect = /(direct|key|confirm|owner)/i.test(raw);
+
+  const society = societyMatch ? societyMatch[0].toUpperCase() : "Twin Cities Prime Sector";
+  const size = sizeMatch ? sizeMatch[0] + " Property" : "10 Marla Residential House";
+  const price = priceMatch ? "PKR " + priceMatch[0].toUpperCase() : "PKR 4.25 Crore";
+
+  const socEl = document.getElementById('outSociety');
+  const sizeEl = document.getElementById('outSize');
+  const priceEl = document.getElementById('outPrice');
+  const badgeEl = document.getElementById('outBadge');
+  const btnEl = document.getElementById('waSafeSendBtn');
+
+  if (socEl) socEl.innerText = society;
+  if (sizeEl) sizeEl.innerText = size;
+  if (priceEl) priceEl.innerText = price;
+  if (badgeEl) badgeEl.innerText = isDirect ? "🔑 Direct Inventory" : "🔗 Broker Chain";
+
+  const waText = encodeURIComponent("🏡 *Verified Property Offer via Dealo OS*\n📍 *Society:* " + society + "\n📐 *Size:* " + size + "\n💰 *Demand:* " + price + "\n✅ *Status:* Verified Inventory (Plot # hidden for client protection)\n\nReply to schedule an inspection today.");
+  if (btnEl) btnEl.href = "https://wa.me/?text=" + waText;
+}
+</script>
+
 <!-- DEALER CALLOUT STRIP (Visible on Public Mode to Realtors / Agency Owners) -->
 <div class="dealer-callout-strip public-only">
   <div class="dealer-callout-inner">
