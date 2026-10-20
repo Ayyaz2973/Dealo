@@ -87,6 +87,8 @@ app.add_middleware(
 
 PUBLIC_ROUTES = {
     ("/", "GET"),
+    ("/sitemap.xml", "GET"),
+    ("/robots.txt", "GET"),
     ("/api/properties", "GET"),
     ("/api/societies", "GET"),
     ("/api/health", "GET"),
@@ -110,8 +112,8 @@ async def admin_auth_middleware(request: Request, call_next):
     path = request.url.path
     method = request.method
 
-    # Allow static files and root
-    if path == "/" or path.startswith("/static/"):
+    # Allow static files, root, sitemap, and robots
+    if path in ("/", "/sitemap.xml", "/robots.txt") or path.startswith("/static/"):
         return await call_next(request)
 
     # Allow explicit public endpoints
@@ -3976,6 +3978,34 @@ def get_demo_info():
 @app.get("/")
 def index():
     return FileResponse(BASE / "static" / "index.html")
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+def sitemap():
+    sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dealo.yoursmarttoolkit.com/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>"""
+    return Response(content=sitemap_xml.strip(), media_type="application/xml")
+
+
+@app.get("/robots.txt", include_in_schema=False)
+def robots():
+    robots_txt = """User-agent: *
+Allow: /
+Disallow: /api/
+Allow: /api/properties
+Allow: /api/societies
+Allow: /api/demo-info
+
+Sitemap: https://dealo.yoursmarttoolkit.com/sitemap.xml
+"""
+    return Response(content=robots_txt.strip(), media_type="text/plain")
 
 
 app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
