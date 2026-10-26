@@ -4040,9 +4040,17 @@ SOCIETIES_SEO = {
 }
 
 
-@app.api_route("/", methods=["GET", "HEAD"])
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def index():
-    return FileResponse(BASE / "static" / "index.html")
+    index_path = BASE / "static" / "index.html"
+    if not index_path.exists():
+        raise HTTPException(status_code=500, detail="index.html not found")
+    html = index_path.read_text(encoding="utf-8")
+    head_inject = """  <link rel="canonical" href="https://dealo.yoursmarttoolkit.com/" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+"""
+    html = html.replace("<head>", f"<head>\n{head_inject}", 1)
+    return HTMLResponse(content=html)
 
 
 @app.api_route("/tools", methods=["GET", "HEAD"], response_class=HTMLResponse)
@@ -4062,13 +4070,21 @@ def tools_landing():
     html = re.sub(r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{seo_desc}">', html, count=1)
     html = re.sub(r'<meta property="og:url" content=".*?">', '<meta property="og:url" content="https://dealo.yoursmarttoolkit.com/tools">', html, count=1)
 
+    head_inject = """  <link rel="canonical" href="https://dealo.yoursmarttoolkit.com/tools" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+"""
+    html = html.replace("<head>", f"<head>\n{head_inject}", 1)
+
+    # Server-render the tools tab as VISIBLE immediately so search engines see it without waiting on JS
+    html = html.replace('<section class="panel on" id="p-props">', '<section class="panel" id="p-props">')
+    html = html.replace('<section class="panel" id="p-tools">', '<section class="panel on" id="p-tools">')
+    html = html.replace('id="pubTabBtn_props" class="pub-nav-btn active-pub-tab"', 'id="pubTabBtn_props" class="pub-nav-btn"')
+    html = html.replace('id="pubTabBtn_tools" class="pub-nav-btn"', 'id="pubTabBtn_tools" class="pub-nav-btn active-pub-tab"')
+
     inject_script = """
     <script>
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          if (typeof go === 'function') go('tools');
-        }, 150);
-      });
+      cur = 'tools';
+      if (typeof initRealEstateToolsSuite === 'function') initRealEstateToolsSuite();
     </script>
     """
     html = html.replace("</body>", f"{inject_script}\n</body>")
@@ -4097,6 +4113,11 @@ def society_landing(slug: str):
     html = re.sub(r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{seo_title}">', html, count=1)
     html = re.sub(r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{seo_desc}">', html, count=1)
     html = re.sub(r'<meta property="og:url" content=".*?">', f'<meta property="og:url" content="https://dealo.yoursmarttoolkit.com/society/{slug}">', html, count=1)
+
+    head_inject = f"""  <link rel="canonical" href="https://dealo.yoursmarttoolkit.com/society/{slug}" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+"""
+    html = html.replace("<head>", f"<head>\n{head_inject}", 1)
 
     hero_replace = f'<h2 data-t="heroTitle">{info["name"]} — {info["name_ur"]}</h2>'
     html = re.sub(r'<h2 data-t="heroTitle">.*?</h2>', hero_replace, html, count=1)
