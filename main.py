@@ -4180,7 +4180,10 @@ def sitemap():
 
 @app.api_route("/robots.txt", methods=["GET", "HEAD"], include_in_schema=False)
 def robots():
-    robots_txt = """User-agent: Googlebot
+    robots_txt = """User-agent: Google-InspectionTool
+Allow: /
+
+User-agent: Googlebot
 Allow: /
 
 User-agent: *
