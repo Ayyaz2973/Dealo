@@ -102,6 +102,7 @@ PUBLIC_ROUTES = {
     ("/api/extension/status", "GET"),
     ("/api/extension/import", "POST"),
     ("/api/download/extension", "GET"),
+    ("/tools", "GET"),
     ("/openapi.json", "GET"),
     ("/docs", "GET"),
     ("/redoc", "GET"),
@@ -112,8 +113,8 @@ async def admin_auth_middleware(request: Request, call_next):
     path = request.url.path
     method = request.method
 
-    # Allow static files, root, sitemap, robots, and society SEO landing pages
-    if path in ("/", "/sitemap.xml", "/robots.txt") or path.startswith("/static/") or path.startswith("/society/"):
+    # Allow static files, root, /tools, sitemap, robots, and society SEO landing pages
+    if path in ("/", "/tools", "/sitemap.xml", "/robots.txt") or path.startswith("/static/") or path.startswith("/society/"):
         return await call_next(request)
 
     # Allow explicit public endpoints
@@ -4032,6 +4033,36 @@ def index():
     return FileResponse(BASE / "static" / "index.html")
 
 
+@app.get("/tools", response_class=HTMLResponse)
+def tools_landing():
+    index_path = BASE / "static" / "index.html"
+    if not index_path.exists():
+        raise HTTPException(status_code=500, detail="index.html not found")
+    html = index_path.read_text(encoding="utf-8")
+    seo_title = "FBR Property Tax Calculator 2026-27 & Real Estate Tools — Dealo PropTech OS"
+    seo_desc = "Free FBR Section 236C & 236K Property Tax Calculator, Multi-Standard Marla Converter (225 vs 250 vs 272 sq ft), Society Transfer Expense & Construction Estimator for Islamabad & Rawalpindi."
+    seo_keywords = "FBR property tax calculator 2026, 236C seller tax rate 2026, 236K buyer tax rate, marla converter 225 250, DHA Islamabad transfer fee, Bahria Town transfer charges, house construction cost estimator"
+
+    html = re.sub(r"<title>.*?</title>", f"<title>{seo_title}</title>", html, count=1)
+    html = re.sub(r'<meta name="description" content=".*?">', f'<meta name="description" content="{seo_desc}">', html, count=1)
+    html = re.sub(r'<meta name="keywords" content=".*?">', f'<meta name="keywords" content="{seo_keywords}">', html, count=1)
+    html = re.sub(r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{seo_title}">', html, count=1)
+    html = re.sub(r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{seo_desc}">', html, count=1)
+    html = re.sub(r'<meta property="og:url" content=".*?">', '<meta property="og:url" content="https://dealo.yoursmarttoolkit.com/tools">', html, count=1)
+
+    inject_script = """
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          if (typeof go === 'function') go('tools');
+        }, 150);
+      });
+    </script>
+    """
+    html = html.replace("</body>", f"{inject_script}\n</body>")
+    return HTMLResponse(content=html)
+
+
 @app.get("/society/{slug}", response_class=HTMLResponse)
 def society_landing(slug: str):
     info = SOCIETIES_SEO.get(slug.lower().strip())
@@ -4084,9 +4115,15 @@ def sitemap():
     urls = [
         """  <url>
     <loc>https://dealo.yoursmarttoolkit.com/</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>""",
+        """  <url>
+    <loc>https://dealo.yoursmarttoolkit.com/tools</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>"""
     ]
     for slug in SOCIETIES_SEO.keys():

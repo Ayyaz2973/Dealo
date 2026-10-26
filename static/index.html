@@ -2219,9 +2219,64 @@ body.is-admin .public-only {
   color: var(--text);
   line-height: 1.3;
 }
-.flow-step-sub {
-  font-size: 0.68rem;
+/* Tool Suite Sub-Navigation & Calculator Styles */
+.tool-subnav-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tool-subnav-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: #38bdf8;
+}
+.active-tool-subnav {
+  background: linear-gradient(135deg, #10b981 0%, #0284c7 100%) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+.tool-chip-btn {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.tool-chip-btn:hover, .tool-chip-btn.active-chip {
+  background: var(--primary-light) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-dark) !important;
+}
+.tool-card-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.pub-nav-btn {
+  background: var(--surface-hover);
   color: var(--text-muted);
+}
+.active-pub-tab {
+  background: linear-gradient(135deg, #059669 0%, #0284c7 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
 }
 </style>
 </head>
@@ -2260,6 +2315,11 @@ body.is-admin .public-only {
     <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20properties%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="header-btn public-only" style="background:#25d366;color:#fff;border-color:transparent;font-weight:700;text-decoration:none">
       💬 <span data-t="contactAgency">0321-5873665</span>
     </a>
+
+    <!-- Real Estate & FBR Tax Calculators Suite 2026-27 -->
+    <button id="btnHeaderTools" onclick="go('tools')" class="header-btn" style="background:linear-gradient(135deg, #0284c7 0%, #059669 100%);color:#fff;border-color:transparent;font-weight:800;box-shadow:0 2px 8px rgba(2,132,199,0.3);cursor:pointer" title="FBR 2026-27 Property Tax & Marla Converters">
+      🧮 <span data-t="toolsHeaderBtn">ٹیکس و کیلکولیٹرز 2026–27</span>
+    </button>
 
     <!-- Live Demo & Pricing Tour Button -->
     <button id="btnHeaderLiveDemo" onclick="openLiveDemoModal()" class="header-btn" style="background:linear-gradient(135deg, #10b981 0%, #0284c7 100%);color:#fff;border-color:transparent;font-weight:800;box-shadow:0 2px 8px rgba(16,185,129,0.35);cursor:pointer" title="Explore Complete Dealo OS Functionality & Pricing">
@@ -2438,6 +2498,19 @@ function parseWhatsappListing() {
         ⚡ <span data-t="dealerStripDemo">Book Live Demo & Tour</span>
       </button>
     </div>
+  </div>
+</div>
+
+<!-- PUBLIC NAVIGATION SWITCHER (Properties & Map vs Free Tax & Land Tools) -->
+<div class="public-only" style="max-width:960px;margin:1rem auto 1.5rem;padding:0 1rem;">
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:6px;display:flex;gap:8px;box-shadow:var(--shadow-sm);flex-wrap:wrap">
+    <button id="pubTabBtn_props" class="pub-nav-btn active-pub-tab" onclick="go('props')" style="flex:1;min-width:200px;padding:12px 18px;border-radius:10px;border:none;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s">
+      <span>🗺️</span> <span data-t="pubTabProps">پراپرٹیز تلاش و جیو اسپیٹیل میپ</span>
+    </button>
+    <button id="pubTabBtn_tools" class="pub-nav-btn" onclick="go('tools')" style="flex:1;min-width:200px;padding:12px 18px;border-radius:10px;border:none;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s">
+      <span>🧮</span> <span data-t="pubTabTools">ایف بی آر پراپرٹی ٹیکس و ٹولز سوٹ 2026–27</span>
+      <span class="badge" style="background:#ecfdf5;color:#047857;font-size:0.72rem;padding:2px 8px;border-radius:12px">Free 6 Tools</span>
+    </button>
   </div>
 </div>
 
@@ -2819,6 +2892,710 @@ function parseWhatsappListing() {
         <button class="pri" onclick="saveProp()">
           💾 <span data-t="save">Save Property Record</span>
         </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL: DEALO REAL ESTATE TOOLS & FBR TAX CALCULATOR SUITE 2026-27 -->
+  <section class="panel" id="p-tools">
+    <!-- TOOLS SUITE HERO CARD -->
+    <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg, #061121 0%, #0c203b 50%, #13335c 100%);color:#fff;border:1px solid #1e3a8a;border-radius:18px;padding:24px;box-shadow:0 15px 35px rgba(0,0,0,0.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+            <span style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(52,211,153,0.3);padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:800">
+              🇵🇰 FINANCE ACT 2026–27 COMPLIANT
+            </span>
+            <span style="background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:800">
+              📐 225 / 250 / 272 SQ.FT STANDARDS
+            </span>
+            <span style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:800">
+              📲 1-CLICK WHATSAPP SHARE
+            </span>
+          </div>
+          <h2 style="margin:0;font-size:1.45rem;font-weight:900;color:#fff">
+            ⚡ Dealo ٹوئن سٹیز رئیل اسٹیٹ کیلکولیٹرز و ایف بی آر ٹیکس سوٹ (2026–27)
+          </h2>
+          <p style="margin:6px 0 0 0;font-size:0.88rem;color:#94a3b8;line-height:1.5">
+            اسلام آباد اور راولپنڈی کے پراپرٹی ڈیلرز، بلڈرز اور خریداروں کے لیے فنانس ایکٹ 2026-27 کے عین مطابق ٹیکس، سوسائٹی اخراجات، مرلہ کنورژن اور کنسٹرکشن لاگت کے خودکار اوزار۔
+          </p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button type="button" class="secondary" style="color:#fff;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);font-size:0.82rem;padding:8px 14px;border-radius:10px" onclick="openLiveDemoModal()">
+            ⚡ لائیو ڈیمو ٹور
+          </button>
+          <a href="https://wa.me/923215873665?text=Assalam-o-Alaikum,%20mujhe%20Dealo%20Property%20Calculators%20k%20baray%20mein%20maloomat%20chahiye." target="_blank" class="pri" style="text-decoration:none;font-size:0.82rem;padding:8px 14px;border-radius:10px;font-weight:800;display:inline-flex;align-items:center;gap:6px">
+            💬 واٹس ایپ رہنمائی
+          </a>
+        </div>
+      </div>
+
+      <!-- SUB-NAVIGATION BAR (6 TOOLS) -->
+      <div style="display:flex;gap:8px;margin-top:20px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none">
+        <button id="toolSubBtn_fbr" class="tool-subnav-btn active-tool-subnav" onclick="switchToolSubTab('fbr')">
+          🏛️ 1. FBR ٹیکس 2026-27 (236C / 236K)
+        </button>
+        <button id="toolSubBtn_marla" class="tool-subnav-btn" onclick="switchToolSubTab('marla')">
+          📐 2. ملٹی اسٹینڈرڈ مرلہ کنورٹر
+        </button>
+        <button id="toolSubBtn_transfer" class="tool-subnav-btn" onclick="switchToolSubTab('transfer')">
+          📋 3. سوسائٹی ٹرانسفر و کمیشن
+        </button>
+        <button id="toolSubBtn_construction" class="tool-subnav-btn" onclick="switchToolSubTab('construction')">
+          🏗️ 4. گرے اسٹرکچر تعمیراتی لاگت
+        </button>
+        <button id="toolSubBtn_installment" class="tool-subnav-btn" onclick="switchToolSubTab('installment')">
+          📅 5. فائل قسط وار شیڈول
+        </button>
+        <button id="toolSubBtn_formatter" class="tool-subnav-btn" onclick="switchToolSubTab('formatter')">
+          💬 6. واٹس ایپ را میسج فارمیٹر
+        </button>
+      </div>
+    </div>
+
+    <!-- TOOL 1: FBR PROPERTY TAX CALCULATOR 2026-27 -->
+    <div id="toolPane_fbr" class="tool-pane">
+      <div class="tool-card-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:1.2rem;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:8px">
+              <span>🏛️</span> <span>FBR پراپرٹی ایڈوانس ٹیکس کیلکولیٹر (Finance Act 2026–27)</span>
+            </h3>
+            <span style="font-size:0.8rem;color:var(--text-muted)">سیکشن 236C (سیلر ایڈوانس ٹیکس) اور سیکشن 236K (بائیر ایڈوانس ٹیکس) برائے ٹیکس ایئر 2027</span>
+          </div>
+          <span class="badge" style="background:#ecfdf5;color:#047857;font-weight:800;font-size:0.8rem">
+            ✅ ایکٹو فائلر بمقابلہ نان فائلر
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+          <!-- Inputs Column -->
+          <div>
+            <label style="display:block;margin-bottom:12px">
+              <span style="font-weight:800;font-size:0.85rem;color:var(--text-main);display:block;margin-bottom:4px">
+                💰 پراپرٹی کی کل قیمت / ایف بی آر ویلیو (PKR):
+              </span>
+              <input type="number" id="fbrPropPrice" value="25000000" min="100000" step="500000" oninput="calculateFbrTax()" style="width:100%;font-size:1.1rem;font-weight:800;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface)">
+            </label>
+
+            <!-- Quick Preset Chips -->
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+              <button type="button" class="tool-chip-btn" onclick="setFbrPriceChip(5000000)">50 Lakh</button>
+              <button type="button" class="tool-chip-btn" onclick="setFbrPriceChip(10000000)">1 Crore</button>
+              <button type="button" class="tool-chip-btn active-chip" onclick="setFbrPriceChip(25000000)">2.5 Crore</button>
+              <button type="button" class="tool-chip-btn" onclick="setFbrPriceChip(50000000)">5 Crore</button>
+              <button type="button" class="tool-chip-btn" onclick="setFbrPriceChip(100000000)">10 Crore</button>
+              <button type="button" class="tool-chip-btn" onclick="setFbrPriceChip(200000000)">20 Crore</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div>
+                <label style="font-weight:800;font-size:0.85rem;color:var(--text-main);display:block;margin-bottom:6px">
+                  📤 بیچنے والا (Seller Status - 236C):
+                </label>
+                <select id="fbrSellerStatus" onchange="calculateFbrTax()" style="width:100%;padding:10px;border-radius:8px;font-weight:800;border:1px solid var(--border)">
+                  <option value="filer" selected>🟢 فائلر (ATL Filer - 2.75%)</option>
+                  <option value="non_filer">🔴 نان فائلر (Non-Filer - 11.5%)</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-weight:800;font-size:0.85rem;color:var(--text-main);display:block;margin-bottom:6px">
+                  📥 خریدنے والا (Buyer Status - 236K):
+                </label>
+                <select id="fbrBuyerStatus" onchange="calculateFbrTax()" style="width:100%;padding:10px;border-radius:8px;font-weight:800;border:1px solid var(--border)">
+                  <option value="filer" selected>🟢 فائلر (ATL Filer - 1.25%)</option>
+                  <option value="non_filer">🔴 نان فائلر (Non-Filer - 10.5% - 18.5%)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label style="font-weight:800;font-size:0.85rem;color:var(--text-main);display:block;margin-bottom:6px">
+                🏡 پراپرٹی کی نوعیت:
+              </label>
+              <select id="fbrPropertyType" onchange="calculateFbrTax()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border)">
+                <option value="plot">رہائشی پلاٹ (Residential Plot)</option>
+                <option value="house">تعمیر شدہ مکان / کوٹھی (Constructed House)</option>
+                <option value="flat">اپارٹمنٹ / فلیٹ (Apartment / Flat)</option>
+                <option value="commercial">تجارتی پراپرٹی / پلازہ (Commercial)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Live Output Column -->
+          <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <div style="font-size:0.8rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">
+                📊 فنانس ایکٹ 2026-27 تخمینہ نتیجہ:
+              </div>
+
+              <!-- Seller 236C Card -->
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <strong style="font-size:0.88rem;color:var(--text-main)">سیکشن 236C (سیلر ایڈوانس ٹیکس):</strong>
+                    <div id="fbrSellerRateLabel" style="font-size:0.75rem;color:var(--text-muted)">شرح: 2.75% (ایکٹو فائلر)</div>
+                  </div>
+                  <div id="fbrSellerTaxAmt" style="font-size:1.15rem;font-weight:900;color:#047857">PKR 687,500</div>
+                </div>
+              </div>
+
+              <!-- Buyer 236K Card -->
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <strong style="font-size:0.88rem;color:var(--text-main)">سیکشن 236K (بائیر ایڈوانس ٹیکس):</strong>
+                    <div id="fbrBuyerRateLabel" style="font-size:0.75rem;color:var(--text-muted)">شرح: 1.25% (ایکٹو فائلر)</div>
+                  </div>
+                  <div id="fbrBuyerTaxAmt" style="font-size:1.15rem;font-weight:900;color:#0284c7">PKR 312,500</div>
+                </div>
+              </div>
+
+              <!-- Total Federal Tax -->
+              <div style="background:linear-gradient(135deg, rgba(5,150,105,0.08), rgba(2,132,199,0.08));border:1.5px solid var(--primary);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <strong style="font-size:0.95rem;color:var(--text-main)">💵 کل ایف بی آر فیڈرل ٹیکس:</strong>
+                    <div id="fbrTotalTaxPct" style="font-size:0.75rem;color:var(--text-muted)">کل شرح: 4.00%</div>
+                  </div>
+                  <div id="fbrTotalTaxAmt" style="font-size:1.35rem;font-weight:900;color:var(--primary)">PKR 1,000,000</div>
+                </div>
+              </div>
+
+              <!-- Filer Savings Card -->
+              <div id="fbrSavingsBox" style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 12px;font-size:0.82rem;color:#065f46;line-height:1.4">
+                🎉 <strong>فائلر بننے کی بچت:</strong> اگر دونوں نان فائلر ہوتے تو ٹیکس <strong>PKR 5,500,000</strong> بنتا۔ آپ کی بچت = <strong id="fbrSavingsVal">PKR 4,500,000</strong> ہے۔
+              </div>
+            </div>
+
+            <!-- WhatsApp Share Button -->
+            <div style="margin-top:14px">
+              <button type="button" class="pri" onclick="shareFbrTaxWa()" style="width:100%;padding:12px;font-size:0.92rem;font-weight:800;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 12px rgba(5,150,105,0.25)">
+                <span>📲</span> <span>واٹس ایپ پر ٹیکس بریک ڈاؤن شیئر کریں (Share with Client)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2026-27 Legal Highlights Note -->
+        <div style="margin-top:16px;background:var(--surface-hover);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:0.82rem;color:var(--text-muted);line-height:1.6">
+          ⚖️ <strong>فنانس ایکٹ 2026–27 قانونی نکات:</strong> نان فائلر خریدار کے لیے 5 کروڑ تک 10.5%، 5 سے 10 کروڑ پر 14.5%، اور 10 کروڑ سے زائد پر 18.5% کی سلیبز لاگو ہیں۔ پرانا لیٹ فائلر (Rule 1A) اور سیکشن 7E (ڈییمڈ رینٹ ٹیکس) 2026-27 کے موجودہ وفاقی فریم ورک میں خارج ہیں۔
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 2: MULTI-STANDARD MARLA CONVERTER -->
+    <div id="toolPane_marla" class="tool-pane" style="display:none">
+      <div class="tool-card-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:1.2rem;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:8px">
+              <span>📐</span> <span>ملٹی اسٹینڈرڈ پلاٹ رقبہ و مرلہ کنورٹر (Multi-Standard Marla Converter)</span>
+            </h3>
+            <span style="font-size:0.8rem;color:var(--text-muted)">DHA، بحریہ، سی ڈی اے سیکٹرز، اور ریونیو پٹوار ریکارڈ (225 vs 250 vs 272.25 Sq Ft)</span>
+          </div>
+          <span class="badge" style="background:#eff6ff;color:#1e40af;font-weight:800;font-size:0.8rem">
+            🔄 فوری دو طرفہ کنورژن
+          </span>
+        </div>
+
+        <!-- Society Standard Selector Buttons -->
+        <div style="background:var(--surface-hover);padding:14px;border-radius:12px;border:1px solid var(--border);margin-bottom:16px">
+          <div style="font-weight:800;font-size:0.88rem;color:var(--text-main);margin-bottom:8px">
+            📍 سوسائٹی کے مطابق مرلہ اسٹینڈرڈ منتخب کریں:
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:10px">
+            <button type="button" id="stdBtn_225" class="tool-chip-btn active-chip" onclick="setMarlaStandard(225)" style="padding:10px;text-align:start">
+              <div style="font-weight:900;font-size:0.95rem">225 اسکوائر فٹ (Society Standard)</div>
+              <div style="font-size:0.75rem;opacity:0.85">DHA Phase 1-5، بحریہ ٹاؤن، گلبرگ گرینز، B-17، نیول اینکریج</div>
+            </button>
+            <button type="button" id="stdBtn_250" class="tool-chip-btn" onclick="setMarlaStandard(250)" style="padding:10px;text-align:start">
+              <div style="font-weight:900;font-size:0.95rem">250 اسکوائر فٹ (CDA / Municipal)</div>
+              <div style="font-size:0.75rem;opacity:0.85">سی ڈی اے سیکٹرز (F-10, G-13, G-14) اور راولپنڈی میونسپل زونز</div>
+            </button>
+            <button type="button" id="stdBtn_272" class="tool-chip-btn" onclick="setMarlaStandard(272.25)" style="padding:10px;text-align:start">
+              <div style="font-weight:900;font-size:0.95rem">272.25 اسکوائر فٹ (Revenue / Sarsahi)</div>
+              <div style="font-size:0.75rem;opacity:0.85">پٹوار خسرہ/انتقال، چک شہزاد فارم ہاؤسز، اور سرکاری اراضی ریکارڈ</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Presets -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+          <span style="font-size:0.82rem;font-weight:800;color:var(--text-muted)">تیز رفتار سائز:</span>
+          <button type="button" class="tool-chip-btn" onclick="setMarlaPreset(5)">5 مرلہ</button>
+          <button type="button" class="tool-chip-btn" onclick="setMarlaPreset(7)">7 مرلہ</button>
+          <button type="button" class="tool-chip-btn active-chip" onclick="setMarlaPreset(10)">10 مرلہ</button>
+          <button type="button" class="tool-chip-btn" onclick="setMarlaPreset(20)">1 کنال</button>
+          <button type="button" class="tool-chip-btn" onclick="setMarlaPreset(40)">2 کنال</button>
+          <button type="button" class="tool-chip-btn" onclick="setMarlaPreset(80)">4 کنال (فارم ہاؤس)</button>
+        </div>
+
+        <!-- Dynamic Conversion Grid -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin-bottom:20px">
+          <div style="background:var(--surface);border:1.5px solid var(--primary);border-radius:10px;padding:12px">
+            <span style="font-size:0.82rem;font-weight:800;color:var(--primary);display:block;margin-bottom:4px">📐 مرلہ (Marla):</span>
+            <input type="number" id="mConv_marla" value="10" step="0.25" oninput="calcMarlaFrom('marla')" style="width:100%;font-size:1.25rem;font-weight:900;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface-hover)">
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <span style="font-size:0.82rem;font-weight:800;color:var(--text-main);display:block;margin-bottom:4px">🏡 کنال (Kanal = 20 Marla):</span>
+            <input type="number" id="mConv_kanal" value="0.5" step="0.05" oninput="calcMarlaFrom('kanal')" style="width:100%;font-size:1.25rem;font-weight:900;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface)">
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <span style="font-size:0.82rem;font-weight:800;color:var(--text-main);display:block;margin-bottom:4px">📏 مربع فٹ (Square Feet):</span>
+            <input type="number" id="mConv_sqft" value="2250" step="1" oninput="calcMarlaFrom('sqft')" style="width:100%;font-size:1.25rem;font-weight:900;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface)">
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <span style="font-size:0.82rem;font-weight:800;color:var(--text-main);display:block;margin-bottom:4px">📐 اسکوائر یارڈز / گز (Gazz):</span>
+            <input type="number" id="mConv_gazz" value="250" step="0.5" oninput="calcMarlaFrom('gazz')" style="width:100%;font-size:1.25rem;font-weight:900;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface)">
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <span style="font-size:0.82rem;font-weight:800;color:var(--text-main);display:block;margin-bottom:4px">🌾 ایکڑ (Acres = 8 Kanal):</span>
+            <input type="number" id="mConv_acre" value="0.0625" step="0.01" oninput="calcMarlaFrom('acre')" style="width:100%;font-size:1.25rem;font-weight:900;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface)">
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <span style="font-size:0.82rem;font-weight:800;color:var(--text-main);display:block;margin-bottom:4px">📜 سرسائی (Sarsahi = 1/9 Marla):</span>
+            <input type="number" id="mConv_sarsahi" value="90" step="1" oninput="calcMarlaFrom('sarsahi')" style="width:100%;font-size:1.25rem;font-weight:900;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface)">
+          </div>
+        </div>
+
+        <!-- Comparative Reference Matrix -->
+        <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto">
+          <strong style="font-size:0.85rem;color:var(--text-main);display:block;margin-bottom:8px">📊 ٹوئن سٹیز مرلہ موازنہ چارٹ (Comparative Standards):</strong>
+          <table style="width:100%;border-collapse:collapse;font-size:0.82rem;text-align:center">
+            <thead>
+              <tr style="background:var(--surface);border-bottom:2px solid var(--border)">
+                <th style="padding:8px">پلاٹ سائز</th>
+                <th style="padding:8px">225 Sq.Ft (DHA/Bahria)</th>
+                <th style="padding:8px">250 Sq.Ft (CDA Sectors)</th>
+                <th style="padding:8px">272.25 Sq.Ft (Revenue/پٹوار)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:8px;font-weight:800">5 مرلہ</td>
+                <td>1,125 Sq.Ft (125 گز)</td>
+                <td>1,250 Sq.Ft (138.8 گز)</td>
+                <td>1,361 Sq.Ft (151.2 گز)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:8px;font-weight:800">7 مرلہ</td>
+                <td>1,575 Sq.Ft (175 گز)</td>
+                <td>1,750 Sq.Ft (194.4 گز)</td>
+                <td>1,905 Sq.Ft (211.7 گز)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:8px;font-weight:800">10 مرلہ</td>
+                <td>2,250 Sq.Ft (250 گز)</td>
+                <td>2,500 Sq.Ft (277.7 گز)</td>
+                <td>2,722 Sq.Ft (302.5 گز)</td>
+              </tr>
+              <tr>
+                <td style="padding:8px;font-weight:800">1 کنال (20 مرلہ)</td>
+                <td>4,500 Sq.Ft (500 گز)</td>
+                <td>5,000 Sq.Ft (555.5 گز)</td>
+                <td>5,445 Sq.Ft (605 گز)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 3: SOCIETY TRANSFER EXPENSE & COMMISSION ESTIMATOR -->
+    <div id="toolPane_transfer" class="tool-pane" style="display:none">
+      <div class="tool-card-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:1.2rem;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:8px">
+              <span>📋</span> <span>سوسائٹی ٹرانسفر اخراجات و کمیشن اسپلٹ کیلکولیٹر</span>
+            </h3>
+            <span style="font-size:0.8rem;color:var(--text-muted)">DHA، بحریہ، سی ڈی اے اور MPCHS B-17 ٹرانسفر فیس، NDC، اور ایجنٹس کی چٹھی تقسیم</span>
+          </div>
+          <span class="badge" style="background:#fef3c7;color:#92400e;font-weight:800;font-size:0.8rem">
+            💼 ڈیلر کمیشن اسپلٹ
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+          <!-- Inputs -->
+          <div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">سوسائٹی منتخب کریں:</label>
+                <select id="tfSociety" onchange="calcSocietyTransfer()" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);font-weight:700">
+                  <option value="dha2" selected>DHA Phase 2 Islamabad</option>
+                  <option value="dha1">DHA Phase 1 / Phase 5</option>
+                  <option value="bahria8">Bahria Town Phase 8</option>
+                  <option value="bahria7">Bahria Town Phase 1-7</option>
+                  <option value="cda">CDA Sectors (G-13 / F-11)</option>
+                  <option value="b17">B-17 Multi Gardens (MPCHS)</option>
+                  <option value="gulberg">Gulberg Greens Islamabad</option>
+                  <option value="soan">Soan Garden / PWD</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">پلاٹ سائز:</label>
+                <select id="tfSize" onchange="calcSocietyTransfer()" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);font-weight:700">
+                  <option value="5">5 مرلہ</option>
+                  <option value="7">7 مرلہ</option>
+                  <option value="10" selected>10 مرلہ</option>
+                  <option value="20">1 کنال</option>
+                </select>
+              </div>
+            </div>
+
+            <label style="display:block;margin-bottom:12px">
+              <span style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">ڈیل رقم (Deal Value in PKR):</span>
+              <input type="number" id="tfPrice" value="22000000" step="500000" oninput="calcSocietyTransfer()" style="width:100%;font-size:1.05rem;font-weight:800;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px">
+            </label>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">خریدار ٹیکس اسٹیٹس:</label>
+                <select id="tfBuyerFiler" onchange="calcSocietyTransfer()" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border)">
+                  <option value="filer" selected>🟢 فائلر (1.25%)</option>
+                  <option value="non_filer">🔴 نان فائلر</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">بیچنے والا ٹیکس اسٹیٹس:</label>
+                <select id="tfSellerFiler" onchange="calcSocietyTransfer()" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border)">
+                  <option value="filer" selected>🟢 فائلر (2.75%)</option>
+                  <option value="non_filer">🔴 نان فائلر (11.5%)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="background:var(--surface-hover);padding:12px;border-radius:10px;border:1px solid var(--border);margin-bottom:12px">
+              <div style="font-weight:800;font-size:0.82rem;color:var(--text-main);margin-bottom:6px">🤝 بروکر کمیشن و چٹھی تقسیم:</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <label style="font-size:0.75rem;color:var(--text-muted)">کمیشن ریٹ:</label>
+                  <select id="tfCommRate" onchange="calcSocietyTransfer()" style="width:100%;padding:6px;border-radius:6px;border:1px solid var(--border);font-weight:700">
+                    <option value="0.02" selected>2% (1% Buyer + 1% Seller)</option>
+                    <option value="0.01">1% ٹوٹل</option>
+                    <option value="0.015">1.5% ریٹ</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.75rem;color:var(--text-muted)">ڈیل تقسیم (Deal Split):</label>
+                  <select id="tfSplitType" onchange="calcSocietyTransfer()" style="width:100%;padding:6px;border-radius:6px;border:1px solid var(--border);font-weight:700">
+                    <option value="single">سنگل ایجنسی (100%)</option>
+                    <option value="50_50" selected>جوائنٹ چٹھی (50% - 50%)</option>
+                    <option value="3way">3-Way Split (33% ہر ایجنٹ)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Breakdown Results -->
+          <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:12px;padding:16px">
+            <strong style="font-size:0.85rem;color:var(--text-main);display:block;margin-bottom:10px">📋 کلوزنگ اخراجات بریک ڈاؤن:</strong>
+            
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:0.82rem">
+              <span>سوسائٹی ٹرانسفر و ممبرشپ فیس:</span>
+              <strong id="tfOutTransfer">PKR 180,000</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:0.82rem">
+              <span>این ڈی سی فیس (No Demand Cert):</span>
+              <strong id="tfOutNdc">PKR 10,000</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:0.82rem">
+              <span>اسٹامپ ڈیوٹی و صوبائی چارجز (~2.5%):</span>
+              <strong id="tfOutStamp">PKR 550,000</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:0.82rem">
+              <span>سیلر ایڈوانس ٹیکس 236C:</span>
+              <strong id="tfOut236C" style="color:#047857">PKR 605,000</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:0.82rem">
+              <span>بائیر ایڈوانس ٹیکس 236K:</span>
+              <strong id="tfOut236K" style="color:#0284c7">PKR 275,000</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;margin-top:6px;border-top:1.5px solid var(--border);font-size:0.92rem;font-weight:900;color:var(--text-main)">
+              <span>کل اندازاً ٹرانسفر اخراجات:</span>
+              <span id="tfOutTotalClosing" style="color:#dc2626">PKR 1,620,000</span>
+            </div>
+
+            <div style="margin-top:12px;background:var(--surface);border:1px solid #10b981;border-radius:8px;padding:10px 12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem">
+                <span>کل کمیشن رقم:</span>
+                <strong id="tfOutTotalComm" style="color:#047857">PKR 440,000</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;color:var(--text-muted);margin-top:4px">
+                <span>آپ کا حصہ (Your Share):</span>
+                <strong id="tfOutAgentShare" style="color:var(--primary);font-size:0.9rem">PKR 220,000</strong>
+              </div>
+            </div>
+
+            <button type="button" class="pri" onclick="shareTransferWa()" style="width:100%;margin-top:14px;padding:10px;font-size:0.88rem;font-weight:800;border-radius:8px">
+              📲 واٹس ایپ پر ڈیل شیٹ شیئر کریں (Share Deal Sheet)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 4: GREY STRUCTURE CONSTRUCTION COST ESTIMATOR -->
+    <div id="toolPane_construction" class="tool-pane" style="display:none">
+      <div class="tool-card-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:1.2rem;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:8px">
+              <span>🏗️</span> <span>گرے اسٹرکچر تعمیراتی لاگت و میٹریل ایسٹیمیٹر (Construction Cost Estimator)</span>
+            </h3>
+            <span style="font-size:0.8rem;color:var(--text-muted)">اسلام آباد و راولپنڈی کے بلڈرز اور ہوم اونرز کے لیے سیمنٹ، سریا، اینٹ اور لیبر کا درست حساب</span>
+          </div>
+          <span class="badge" style="background:#ecfdf5;color:#047857;font-weight:800;font-size:0.8rem">
+            🧱 مارکیٹ ریٹس 2026-27
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;margin-bottom:16px">
+          <div>
+            <label style="font-weight:800;font-size:0.85rem;display:block;margin-bottom:6px">پلاٹ سائز منتخب کریں:</label>
+            <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;margin-bottom:14px">
+              <button type="button" id="cstSizeBtn_5" class="tool-chip-btn" onclick="setConstructionSize(5)">5 مرلہ (1,950 Sq.Ft)</button>
+              <button type="button" id="cstSizeBtn_7" class="tool-chip-btn" onclick="setConstructionSize(7)">7 مرلہ (2,500 Sq.Ft)</button>
+              <button type="button" id="cstSizeBtn_10" class="tool-chip-btn active-chip" onclick="setConstructionSize(10)">10 مرلہ (3,300 Sq.Ft)</button>
+              <button type="button" id="cstSizeBtn_20" class="tool-chip-btn" onclick="setConstructionSize(20)">1 کنال (5,500 Sq.Ft)</button>
+            </div>
+
+            <label style="font-weight:800;font-size:0.85rem;display:block;margin-bottom:6px">تعمیر کا معیار (Quality Tier):</label>
+            <select id="cstTier" onchange="calcConstructionCost()" style="width:100%;padding:10px;border-radius:8px;font-weight:800;border:1px solid var(--border);margin-bottom:14px">
+              <option value="a_grade" selected>⭐ A-Grade Standard (PKR 3,050 / Sq.Ft)</option>
+              <option value="premium">💎 Premium Executive (PKR 3,650 / Sq.Ft)</option>
+              <option value="turnkey">🏡 Complete Turnkey Finish (PKR 6,200 / Sq.Ft)</option>
+            </select>
+
+            <div style="background:var(--surface-hover);padding:12px;border-radius:10px;border:1px solid var(--border)">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px">
+                <span>کل کورڈ ایریا (Covered Area):</span>
+                <strong id="cstAreaSqft">3,300 Sq.Ft</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem">
+                <span>فی اسکوائر فٹ ریٹ:</span>
+                <strong id="cstRatePerSqft">PKR 3,050 / Sq.Ft</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Material Quantities Output -->
+          <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:12px;padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <span style="font-size:0.82rem;font-weight:800;color:var(--text-muted)">کل اندازاً لاگت:</span>
+              <strong id="cstTotalCost" style="font-size:1.4rem;color:#047857">PKR 10,065,000</strong>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.82rem">
+              <div style="background:var(--surface);padding:8px 10px;border-radius:8px;border:1px solid var(--border)">
+                <span>سیمنٹ بیگز:</span>
+                <div id="cstCement" style="font-weight:900;font-size:1.05rem;color:var(--primary)">~3,465 بوری</div>
+              </div>
+              <div style="background:var(--surface);padding:8px 10px;border-radius:8px;border:1px solid var(--border)">
+                <span>سریا (Grade 60):</span>
+                <div id="cstSteel" style="font-weight:900;font-size:1.05rem;color:var(--primary)">~13.2 ٹن</div>
+              </div>
+              <div style="background:var(--surface);padding:8px 10px;border-radius:8px;border:1px solid var(--border)">
+                <span>اینٹیں (اول کوالٹی):</span>
+                <div id="cstBricks" style="font-weight:900;font-size:1.05rem;color:var(--primary)">~85,800 اینٹ</div>
+              </div>
+              <div style="background:var(--surface);padding:8px 10px;border-radius:8px;border:1px solid var(--border)">
+                <span>ریت و کرش:</span>
+                <div id="cstSandCrush" style="font-weight:900;font-size:0.95rem;color:var(--primary)">75k / 82k Cft</div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;background:var(--surface);padding:8px 10px;border-radius:8px;border:1px solid var(--border);display:flex;justify-content:space-between;font-size:0.82rem">
+              <span>لیبر ٹھیکیدار چارجز:</span>
+              <strong id="cstLabor" style="color:var(--text-main)">PKR 1,716,000</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- HIGH CONVERTING SHOP MONETIZATION BANNER -->
+        <div style="background:linear-gradient(135deg, #059669 0%, #0369a1 100%);color:#fff;border-radius:12px;padding:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;box-shadow:0 8px 20px rgba(5,150,105,0.25)">
+          <div style="max-width:620px">
+            <div style="font-size:0.75rem;font-weight:800;background:rgba(255,255,255,0.2);display:inline-block;padding:2px 8px;border-radius:12px;margin-bottom:6px">
+              ⭐ 100% MACRO-FREE EXCEL / GOOGLE SHEET
+            </div>
+            <h4 style="margin:0 0 4px;font-size:1.1rem;font-weight:900">مکان کی تعمیر شروع کر رہے ہیں؟ ٹھیکیدار کو اوور بلنگ نہ کرنے دیں!</h4>
+            <p style="margin:0;font-size:0.82rem;opacity:0.9;line-height:1.4">
+              ہمارا پروفیشنل <strong>House Construction Cost Tracker & Contractor Ledger ($15)</strong> ڈاؤن لوڈ کریں، جس میں روزانہ میٹریل کا اندراج، لیبر لاگ بک اور خودکار ٹھیکیدار بلنگ شامل ہے۔
+            </p>
+          </div>
+          <a href="https://shop.yoursmarttoolkit.com" target="_blank" style="background:#fff;color:#047857;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:900;font-size:0.92rem;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);white-space:nowrap">
+            🛒 حاصل کریں ($15) — shop.yoursmarttoolkit.com ➔
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 5: PLOT INSTALLMENT SCHEDULE CALCULATOR -->
+    <div id="toolPane_installment" class="tool-pane" style="display:none">
+      <div class="tool-card-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:1.2rem;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:8px">
+              <span>📅</span> <span>پلاٹ و فائل قسط وار شیڈول کیلکولیٹر (Installment Plan Calculator)</span>
+            </h3>
+            <span style="font-size:0.8rem;color:var(--text-muted)">B-17، فیصل ٹاؤن، گلبرگ یا نیو ہاؤسنگ پراجیکٹس کے لیے 1 تا 4 سالہ شیڈول جنریٹر</span>
+          </div>
+          <span class="badge" style="background:#ecfdf5;color:#047857;font-weight:800;font-size:0.8rem">
+            📑 مکمل شیڈول بریک ڈاؤن
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+          <div>
+            <label style="display:block;margin-bottom:12px">
+              <span style="font-weight:800;font-size:0.85rem;display:block;margin-bottom:4px">فائل یا پلاٹ کی کل قیمت (Total Price PKR):</span>
+              <input type="number" id="instPrice" value="8500000" step="100000" oninput="calcInstallmentSchedule()" style="width:100%;font-size:1.1rem;font-weight:800;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px">
+            </label>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">ڈاؤن پیمنٹ فیصد:</label>
+                <select id="instDownPct" onchange="calcInstallmentSchedule()" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);font-weight:700">
+                  <option value="0.10">10% ڈاؤن پیمنٹ</option>
+                  <option value="0.15">15% ڈاؤن پیمنٹ</option>
+                  <option value="0.20" selected>20% ڈاؤن پیمنٹ</option>
+                  <option value="0.25">25% ڈاؤن پیمنٹ</option>
+                  <option value="0.30">30% ڈاؤن پیمنٹ</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">پلان کی مدت (Tenure):</label>
+                <select id="instTenureYears" onchange="calcInstallmentSchedule()" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);font-weight:700">
+                  <option value="1">1 سال (4 سہ ماہی)</option>
+                  <option value="2">2 سال (8 سہ ماہی)</option>
+                  <option value="3" selected>3 سال (12 سہ ماہی)</option>
+                  <option value="4">4 سال (16 سہ ماہی)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">بیلٹنگ چارجز (%):</label>
+                <input type="number" id="instBallotPct" value="10" min="0" max="30" oninput="calcInstallmentSchedule()" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border)">
+              </div>
+              <div>
+                <label style="font-weight:800;font-size:0.82rem;display:block;margin-bottom:4px">پوزیشن چارجز (%):</label>
+                <input type="number" id="instPossPct" value="10" min="0" max="30" oninput="calcInstallmentSchedule()" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Schedule Summary -->
+          <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:0.82rem;color:var(--text-muted)">ڈاؤن پیمنٹ رقم:</span>
+                <strong id="instOutDownAmt" style="font-size:1.1rem;color:var(--primary)">PKR 1,700,000</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:0.82rem;color:var(--text-muted)">ہر سہ ماہی قسط (Quarterly Installment):</span>
+                <strong id="instOutInstallment" style="font-size:1.2rem;color:#0284c7">PKR 425,000</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:0.82rem;color:var(--text-muted)">بیلٹنگ موقع پر:</span>
+                <strong id="instOutBallotAmt">PKR 850,000</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+                <span style="font-size:0.82rem;color:var(--text-muted)">پوزیشن کے وقت:</span>
+                <strong id="instOutPossAmt">PKR 850,000</strong>
+              </div>
+
+              <div id="instScheduleContainer" style="max-height:160px;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <button type="button" class="pri" onclick="shareInstallmentWa()" style="width:100%;margin-top:14px;padding:10px;font-size:0.88rem;font-weight:800;border-radius:8px">
+              📲 واٹس ایپ پر قسط وار پلان شیئر کریں
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 6: WHATSAPP RAW LISTING-TO-CLEAN-FORMAT CONVERTER -->
+    <div id="toolPane_formatter" class="tool-pane" style="display:none">
+      <div class="tool-card-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:1.2rem;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:8px">
+              <span>💬</span> <span>واٹس ایپ را لسٹنگ سے کلین فارمیٹر (Free Listing Formatter)</span>
+            </h3>
+            <span style="font-size:0.8rem;color:var(--text-muted)">واٹس ایپ گروپس کے بے ہنگم میسج کو 1-سیکنڈ میں پروفیشنل سوشل میڈیا و کلائنٹ کارڈ میں بدلیں</span>
+          </div>
+          <span class="badge" style="background:#eff6ff;color:#1e40af;font-weight:800;font-size:0.8rem">
+            ⚡ سرمد AI لائٹ انجن
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+          <div>
+            <label style="font-weight:800;font-size:0.85rem;display:block;margin-bottom:6px">
+              1. واٹس ایپ گروپ کا را میسج یہاں پیسٹ کریں:
+            </label>
+            <textarea id="fmtRawInput" rows="6" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);font-size:0.9rem;line-height:1.5" placeholder="مثال: urgent sale bahria phase 8 sector M 10 marla solid brand new house demand 390 lac direct meeting contact malik zafar 03001234567"></textarea>
+
+            <div style="margin:10px 0;display:flex;align-items:center;gap:8px">
+              <input type="checkbox" id="fmtClientSafe" checked style="width:18px;height:18px;cursor:pointer">
+              <label for="fmtClientSafe" style="font-size:0.82rem;font-weight:800;cursor:pointer;color:var(--primary)">
+                🛡️ کلائنٹ سیف موڈ (اسٹریٹ اور پلاٹ نمبر چھپائیں تاکہ کلائنٹ بائی پاس نہ کرے)
+              </label>
+            </div>
+
+            <button type="button" class="pri" onclick="formatRawListingTool()" style="width:100%;padding:12px;font-size:0.92rem;font-weight:800;border-radius:10px">
+              ✨ 1-کلک میں پروفیشنل کارڈ بنائیں
+            </button>
+          </div>
+
+          <!-- Formatted Preview -->
+          <div style="background:var(--surface-hover);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <div style="font-size:0.8rem;font-weight:800;color:var(--text-muted);margin-bottom:8px">
+                📱 تیار شدہ کلین واٹس ایپ کارڈ (Ready to Send):
+              </div>
+              <div id="fmtCardPreview" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:0.85rem;line-height:1.6;white-space:pre-wrap;min-height:140px">
+🏡 *Executive Property Offer via Dealo OS*
+📍 *Location:* Bahria Town Phase 8 (Sector M)
+📐 *Size & Type:* 10 Marla Brand New House
+💰 *Demand:* PKR 3.90 Crore
+🛡️ *Plot Verification:* Direct Owner / Key Available
+📞 *Contact for Inspection:* 0300-1234567
+
+✨ *Formatted with Dealo PropTech OS*
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button type="button" class="secondary" onclick="copyCleanListing()" style="flex:1;padding:10px;font-size:0.82rem;font-weight:800;border-radius:8px">
+                📋 کاپی کریں (Copy)
+              </button>
+              <button type="button" class="pri" onclick="shareCleanListingWa()" style="flex:1;padding:10px;font-size:0.82rem;font-weight:800;border-radius:8px">
+                📲 واٹس ایپ بھیجیں
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;background:var(--surface-hover);border:1.5px dashed var(--primary);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div>
+            <strong style="font-size:0.88rem;color:var(--text-main)">🚀 کیا آپ یہ سارا کام خودکار بنانا چاہتے ہیں؟</strong>
+            <p style="margin:2px 0 0 0;font-size:0.78rem;color:var(--text-muted)">
+              Dealo CRM کے اندر یہ لسٹنگ فوری ڈیٹابیس میں محفوظ ہو کر خریداروں کے ساتھ خودکار میچ بھی ہو جاتی ہے!
+            </p>
+          </div>
+          <button type="button" class="pri" onclick="openLiveDemoModal()" style="font-size:0.82rem;font-weight:800;padding:8px 16px;border-radius:8px">
+            ⚡ Dealo لائیو ڈیمو دیکھیں
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -4920,6 +5697,10 @@ Salam Kayani sahab, mujhe Bahria Town phase 8 mein 10 marla residential plot cha
 const T = {
   ur: {
     props: "🗺️ نقشہ و سرچ",
+    tools: "🧮 ٹیکس و ٹولز سوٹ 2026–27",
+    toolsHeaderBtn: "🧮 2026 ٹیکس و ٹولز",
+    pubTabProps: "🗺️ پراپرٹیز تلاش و جیو اسپیٹیل میپ",
+    pubTabTools: "🧮 ایف بی آر پراپرٹی ٹیکس و ٹولز سوٹ 2026–27 (Free 6 Tools)",
     tenants: "🏢 رینٹل و کرایہ دار",
     maint: "🛠️ مینٹیننس و ورک آرڈرز",
     accounting: "💰 فنانشل لیجر و اونر اسٹیٹمنٹ",
@@ -5085,6 +5866,10 @@ const T = {
   },
   en: {
     props: "🗺️ Map & Search",
+    tools: "🧮 Tax & Tools Suite 2026–27",
+    toolsHeaderBtn: "🧮 2026 Tax & Tools",
+    pubTabProps: "🗺️ Search Properties & Geospatial Map",
+    pubTabTools: "🧮 FBR Property Tax & Tools Suite 2026–27 (Free 6 Tools)",
     tenants: "🏢 Tenants & Leases",
     maint: "🛠️ Work Orders & Maintenance",
     accounting: "💰 Accounting & Owner Statements",
@@ -8368,7 +9153,7 @@ function tabs() {
     return;
   }
   tabsEl.style.display = "flex";
-  tabsEl.innerHTML = ["props", "analytics", "team", "tenants", "maint", "accounting", "screening", "reqs", "match", "follow", "emp"].map(k => {
+  tabsEl.innerHTML = ["props", "tools", "analytics", "team", "tenants", "maint", "accounting", "screening", "reqs", "match", "follow", "emp"].map(k => {
     let badge = "";
     if (k === "emp" && BOTS_QUEUE) {
       const pCount = BOTS_QUEUE.filter(q => q.status === "pending").length;
@@ -8387,10 +9172,23 @@ function tabs() {
 }
 
 function go(k) {
-  if (!IS_ADMIN && k !== "props") return;
+  if (!IS_ADMIN && k !== "props" && k !== "tools") return;
   cur = k;
   document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + k));
+
+  const pBtn = $("pubTabBtn_props");
+  const tBtn = $("pubTabBtn_tools");
+  if (pBtn && tBtn) {
+    pBtn.classList.toggle("active-pub-tab", k === "props");
+    tBtn.classList.toggle("active-pub-tab", k === "tools");
+  }
+
   tabs();
+  if (k === "tools") {
+    if (typeof initRealEstateToolsSuite === "function") initRealEstateToolsSuite();
+    const el = $("p-tools");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
   if (k === "analytics") loadAnalytics();
   if (k === "team") loadTeamData();
   if (k === "follow") loadFollow();
@@ -9001,6 +9799,499 @@ function scrollToInquiry() {
   }
 }
 
+// ==============================================================================
+// 6 REAL ESTATE CALCULATORS & CONVERTERS SUITE (Finance Act 2026-27 & Twin Cities)
+// ==============================================================================
+let currentToolSubTab = "fbr";
+let marlaSqFtStandard = 225; // 225 (DHA/Bahria/Gulberg/B-17), 250 (CDA), 272.25 (Revenue)
+
+function switchToolSubTab(tabName) {
+  currentToolSubTab = tabName;
+  const tabs = ["fbr", "marla", "transfer", "construction", "installment", "formatter"];
+  tabs.forEach(t => {
+    const btn = $("toolSubBtn_" + t);
+    const pane = $("toolPane_" + t);
+    if (btn) btn.classList.toggle("active-tool-subnav", t === tabName);
+    if (pane) pane.style.display = t === tabName ? "block" : "none";
+  });
+  if (tabName === "fbr") calculateFbrTax();
+  else if (tabName === "marla") calcMarlaFrom("marla");
+  else if (tabName === "transfer") calcSocietyTransfer();
+  else if (tabName === "construction") calcConstructionCost();
+  else if (tabName === "installment") calcInstallmentSchedule();
+}
+
+function formatPKR(num) {
+  if (isNaN(num)) return "0";
+  return Math.round(num).toLocaleString("en-PK");
+}
+
+// 1. FBR TAX CALCULATOR (Finance Act 2026-27)
+function setFbrPriceChip(price) {
+  const el = $("fbrPropPrice");
+  if (el) {
+    el.value = price;
+    calculateFbrTax();
+  }
+}
+
+function calculateFbrTax() {
+  const priceInput = $("fbrPropPrice");
+  if (!priceInput) return;
+  const price = Math.max(0, parseFloat(priceInput.value) || 0);
+  const sellerStatus = $("fbrSellerStatus") ? $("fbrSellerStatus").value : "filer";
+  const buyerStatus = $("fbrBuyerStatus") ? $("fbrBuyerStatus").value : "filer";
+
+  // Section 236C (Seller Advance Tax)
+  // Finance Act 2026 (Tax Year 2027): Flat 2.75% for ATL Filer vs 11.5% for Non-Filer
+  const sellerRate = sellerStatus === "filer" ? 2.75 : 11.50;
+  const sellerTax = (price * sellerRate) / 100;
+
+  // Section 236K (Buyer Advance Tax)
+  // Finance Act 2026 (Tax Year 2027): Flat 1.25% for ATL Filer.
+  // Non-Filer Tiered:
+  // <= 50,000,000: 10.5%
+  // 50,000,001 - 100,000,000: 14.5%
+  // > 100,000,000: 18.5%
+  let buyerRate = 1.25;
+  if (buyerStatus !== "filer") {
+    if (price <= 50000000) {
+      buyerRate = 10.5;
+    } else if (price <= 100000000) {
+      buyerRate = 14.5;
+    } else {
+      buyerRate = 18.5;
+    }
+  }
+  const buyerTax = (price * buyerRate) / 100;
+
+  const totalTax = sellerTax + buyerTax;
+  const totalPct = price > 0 ? (totalTax / price) * 100 : 0;
+
+  if ($("fbrSellerRateLabel")) {
+    $("fbrSellerRateLabel").textContent = `شرح: ${sellerRate}% (${sellerStatus === "filer" ? "ایکٹو فائلر ATL" : "نان فائلر سلیب"})`;
+  }
+  if ($("fbrSellerTaxAmt")) $("fbrSellerTaxAmt").textContent = `PKR ${formatPKR(sellerTax)}`;
+
+  if ($("fbrBuyerRateLabel")) {
+    $("fbrBuyerRateLabel").textContent = `شرح: ${buyerRate}% (${buyerStatus === "filer" ? "ایکٹو فائلر ATL" : "نان فائلر سلیب"})`;
+  }
+  if ($("fbrBuyerTaxAmt")) $("fbrBuyerTaxAmt").textContent = `PKR ${formatPKR(buyerTax)}`;
+
+  if ($("fbrTotalTaxPct")) $("fbrTotalTaxPct").textContent = `کل مؤثر ٹیکس شرح: ${totalPct.toFixed(2)}%`;
+  if ($("fbrTotalTaxAmt")) $("fbrTotalTaxAmt").textContent = `PKR ${formatPKR(totalTax)}`;
+
+  // Calculate savings vs worst-case Non-Filer
+  let maxBuyerRate = 10.5;
+  if (price > 100000000) maxBuyerRate = 18.5;
+  else if (price > 50000000) maxBuyerRate = 14.5;
+  const nonFilerWorstTax = price * (11.5 + maxBuyerRate) / 100;
+  const savings = Math.max(0, nonFilerWorstTax - totalTax);
+
+  if ($("fbrSavingsVal")) $("fbrSavingsVal").textContent = `PKR ${formatPKR(savings)}`;
+  if ($("fbrSavingsBox")) {
+    $("fbrSavingsBox").style.display = savings > 0 ? "block" : "none";
+  }
+}
+
+function shareFbrTaxWa() {
+  const price = parseFloat($("fbrPropPrice").value) || 0;
+  const sellerStatus = $("fbrSellerStatus") ? $("fbrSellerStatus").value : "filer";
+  const buyerStatus = $("fbrBuyerStatus") ? $("fbrBuyerStatus").value : "filer";
+  const pType = $("fbrPropertyType") ? $("fbrPropertyType").options[$("fbrPropertyType").selectedIndex].text : "پراپرٹی";
+
+  const sellerRate = sellerStatus === "filer" ? 2.75 : 11.50;
+  const sellerTax = (price * sellerRate) / 100;
+
+  let buyerRate = 1.25;
+  if (buyerStatus !== "filer") {
+    if (price <= 50000000) buyerRate = 10.5;
+    else if (price <= 100000000) buyerRate = 14.5;
+    else buyerRate = 18.5;
+  }
+  const buyerTax = (price * buyerRate) / 100;
+  const totalTax = sellerTax + buyerTax;
+
+  const msg = `🏛️ *FBR Property Advance Tax Breakdown (Finance Act 2026–27)*
+🏡 *Type:* ${pType}
+💰 *Property Deal Value:* PKR ${formatPKR(price)}
+━━━━━━━━━━━━━━━━━━
+📥 *Buyer Tax (Section 236K):*
+• Status: ${buyerStatus === "filer" ? "🟢 ATL Active Filer" : "🔴 Non-Filer (Tiered)"}
+• Rate: *${buyerRate}%*
+• Amount: *PKR ${formatPKR(buyerTax)}*
+
+📤 *Seller Tax (Section 236C):*
+• Status: ${sellerStatus === "filer" ? "🟢 ATL Active Filer" : "🔴 Non-Filer"}
+• Rate: *${sellerRate}%*
+• Amount: *PKR ${formatPKR(sellerTax)}*
+━━━━━━━━━━━━━━━━━━
+📊 *Total Federal Tax:* *PKR ${formatPKR(totalTax)}*
+
+⚖️ *2026 Update:* Rule 1A (Late Filer) and Section 7E (Deemed Income Tax) have been omitted.
+✨ *Calculated via Dealo Real Estate OS*
+👉 https://dealo.yoursmarttoolkit.com/tools`;
+
+  window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(msg), "_blank");
+}
+
+// 2. MULTI-STANDARD MARLA CONVERTER
+function setMarlaStandard(std) {
+  marlaSqFtStandard = std;
+  ["225", "250", "272"].forEach(s => {
+    const btn = $("stdBtn_" + s);
+    if (btn) btn.classList.toggle("active-chip", (s === "272" && std > 260) || s === String(std));
+  });
+  calcMarlaFrom("marla");
+}
+
+function setMarlaPreset(marla) {
+  if ($("mConv_marla")) {
+    $("mConv_marla").value = marla;
+    calcMarlaFrom("marla");
+  }
+}
+
+function calcMarlaFrom(source) {
+  let sqft = 0;
+  const mStd = marlaSqFtStandard;
+
+  if (source === "marla") {
+    const m = parseFloat($("mConv_marla").value) || 0;
+    sqft = m * mStd;
+  } else if (source === "kanal") {
+    const k = parseFloat($("mConv_kanal").value) || 0;
+    sqft = k * 20 * mStd;
+  } else if (source === "sqft") {
+    sqft = parseFloat($("mConv_sqft").value) || 0;
+  } else if (source === "gazz") {
+    const g = parseFloat($("mConv_gazz").value) || 0;
+    sqft = g * 9;
+  } else if (source === "acre") {
+    const ac = parseFloat($("mConv_acre").value) || 0;
+    sqft = ac * 160 * mStd;
+  } else if (source === "sarsahi") {
+    const s = parseFloat($("mConv_sarsahi").value) || 0;
+    sqft = (s * mStd) / 9;
+  }
+
+  const marla = mStd > 0 ? sqft / mStd : 0;
+  const kanal = marla / 20;
+  const gazz = sqft / 9;
+  const acre = marla / 160;
+  const sarsahi = marla * 9;
+
+  if (source !== "marla" && $("mConv_marla")) $("mConv_marla").value = parseFloat(marla.toFixed(4));
+  if (source !== "kanal" && $("mConv_kanal")) $("mConv_kanal").value = parseFloat(kanal.toFixed(4));
+  if (source !== "sqft" && $("mConv_sqft")) $("mConv_sqft").value = Math.round(sqft);
+  if (source !== "gazz" && $("mConv_gazz")) $("mConv_gazz").value = parseFloat(gazz.toFixed(2));
+  if (source !== "acre" && $("mConv_acre")) $("mConv_acre").value = parseFloat(acre.toFixed(5));
+  if (source !== "sarsahi" && $("mConv_sarsahi")) $("mConv_sarsahi").value = parseFloat(sarsahi.toFixed(2));
+}
+
+// 3. SOCIETY TRANSFER EXPENSE & COMMISSION SPLIT
+function calcSocietyTransfer() {
+  const soc = $("tfSociety") ? $("tfSociety").value : "dha2";
+  const size = $("tfSize") ? $("tfSize").value : "10";
+  const price = Math.max(0, parseFloat($("tfPrice").value) || 0);
+  const buyerFiler = $("tfBuyerFiler") ? $("tfBuyerFiler").value === "filer" : true;
+  const sellerFiler = $("tfSellerFiler") ? $("tfSellerFiler").value === "filer" : true;
+  const commRate = parseFloat($("tfCommRate").value) || 0.02;
+  const splitType = $("tfSplitType") ? $("tfSplitType").value : "50_50";
+
+  let transferFee = 100000;
+  let ndcFee = 10000;
+
+  if (soc.startsWith("dha")) {
+    if (size === "5") { transferFee = 65000; ndcFee = 8000; }
+    else if (size === "7") { transferFee = 90000; ndcFee = 10000; }
+    else if (size === "10") { transferFee = 135000; ndcFee = 12000; }
+    else if (size === "20") { transferFee = 240000; ndcFee = 18000; }
+  } else if (soc.startsWith("bahria")) {
+    if (size === "5") { transferFee = 55000; ndcFee = 7000; }
+    else if (size === "7") { transferFee = 75000; ndcFee = 8500; }
+    else if (size === "10") { transferFee = 110000; ndcFee = 10000; }
+    else if (size === "20") { transferFee = 195000; ndcFee = 15000; }
+  } else if (soc === "cda") {
+    if (size === "5") { transferFee = 45000; ndcFee = 5000; }
+    else if (size === "7") { transferFee = 65000; ndcFee = 7000; }
+    else if (size === "10") { transferFee = 95000; ndcFee = 10000; }
+    else if (size === "20") { transferFee = 165000; ndcFee = 15000; }
+  } else if (soc === "b17") {
+    if (size === "5") { transferFee = 38000; ndcFee = 5000; }
+    else if (size === "7") { transferFee = 52000; ndcFee = 6500; }
+    else if (size === "10") { transferFee = 75000; ndcFee = 8000; }
+    else if (size === "20") { transferFee = 130000; ndcFee = 12000; }
+  } else if (soc === "gulberg") {
+    if (size === "5") { transferFee = 50000; ndcFee = 6000; }
+    else if (size === "7") { transferFee = 70000; ndcFee = 8000; }
+    else if (size === "10") { transferFee = 105000; ndcFee = 10000; }
+    else if (size === "20") { transferFee = 180000; ndcFee = 15000; }
+  } else {
+    if (size === "5") { transferFee = 35000; ndcFee = 5000; }
+    else if (size === "7") { transferFee = 45000; ndcFee = 6000; }
+    else if (size === "10") { transferFee = 65000; ndcFee = 8000; }
+    else if (size === "20") { transferFee = 110000; ndcFee = 12000; }
+  }
+
+  const stampDuty = price * 0.025;
+
+  const sellerRate = sellerFiler ? 2.75 : 11.50;
+  const sellerTax = (price * sellerRate) / 100;
+
+  let buyerRate = 1.25;
+  if (!buyerFiler) {
+    if (price <= 50000000) buyerRate = 10.5;
+    else if (price <= 100000000) buyerRate = 14.5;
+    else buyerRate = 18.5;
+  }
+  const buyerTax = (price * buyerRate) / 100;
+
+  const totalClosing = transferFee + ndcFee + stampDuty + sellerTax + buyerTax;
+
+  const totalComm = price * commRate;
+  let agentShare = totalComm;
+  if (splitType === "50_50") agentShare = totalComm / 2;
+  else if (splitType === "3way") agentShare = totalComm / 3;
+
+  if ($("tfOutTransfer")) $("tfOutTransfer").textContent = `PKR ${formatPKR(transferFee)}`;
+  if ($("tfOutNdc")) $("tfOutNdc").textContent = `PKR ${formatPKR(ndcFee)}`;
+  if ($("tfOutStamp")) $("tfOutStamp").textContent = `PKR ${formatPKR(stampDuty)}`;
+  if ($("tfOut236C")) $("tfOut236C").textContent = `PKR ${formatPKR(sellerTax)} (${sellerRate}%)`;
+  if ($("tfOut236K")) $("tfOut236K").textContent = `PKR ${formatPKR(buyerTax)} (${buyerRate}%)`;
+  if ($("tfOutTotalClosing")) $("tfOutTotalClosing").textContent = `PKR ${formatPKR(totalClosing)}`;
+  if ($("tfOutTotalComm")) $("tfOutTotalComm").textContent = `PKR ${formatPKR(totalComm)} (${(commRate * 100).toFixed(1)}%)`;
+  if ($("tfOutAgentShare")) $("tfOutAgentShare").textContent = `PKR ${formatPKR(agentShare)} (${splitType === "50_50" ? "50% چٹھی شیئر" : splitType === "3way" ? "33.3% شیئر" : "سنگل 100%"})`;
+}
+
+function shareTransferWa() {
+  const socName = $("tfSociety") ? $("tfSociety").options[$("tfSociety").selectedIndex].text : "سوسائٹی";
+  const sizeName = $("tfSize") ? $("tfSize").options[$("tfSize").selectedIndex].text : "سائز";
+  const price = parseFloat($("tfPrice").value) || 0;
+  const transfer = $("tfOutTransfer") ? $("tfOutTransfer").textContent : "0";
+  const ndc = $("tfOutNdc") ? $("tfOutNdc").textContent : "0";
+  const stamp = $("tfOutStamp") ? $("tfOutStamp").textContent : "0";
+  const t236C = $("tfOut236C") ? $("tfOut236C").textContent : "0";
+  const t236K = $("tfOut236K") ? $("tfOut236K").textContent : "0";
+  const totalClosing = $("tfOutTotalClosing") ? $("tfOutTotalClosing").textContent : "0";
+  const comm = $("tfOutTotalComm") ? $("tfOutTotalComm").textContent : "0";
+
+  const msg = `📋 *Society Transfer Expense & Deal Sheet*
+📍 *Society:* ${socName}
+📐 *Plot Size:* ${sizeName}
+💰 *Deal Value:* PKR ${formatPKR(price)}
+━━━━━━━━━━━━━━━━━━
+• Transfer & Membership Fee: ${transfer}
+• NDC (No Demand Certificate): ${ndc}
+• Stamp Duty & Mutation (~2.5%): ${stamp}
+• Seller Tax 236C: ${t236C}
+• Buyer Tax 236K: ${t236K}
+━━━━━━━━━━━━━━━━━━
+🚨 *Total Estimated Closing Costs:* *${totalClosing}*
+🤝 *Brokerage Commission:* ${comm}
+
+✨ *Prepared via Dealo Real Estate CRM*
+👉 https://dealo.yoursmarttoolkit.com/tools`;
+
+  window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(msg), "_blank");
+}
+
+// 4. GREY STRUCTURE & CONSTRUCTION COST ESTIMATOR
+let selectedConstSize = 10;
+
+function setConstructionSize(size) {
+  selectedConstSize = size;
+  [5, 7, 10, 20].forEach(s => {
+    const btn = $("cstSizeBtn_" + s);
+    if (btn) btn.classList.toggle("active-chip", s === size);
+  });
+  calcConstructionCost();
+}
+
+function calcConstructionCost() {
+  const size = selectedConstSize;
+  const tier = $("cstTier") ? $("cstTier").value : "a_grade";
+
+  let coveredArea = 3300;
+  if (size === 5) coveredArea = 1950;
+  else if (size === 7) coveredArea = 2500;
+  else if (size === 10) coveredArea = 3300;
+  else if (size === 20) coveredArea = 5500;
+
+  let rate = 3050;
+  if (tier === "a_grade") rate = 3050;
+  else if (tier === "premium") rate = 3650;
+  else if (tier === "turnkey") rate = 6200;
+
+  const totalCost = coveredArea * rate;
+
+  const cementBags = Math.round(coveredArea * 1.05);
+  const steelTons = (coveredArea * 4.0 / 1000).toFixed(1);
+  const bricksCount = Math.round(coveredArea * 26);
+  const sandCft = Math.round(coveredArea * 2.2);
+  const crushCft = Math.round(coveredArea * 1.8);
+  const laborRate = tier === "turnkey" ? 950 : (tier === "premium" ? 580 : 520);
+  const laborCost = coveredArea * laborRate;
+
+  if ($("cstAreaSqft")) $("cstAreaSqft").textContent = `${formatPKR(coveredArea)} Sq.Ft`;
+  if ($("cstRatePerSqft")) $("cstRatePerSqft").textContent = `PKR ${formatPKR(rate)} / Sq.Ft`;
+  if ($("cstTotalCost")) $("cstTotalCost").textContent = `PKR ${formatPKR(totalCost)}`;
+  if ($("cstCement")) $("cstCement").textContent = `~${formatPKR(cementBags)} بوری`;
+  if ($("cstSteel")) $("cstSteel").textContent = `~${steelTons} ٹن (Grade 60)`;
+  if ($("cstBricks")) $("cstBricks").textContent = `~${formatPKR(bricksCount)} اینٹ`;
+  if ($("cstSandCrush")) $("cstSandCrush").textContent = `${formatPKR(sandCft)} / ${formatPKR(crushCft)} Cft`;
+  if ($("cstLabor")) $("cstLabor").textContent = `PKR ${formatPKR(laborCost)} (@ ${laborRate}/sqft)`;
+}
+
+// 5. PLOT INSTALLMENT SCHEDULE CALCULATOR
+function calcInstallmentSchedule() {
+  const price = Math.max(0, parseFloat($("instPrice").value) || 0);
+  const downPct = parseFloat($("instDownPct").value) || 0.20;
+  const tenureYears = parseInt($("instTenureYears").value) || 3;
+  const ballotPct = (parseFloat($("instBallotPct").value) || 10) / 100;
+  const possPct = (parseFloat($("instPossPct").value) || 10) / 100;
+
+  const downAmt = price * downPct;
+  const ballotAmt = price * ballotPct;
+  const possAmt = price * possPct;
+
+  const quartersCount = tenureYears * 4;
+  const remainingForQuarters = Math.max(0, price - downAmt - ballotAmt - possAmt);
+  const quarterlyAmt = quartersCount > 0 ? remainingForQuarters / quartersCount : 0;
+
+  if ($("instOutDownAmt")) $("instOutDownAmt").textContent = `PKR ${formatPKR(downAmt)}`;
+  if ($("instOutInstallment")) $("instOutInstallment").textContent = `PKR ${formatPKR(quarterlyAmt)}`;
+  if ($("instOutBallotAmt")) $("instOutBallotAmt").textContent = `PKR ${formatPKR(ballotAmt)}`;
+  if ($("instOutPossAmt")) $("instOutPossAmt").textContent = `PKR ${formatPKR(possAmt)}`;
+
+  const cont = $("instScheduleContainer");
+  if (cont) {
+    let rowsHtml = `<div style="font-size:0.75rem;font-weight:800;color:var(--text-muted);margin-bottom:6px">تفصیلی قسط وار فہرست (${quartersCount} سہ ماہی اقساط):</div>`;
+    for (let i = 1; i <= quartersCount; i++) {
+      let extraTag = "";
+      if (i === Math.floor(quartersCount / 2)) extraTag = ` <span style="color:#0284c7;font-weight:800">(+ بیلٹنگ موقع)</span>`;
+      if (i === quartersCount) extraTag = ` <span style="color:#059669;font-weight:800">(+ پوزیشن موقع)</span>`;
+      rowsHtml += `
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:0.78rem">
+          <span>سہ ماہی قسط #${i}${extraTag}:</span>
+          <strong>PKR ${formatPKR(quarterlyAmt)}</strong>
+        </div>
+      `;
+    }
+    cont.innerHTML = rowsHtml;
+  }
+}
+
+function shareInstallmentWa() {
+  const price = parseFloat($("instPrice").value) || 0;
+  const downAmt = $("instOutDownAmt") ? $("instOutDownAmt").textContent : "0";
+  const installment = $("instOutInstallment") ? $("instOutInstallment").textContent : "0";
+  const ballot = $("instOutBallotAmt") ? $("instOutBallotAmt").textContent : "0";
+  const poss = $("instOutPossAmt") ? $("instOutPossAmt").textContent : "0";
+  const years = $("instTenureYears") ? $("instTenureYears").value : "3";
+
+  const msg = `📅 *Plot File Installment Schedule (${years} Years Plan)*
+💰 *Total Plot Value:* PKR ${formatPKR(price)}
+━━━━━━━━━━━━━━━━━━
+💵 *Down Payment (Booking):* ${downAmt}
+📆 *Quarterly Installment (سہ ماہی قسط):* ${installment}
+🎯 *Balloting Payment:* ${ballot}
+🔑 *Possession Payment:* ${poss}
+━━━━━━━━━━━━━━━━━━
+✨ *Calculated via Dealo Real Estate OS*
+👉 https://dealo.yoursmarttoolkit.com/tools`;
+
+  window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(msg), "_blank");
+}
+
+// 6. WHATSAPP RAW LISTING-TO-CLEAN-FORMAT CONVERTER
+function formatRawListingTool() {
+  const raw = $("fmtRawInput") ? $("fmtRawInput").value.trim() : "";
+  if (!raw) {
+    alert("برائے مہربانی واٹس ایپ میسج کا متن باکس میں پیسٹ کریں۔");
+    return;
+  }
+  const clientSafe = $("fmtClientSafe") ? $("fmtClientSafe").checked : true;
+
+  let society = "Islamabad / Rawalpindi";
+  if (/bahria/i.test(raw)) society = "Bahria Town (Phase 1-8)";
+  else if (/dha\s*2|dha\s*ii/i.test(raw)) society = "DHA Phase 2 Islamabad";
+  else if (/dha/i.test(raw)) society = "DHA Islamabad";
+  else if (/gulberg/i.test(raw)) society = "Gulberg Greens Islamabad";
+  else if (/b-?17|multi/i.test(raw)) society = "B-17 Multi Gardens";
+  else if (/f-?10/i.test(raw)) society = "CDA Sector F-10";
+  else if (/f-?11/i.test(raw)) society = "CDA Sector F-11";
+  else if (/g-?13/i.test(raw)) society = "CDA Sector G-13";
+  else if (/g-?14/i.test(raw)) society = "CDA Sector G-14";
+  else if (/soan/i.test(raw)) society = "Soan Gardens";
+  else if (/pwd/i.test(raw)) society = "PWD Housing Scheme";
+
+  let size = "5 Marla";
+  const sizeMatch = raw.match(/(\d+(?:\.\d+)?)\s*(marla|kanal)/i);
+  if (sizeMatch) {
+    size = `${sizeMatch[1]} ${sizeMatch[2].charAt(0).toUpperCase() + sizeMatch[2].slice(1).toLowerCase()}`;
+  }
+
+  let demand = "Call for Price";
+  const demandMatch = raw.match(/(?:demand|demand:|rate|price|prc|demnd)?\s*[:=]?\s*(\d+(?:\.\d+)?)\s*(crore|cr|lac|lakh)/i);
+  if (demandMatch) {
+    demand = `PKR ${demandMatch[1]} ${demandMatch[2].toLowerCase().startsWith("cr") ? "Crore" : "Lakh"}`;
+  }
+
+  let phone = "Contact Listing Agent";
+  const phoneMatch = raw.match(/(03\d{2}[-\s]?\d{7}|\+923\d{9})/);
+  if (phoneMatch) {
+    phone = phoneMatch[1].replace(/\s+/g, "");
+  }
+
+  let pType = "Residential Property";
+  if (/house|kothi|banglow|makan/i.test(raw)) pType = "Brand New / Constructed House";
+  else if (/plot\s*file|file/i.test(raw)) pType = "Plot File / Installment";
+  else if (/plot/i.test(raw)) pType = "Residential Plot";
+  else if (/flat|apartment/i.test(raw)) pType = "Luxury Apartment";
+  else if (/commercial|shop|plaza/i.test(raw)) pType = "Commercial Unit";
+
+  let outText = `🏡 *EXCLUSIVE PROPERTY OFFER via Dealo OS*
+📍 *Location:* ${society}
+📐 *Size:* ${size}
+🏷️ *Property Type:* ${pType}
+💰 *Demand:* ${demand}
+${clientSafe ? "🛡️ *Plot Verification:* Direct Owner Meeting / File on Table (Plot # Hidden for Client Privacy)" : "📌 *Listing Details:* Genuine Available Deal"}
+📞 *Direct Contact & Inspection:* ${phone}
+
+✨ *Formatted with Dealo PropTech OS*
+👉 https://dealo.yoursmarttoolkit.com`;
+
+  const preview = $("fmtCardPreview");
+  if (preview) preview.textContent = outText;
+}
+
+function copyCleanListing() {
+  const preview = $("fmtCardPreview");
+  if (!preview) return;
+  const text = preview.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast("کلین پراپرٹی کارڈ کاپی ہو گیا! اب واٹس ایپ پر پیسٹ کریں۔");
+  }).catch(() => {
+    alert("کاپی کرنے میں خرابی۔ برائے مہربانی دستی طور پر کاپی کریں۔");
+  });
+}
+
+function shareCleanListingWa() {
+  const preview = $("fmtCardPreview");
+  if (!preview) return;
+  const text = preview.textContent;
+  window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(text), "_blank");
+}
+
+function initRealEstateToolsSuite() {
+  calculateFbrTax();
+  calcMarlaFrom("marla");
+  calcSocietyTransfer();
+  calcConstructionCost();
+  calcInstallmentSchedule();
+}
+
 async function init() {
   const token = localStorage.getItem("dealo_admin_token");
   if (token) {
@@ -9017,6 +10308,7 @@ async function init() {
 
   setAdminMode(IS_ADMIN);
   render();
+  initRealEstateToolsSuite();
 
   if (IS_ADMIN) {
     try {
