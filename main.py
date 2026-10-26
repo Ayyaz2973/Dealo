@@ -87,23 +87,35 @@ app.add_middleware(
 
 PUBLIC_ROUTES = {
     ("/", "GET"),
+    ("/", "HEAD"),
     ("/sitemap.xml", "GET"),
+    ("/sitemap.xml", "HEAD"),
     ("/robots.txt", "GET"),
+    ("/robots.txt", "HEAD"),
+    ("/tools", "GET"),
+    ("/tools", "HEAD"),
     ("/api/properties", "GET"),
+    ("/api/properties", "HEAD"),
     ("/api/societies", "GET"),
+    ("/api/societies", "HEAD"),
     ("/api/health", "GET"),
+    ("/api/health", "HEAD"),
     ("/api/stats", "GET"),
+    ("/api/stats", "HEAD"),
     ("/api/auth/login", "POST"),
     ("/api/auth/status", "GET"),
+    ("/api/auth/status", "HEAD"),
     ("/api/auth/logout", "POST"),
     ("/api/inquiry", "POST"),
     ("/api/voice-command", "POST"),
     ("/api/demo-info", "GET"),
+    ("/api/demo-info", "HEAD"),
     ("/api/extension/status", "GET"),
+    ("/api/extension/status", "HEAD"),
     ("/api/extension/import", "POST"),
     ("/api/download/extension", "GET"),
-    ("/tools", "GET"),
     ("/openapi.json", "GET"),
+    ("/openapi.json", "HEAD"),
     ("/docs", "GET"),
     ("/redoc", "GET"),
 }
@@ -4028,12 +4040,12 @@ SOCIETIES_SEO = {
 }
 
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def index():
     return FileResponse(BASE / "static" / "index.html")
 
 
-@app.get("/tools", response_class=HTMLResponse)
+@app.api_route("/tools", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def tools_landing():
     index_path = BASE / "static" / "index.html"
     if not index_path.exists():
@@ -4063,7 +4075,7 @@ def tools_landing():
     return HTMLResponse(content=html)
 
 
-@app.get("/society/{slug}", response_class=HTMLResponse)
+@app.api_route("/society/{slug}", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def society_landing(slug: str):
     info = SOCIETIES_SEO.get(slug.lower().strip())
     if not info:
@@ -4110,7 +4122,7 @@ def society_landing(slug: str):
     return HTMLResponse(content=html)
 
 
-@app.get("/sitemap.xml", include_in_schema=False)
+@app.api_route("/sitemap.xml", methods=["GET", "HEAD"], include_in_schema=False)
 def sitemap():
     urls = [
         """  <url>
@@ -4129,7 +4141,7 @@ def sitemap():
     for slug in SOCIETIES_SEO.keys():
         urls.append(f"""  <url>
     <loc>https://dealo.yoursmarttoolkit.com/society/{slug}</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>""")
@@ -4137,10 +4149,15 @@ def sitemap():
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {chr(10).join(urls)}
 </urlset>"""
-    return Response(content=sitemap_xml.strip(), media_type="application/xml")
+    headers = {
+        "Content-Type": "application/xml; charset=utf-8",
+        "X-Robots-Tag": "all",
+        "Cache-Control": "public, max-age=3600",
+    }
+    return Response(content=sitemap_xml.strip(), media_type="application/xml", headers=headers)
 
 
-@app.get("/robots.txt", include_in_schema=False)
+@app.api_route("/robots.txt", methods=["GET", "HEAD"], include_in_schema=False)
 def robots():
     robots_txt = """User-agent: *
 Allow: /
@@ -4151,7 +4168,11 @@ Allow: /api/demo-info
 
 Sitemap: https://dealo.yoursmarttoolkit.com/sitemap.xml
 """
-    return Response(content=robots_txt.strip(), media_type="text/plain")
+    headers = {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=3600",
+    }
+    return Response(content=robots_txt.strip(), media_type="text/plain", headers=headers)
 
 
 app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
