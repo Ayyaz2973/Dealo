@@ -94,6 +94,8 @@ PUBLIC_ROUTES = {
     ("/robots.txt", "HEAD"),
     ("/tools", "GET"),
     ("/tools", "HEAD"),
+    ("/tools/", "GET"),
+    ("/tools/", "HEAD"),
     ("/api/properties", "GET"),
     ("/api/properties", "HEAD"),
     ("/api/societies", "GET"),
@@ -126,7 +128,7 @@ async def admin_auth_middleware(request: Request, call_next):
     method = request.method
 
     # Allow static files, root, /tools, sitemap, robots, and society SEO landing pages
-    if path in ("/", "/tools", "/sitemap.xml", "/robots.txt") or path.startswith("/static/") or path.startswith("/society/"):
+    if path in ("/", "/tools", "/tools/", "/sitemap.xml", "/robots.txt") or path.startswith("/static/") or path.startswith("/society/"):
         return await call_next(request)
 
     # Allow explicit public endpoints
@@ -4054,6 +4056,7 @@ def index():
 
 
 @app.api_route("/tools", methods=["GET", "HEAD"], response_class=HTMLResponse)
+@app.api_route("/tools/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def tools_landing():
     index_path = BASE / "static" / "index.html"
     if not index_path.exists():
