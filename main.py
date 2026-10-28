@@ -1491,7 +1491,7 @@ def get_ai_provider() -> str:
     return "auto"
 
 
-def ollama(system: str, user: str, as_json: bool = False, timeout_sec: float = 25.0) -> str:
+def ollama(system: str, user: str, as_json: bool = False, timeout_sec: float = 45.0) -> str:
     active_model = get_ollama_model()
     payload = {
         "model": active_model,
@@ -1511,7 +1511,7 @@ def ollama(system: str, user: str, as_json: bool = False, timeout_sec: float = 2
     return r.json().get("message", {}).get("content", "").strip()
 
 
-def query_ai(system: str, user: str, as_json: bool = False, timeout_sec: float = 25.0) -> str:
+def query_ai(system: str, user: str, as_json: bool = False, timeout_sec: float = 45.0) -> str:
     """
     Unified AI router with full Hermes Agent (Ollama) & Google Gemini support:
     - Provider 'ollama': Local Hermes 3 / Ollama first (100% private & zero cost). Falls back to Gemini if failed.
@@ -1701,7 +1701,7 @@ def test_ai_connection(req: AiTestReq | None = None):
                 ]
             }
             with ai_lock:
-                r = requests.post(f"{OLLAMA_URL}/api/chat", json=payload, timeout=35.0)
+                r = requests.post(f"{OLLAMA_URL}/api/chat", json=payload, timeout=60.0)
             r.raise_for_status()
             elapsed = round(time.time() - start_t, 2)
             reply = r.json().get("message", {}).get("content", "").strip()
