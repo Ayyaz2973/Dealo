@@ -14,7 +14,7 @@ DB = BASE / "dealo.db"
 UPLOADS = BASE / "static" / "uploads"
 UPLOADS.mkdir(parents=True, exist_ok=True)
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
-MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:14b")
+MODEL = os.getenv("OLLAMA_MODEL", "hermes3:8b")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 ai_lock = threading.Lock()
@@ -1466,41 +1466,87 @@ def call_gemini(system: str, user: str, as_json: bool = False, timeout_sec: floa
     raise last_err or RuntimeError("Gemini API call failed.")
 
 
-def ollama(system, user, as_json=False, timeout_sec=6.0):
+def get_ollama_model() -> str:
+    try:
+        with db() as con:
+            row = con.execute("SELECT value FROM system_settings WHERE key='ollama_model'").fetchone()
+            if row and row["value"] and str(row["value"]).strip():
+                return str(row["value"]).strip()
+    except Exception:
+        pass
+    env_m = os.getenv("OLLAMA_MODEL", "").strip()
+    if env_m:
+        return env_m
+    return "hermes3:8b"
+
+
+def get_ai_provider() -> str:
+    try:
+        with db() as con:
+            row = con.execute("SELECT value FROM system_settings WHERE key='ai_provider'").fetchone()
+            if row and row["value"] and str(row["value"]).strip():
+                return str(row["value"]).strip()
+    except Exception:
+        pass
+    return "auto"
+
+
+def ollama(system: str, user: str, as_json: bool = False, timeout_sec: float = 25.0) -> str:
+    active_model = get_ollama_model()
     payload = {
-        "model": MODEL,
+        "model": active_model,
         "stream": False,
         "keep_alive": "30m",
         "options": {"temperature": 0.2},
-        "messages": [{"role": "system", "content": system + (RULE if not as_json else "")}, {"role": "user", "content": user}],
+        "messages": [
+            {"role": "system", "content": system + (RULE if not as_json else "")},
+            {"role": "user", "content": user}
+        ],
     }
     if as_json:
         payload["format"] = "json"
     with ai_lock:
         r = requests.post(f"{OLLAMA_URL}/api/chat", json=payload, timeout=timeout_sec)
     r.raise_for_status()
-    return r.json()["message"]["content"]
+    return r.json().get("message", {}).get("content", "").strip()
 
 
-def query_ai(system: str, user: str, as_json: bool = False, timeout_sec: float = 18.0) -> str:
+def query_ai(system: str, user: str, as_json: bool = False, timeout_sec: float = 25.0) -> str:
     """
-    Unified AI router:
-    1. If Gemini API key is configured, uses Google Gemini (Cloud & Local).
-    2. Otherwise tries Local Ollama if running.
-    3. Raises error for offline fallback.
+    Unified AI router with full Hermes Agent (Ollama) & Google Gemini support:
+    - Provider 'ollama': Local Hermes 3 / Ollama first (100% private & zero cost). Falls back to Gemini if failed.
+    - Provider 'gemini': Google Gemini Flash first. Falls back to Ollama if failed.
+    - Provider 'auto': Uses Local Ollama if available, otherwise Gemini if API key configured.
     """
-    if get_gemini_key():
+    provider = get_ai_provider()
+    gemini_key = get_gemini_key()
+
+    if provider == "ollama":
         try:
-            return call_gemini(system, user, as_json=as_json, timeout_sec=timeout_sec)
+            return ollama(system, user, as_json=as_json, timeout_sec=timeout_sec)
         except Exception as e:
-            print(f"[Dealo AI Engine] Gemini attempt error: {e}")
+            print(f"[Dealo AI Engine] Local Hermes/Ollama error ({get_ollama_model()}): {e}")
+            if gemini_key:
+                return call_gemini(system, user, as_json=as_json, timeout_sec=timeout_sec)
+            raise
 
+    if provider == "gemini":
+        if gemini_key:
+            try:
+                return call_gemini(system, user, as_json=as_json, timeout_sec=timeout_sec)
+            except Exception as e:
+                print(f"[Dealo AI Engine] Gemini attempt error: {e}")
+                return ollama(system, user, as_json=as_json, timeout_sec=timeout_sec)
+        return ollama(system, user, as_json=as_json, timeout_sec=timeout_sec)
+
+    # auto mode: prioritize local private Hermes/Ollama, fallback to Gemini
     try:
-        return ollama(system, user, as_json=as_json, timeout_sec=min(timeout_sec, 8.0))
+        return ollama(system, user, as_json=as_json, timeout_sec=min(timeout_sec, 20.0))
     except Exception as e:
-        print(f"[Dealo AI Engine] Ollama attempt error: {e}")
-
-    raise RuntimeError("No LLM server available")
+        print(f"[Dealo AI Engine] Auto Ollama fallback check: {e}")
+        if gemini_key:
+            return call_gemini(system, user, as_json=as_json, timeout_sec=timeout_sec)
+        raise RuntimeError(f"No active AI engine available: {e}")
 
 
 @app.get("/api/employees")
@@ -1510,7 +1556,9 @@ def employees():
 
 @app.get("/api/health")
 def health():
+    provider = get_ai_provider()
     has_gemini = bool(get_gemini_key())
+    cur_model = get_ollama_model()
     ollama_ok = False
     try:
         requests.get(f"{OLLAMA_URL}/api/tags", timeout=1.5).raise_for_status()
@@ -1518,25 +1566,42 @@ def health():
     except Exception:
         pass
 
-    if has_gemini:
+    if provider == "ollama" and ollama_ok:
+        engine = f"Hermes 3 / Ollama Local ({cur_model})"
+        active_model = cur_model
+    elif provider == "gemini" and has_gemini:
         engine = "Google Gemini (Cloud AI)"
+        active_model = GEMINI_MODEL
     elif ollama_ok:
-        engine = f"Ollama Local ({MODEL})"
+        engine = f"Hermes 3 / Ollama Local ({cur_model})"
+        active_model = cur_model
+    elif has_gemini:
+        engine = "Google Gemini (Cloud AI)"
+        active_model = GEMINI_MODEL
     else:
         engine = "Dealo Smart Offline Engine"
+        active_model = "Rule-based Engine"
 
     return {
         "status": "healthy",
         "engine": engine,
+        "active_provider": provider,
         "gemini_active": has_gemini,
         "ollama_active": ollama_ok,
         "ollama": ollama_ok,
-        "model": "Gemini 2.0 / 1.5 Flash" if has_gemini else MODEL
+        "model": active_model,
+        "ollama_model": cur_model
     }
 
 
-class GeminiConfigReq(BaseModel):
-    api_key: str = ""
+class AiConfigReq(BaseModel):
+    provider: str | None = None
+    ollama_model: str | None = None
+    api_key: str | None = None
+
+
+# Alias for backward compatibility
+GeminiConfigReq = AiConfigReq
 
 
 @app.get("/api/ai/config")
@@ -1544,46 +1609,131 @@ def get_ai_config():
     key = get_gemini_key()
     masked = f"{key[:4]}...{key[-4:]}" if len(key) > 8 else ("Configured" if key else "")
     ollama_ok = False
+    installed_models = []
     try:
-        requests.get(f"{OLLAMA_URL}/api/tags", timeout=1.0).raise_for_status()
-        ollama_ok = True
+        r = requests.get(f"{OLLAMA_URL}/api/tags", timeout=1.5)
+        if r.status_code == 200:
+            ollama_ok = True
+            data = r.json()
+            installed_models = [m.get("name") for m in data.get("models", []) if m.get("name")]
     except Exception:
         pass
 
+    provider = get_ai_provider()
+    cur_model = get_ollama_model()
+
     return {
+        "provider": provider,
         "gemini_configured": bool(key),
         "gemini_masked_key": masked,
         "gemini_model": GEMINI_MODEL,
         "ollama_active": ollama_ok,
         "ollama_url": OLLAMA_URL,
-        "ollama_model": MODEL
+        "ollama_model": cur_model,
+        "installed_models": installed_models
     }
 
 
 @app.post("/api/ai/config")
-def update_ai_config(req: GeminiConfigReq):
-    key = req.api_key.strip()
+def update_ai_config(req: AiConfigReq):
     with db() as con:
-        con.execute(
-            "INSERT INTO system_settings(key, value) VALUES('gemini_api_key', ?) "
-            "ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated=CURRENT_TIMESTAMP",
-            (key,)
-        )
-    return {"ok": True, "gemini_configured": bool(key), "message": "Google Gemini API Key محفوظ کر لی گئی ہے!"}
+        if req.api_key is not None and req.api_key.strip():
+            con.execute(
+                "INSERT INTO system_settings(key, value) VALUES('gemini_api_key', ?) "
+                "ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated=CURRENT_TIMESTAMP",
+                (req.api_key.strip(),)
+            )
+        if req.provider is not None and req.provider.strip():
+            con.execute(
+                "INSERT INTO system_settings(key, value) VALUES('ai_provider', ?) "
+                "ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated=CURRENT_TIMESTAMP",
+                (req.provider.strip(),)
+            )
+        if req.ollama_model is not None and req.ollama_model.strip():
+            con.execute(
+                "INSERT INTO system_settings(key, value) VALUES('ollama_model', ?) "
+                "ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated=CURRENT_TIMESTAMP",
+                (req.ollama_model.strip(),)
+            )
+
+    return {
+        "ok": True,
+        "provider": get_ai_provider(),
+        "ollama_model": get_ollama_model(),
+        "gemini_configured": bool(get_gemini_key()),
+        "message": "AI Engine سیٹنگز کامیابی سے محفوظ ہو گئیں!"
+    }
+
+
+class AiTestReq(BaseModel):
+    provider: str | None = None
+    ollama_model: str | None = None
 
 
 @app.post("/api/ai/test")
-def test_ai_connection():
+def test_ai_connection(req: AiTestReq | None = None):
+    target_prov = (req.provider if req and req.provider else get_ai_provider()) or "auto"
+    selected_ollama = (req.ollama_model if req and req.ollama_model else get_ollama_model()) or "hermes3:8b"
+
+    # Test Local Hermes/Ollama if selected or in auto mode without gemini key
+    if target_prov == "ollama" or (target_prov == "auto" and not get_gemini_key()):
+        try:
+            requests.get(f"{OLLAMA_URL}/api/tags", timeout=2.0).raise_for_status()
+        except Exception:
+            raise HTTPException(400, "Ollama سرور (localhost:11434) تک رسائی نہیں ہو سکی۔ براہ کرم چیک کریں کہ Ollama چل رہا ہے۔")
+
+        try:
+            start_t = time.time()
+            payload = {
+                "model": selected_ollama,
+                "stream": False,
+                "keep_alive": "30m",
+                "options": {"temperature": 0.2},
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "Aap Dealo PropTech Real Estate OS ke AI assistant hain. Roman Urdu mein 1 mukhtasar jumlay mein salam karein aur confirm karein ke Hermes 3 / Local AI connect ho chuka hai aur 100% private chal raha hai."
+                    },
+                    {
+                        "role": "user",
+                        "content": "Salam! Dealo status check."
+                    }
+                ]
+            }
+            with ai_lock:
+                r = requests.post(f"{OLLAMA_URL}/api/chat", json=payload, timeout=35.0)
+            r.raise_for_status()
+            elapsed = round(time.time() - start_t, 2)
+            reply = r.json().get("message", {}).get("content", "").strip()
+            return {
+                "ok": True,
+                "provider": "ollama",
+                "model": selected_ollama,
+                "latency_sec": elapsed,
+                "reply": reply or "Hermes 3 Local AI Agent successfully connected!"
+            }
+        except Exception as e:
+            raise HTTPException(500, f"Ollama / Hermes Error: {str(e)}")
+
+    # Otherwise test Gemini
     key = get_gemini_key()
     if not key:
-        raise HTTPException(400, "کوئی Google Gemini Key موجود نہیں ہے۔ براہ کرم پہلے Key داخل کریں۔")
+        raise HTTPException(400, "کوئی Google Gemini Key موجود نہیں ہے اور نہ ہی Ollama منتخب ہے۔")
     try:
+        start_t = time.time()
         reply = call_gemini(
             system="Aap Dealo PropTech Real Estate OS ke AI assistant hain. Roman Urdu mein 1 jumlay mein salam karein aur batayein ke Gemini AI live aur connect ho chuka hai.",
             user="Dealo test message",
-            timeout_sec=12.0
+            timeout_sec=15.0
         )
-        return {"ok": True, "reply": reply}
+        elapsed = round(time.time() - start_t, 2)
+        return {
+            "ok": True,
+            "provider": "gemini",
+            "model": GEMINI_MODEL,
+            "latency_sec": elapsed,
+            "reply": reply
+        }
     except Exception as e:
         raise HTTPException(500, f"Gemini Connection Error: {str(e)}")
 

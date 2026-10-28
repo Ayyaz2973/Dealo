@@ -1,7 +1,7 @@
 @echo off
 cd /d "%~dp0"
 title Dealo - Property Manager
-if "%OLLAMA_MODEL%"=="" set OLLAMA_MODEL=qwen2.5:14b
+if "%OLLAMA_MODEL%"=="" set OLLAMA_MODEL=hermes3:8b
 echo ========================================================
 echo       Dealo - Smart Real Estate Management System
 echo ========================================================
